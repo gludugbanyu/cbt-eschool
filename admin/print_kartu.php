@@ -211,15 +211,25 @@ window.addEventListener("load", function () {
 
     // Delay sedikit supaya layout benar-benar ter-render
     setTimeout(function () {
-        html2pdf().set({
-            margin: 0.2,
-            filename: 'KartuUjianCbt.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, logging: false },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        }).from(element).save();
-        // Tidak pakai window.close dulu, biar download tidak terganggu
-    }, 500);
+    html2pdf().set({
+        margin: 0.2,
+        filename: 'KartuUjianCbt.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, logging: false },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+    }).from(element).save().then(function () {
+        // kasih jeda lagi sedikit setelah proses save selesai
+        setTimeout(function () {
+            try {
+                window.close();
+            } catch (e) {
+                // kalau diblokir browser, ya tabnya tetap terbuka
+                console.log('Gagal menutup jendela:', e);
+            }
+        }, 800);
+    });
+}, 500);
+
 });
 </script>
 </body>
