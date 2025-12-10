@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset'])) {
                 exit;
             }
         }
+
         if ($item == 'soal') {
             mysqli_query($koneksi, "TRUNCATE TABLE soal");
             mysqli_query($koneksi, "TRUNCATE TABLE jawaban_siswa");
@@ -33,9 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset'])) {
                 }
             }
         }
+
         if ($item == 'nilai') {
+            // 🔴 TADINYA cuma nilai saja
             if (!mysqli_query($koneksi, "TRUNCATE TABLE nilai")) {
                 $response['message'] = 'Gagal reset nilai: ' . mysqli_error($koneksi);
+                echo json_encode($response);
+                exit;
+            }
+
+            // ✅ TAMBAHKAN INI supaya jawaban_siswa ikut kosong
+            if (!mysqli_query($koneksi, "TRUNCATE TABLE jawaban_siswa")) {
+                $response['message'] = 'Gagal reset jawaban_siswa: ' . mysqli_error($koneksi);
                 echo json_encode($response);
                 exit;
             }

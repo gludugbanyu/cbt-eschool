@@ -503,14 +503,4 @@ main.content {
 .question-nav-container.show {
     display: none;
 }
-.btn-group .btn:hover {
-    background-color: #f1f3f5 !important;
-    transform: scale(1.05);
-}
-.btn-group .btn i {
-    transition: transform 0.2s ease-in-out;
-}
-.btn-group .btn:hover i {
-    transform: rotate(15deg);
-}
 </style>
