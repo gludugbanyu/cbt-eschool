@@ -15,6 +15,10 @@ function allBenarSalah($arr) {
 
 // Ambil data POST
 $kode_soal = mysqli_real_escape_string($koneksi, $_POST['kode_soal'] ?? '');
+$q_opsi = mysqli_query($koneksi, "SELECT jumlah_opsi FROM soal WHERE kode_soal='$kode_soal'");
+$data_opsi = mysqli_fetch_assoc($q_opsi);
+$jumlah_opsi = (int)($data_opsi['jumlah_opsi'] ?? 4);
+
 $waktu_sisa = ceil(((int)($_POST['waktu_sisa'] ?? 0)) / 60);
 $jawaban = $_POST['jawaban'] ?? [];
 $soal_kiri = $_POST['soal_kiri'] ?? [];
@@ -141,8 +145,8 @@ for ($i = 0; $i < $total_soal; $i++) {
     $skor = 0;
 
     if (in_array($tipe_soal, ['benar/salah', 'menjodohkan'])) {
-        $kunci_opsi = array_map('strtolower', array_map('trim', explode('|', $isi_kunci)));
-        $jawaban_opsi = array_map('strtolower', array_map('trim', explode('|', $isi_jawaban)));
+        $kunci_opsi = array_map('trim', explode('|', $isi_kunci));
+$jawaban_opsi = array_map('trim', explode('|', $isi_jawaban));
         $jumlah_kunci = count($kunci_opsi);
         $nilai_per_opsi = $nilai_per_soal / $jumlah_kunci;
         $jumlah_benar = 0;
@@ -160,9 +164,8 @@ for ($i = 0; $i < $total_soal; $i++) {
         else $kurang_lengkap++;
 
     } elseif ($tipe_soal === 'pilihan ganda kompleks') {
-        $kunci_opsi = array_map('strtolower', array_map('trim', explode(',', str_replace('|', ',', $isi_kunci))));
-        $jawaban_opsi = array_map('strtolower', array_map('trim', explode(',', str_replace('|', ',', $isi_jawaban))));
-
+        $kunci_opsi = array_map('trim', explode(',', str_replace('|', ',', $isi_kunci)));
+        $jawaban_opsi = array_map('trim', explode(',', str_replace('|', ',', $isi_jawaban)));
         $jumlah_kunci = count($kunci_opsi);
         $jumlah_benar = 0;
 

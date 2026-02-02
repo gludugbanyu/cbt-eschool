@@ -39,17 +39,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tampilan_soal = mysqli_real_escape_string($koneksi, $_POST['tampilan_soal']);
     $waktu_ujian = mysqli_real_escape_string($koneksi, $_POST['waktu_ujian']);
     $tanggal = mysqli_real_escape_string($koneksi, $_POST['tanggal']);
+    $jumlah_opsi = mysqli_real_escape_string($koneksi, $_POST['jumlah_opsi']);
+$tampil_tombol_selesai = mysqli_real_escape_string($koneksi, $_POST['tampil_tombol_selesai']);
+
 
     // Update data soal
     $update_query = "UPDATE soal SET 
-                        kode_soal = '$kode_soal', 
-                        nama_soal = '$nama_soal',
-                        mapel = '$mapel', 
-                        kelas = '$kelas', 
-                        tampilan_soal = '$tampilan_soal', 
-                        waktu_ujian = '$waktu_ujian', 
-                        tanggal = '$tanggal'
-                    WHERE id_soal = '$id_soal'";
+                    kode_soal = '$kode_soal', 
+                    nama_soal = '$nama_soal',
+                    mapel = '$mapel', 
+                    kelas = '$kelas', 
+                    tampilan_soal = '$tampilan_soal', 
+                    waktu_ujian = '$waktu_ujian', 
+                    tanggal = '$tanggal',
+                    jumlah_opsi = '$jumlah_opsi',
+tampil_tombol_selesai = '$tampil_tombol_selesai'
+                WHERE id_soal = '$id_soal'";
 
     if (mysqli_query($koneksi, $update_query)) {
         $_SESSION['success_message'] = 'Data soal berhasil diupdate!';
@@ -130,6 +135,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <option value="Urut">Urut</option>
                                             </select>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="jumlah_opsi" class="form-label">Jumlah Pilihan Jawaban</label>
+                                            <select class="form-control" id="jumlah_opsi" name="jumlah_opsi" required>
+                                                <option value="4" <?php echo ($row['jumlah_opsi'] == 4) ? 'selected' : ''; ?>>4 Pilihan (A-D)</option>
+                                                <option value="5" <?php echo ($row['jumlah_opsi'] == 5) ? 'selected' : ''; ?>>5 Pilihan (A-E)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+    <label class="form-label">Tampilkan Tombol Selesai Saat Sisa Waktu (menit)</label>
+    <input type="number"
+           class="form-control"
+           name="tampil_tombol_selesai"
+           value="<?php echo $row['tampil_tombol_selesai'] ?? 0; ?>">
+    <small class="text-muted">
+        Isi 0 jika tombol boleh tampil dari awal.  
+        Contoh isi 10 → tombol muncul saat sisa waktu tinggal 10 menit.
+    </small>
+</div>
+
+
                                         <div class="mb-3">
                                             <label for="tanggal" class="form-label">Tanggal Ujian</label>
                                             <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?php echo $row['tanggal']; ?>" required onclick="this.showPicker()">

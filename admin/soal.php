@@ -6,13 +6,17 @@ check_login('admin');
 include '../inc/dataadmin.php';
 $query = "
     SELECT 
-        s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, s.token,
+        s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, 
+        s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, 
+        s.token, s.jumlah_opsi,   -- ✅ TAMBAH INI
         COUNT(b.id_soal) AS jumlah_butir
     FROM soal s
     LEFT JOIN butir_soal b ON s.kode_soal = b.kode_soal
-    GROUP BY s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, s.status,  s.tanggal, s.waktu_ujian, s.token
+    GROUP BY 
+        s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, 
+        s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, 
+        s.token, s.jumlah_opsi   -- ✅ TAMBAH INI
 ";
-
 $result = mysqli_query($koneksi, $query);
 
 // Check if the query was successful
@@ -70,7 +74,8 @@ if (!$result) {
                                                 <th>Kode Soal</th>
                                                 <th>Mapel</th>
                                                 <th>Kls</th>
-                                                <th>Jml Soal</th>
+                                                <th>Jmlh</th>
+                                                <th>Opsi</th>
                                                 <th>Durasi (menit)</th>
                                                 <th>Tgl Ujian</th>
                                                 <th>Tampilan</th>
@@ -88,6 +93,13 @@ if (!$result) {
                                                 <td><?php echo $row['mapel']; ?></td>
                                                 <td><?php echo $row['kelas']; ?></td>
                                                 <td><?php echo $row['jumlah_butir']; ?></td>
+                                                <td>
+                                                    <?php if ($row['jumlah_opsi'] == 5): ?>
+                                                        <span class="badge bg-info">A-E</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary">A-D</span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><i class="fa fa-clock" aria-hidden="true"></i>
                                                     <?php echo $row['waktu_ujian']; ?></td>
                                                 <td><i class="fa fa-calendar-alt" aria-hidden="true"></i>
@@ -119,9 +131,11 @@ if (!$result) {
                                                     <?php } ?>
                                                 </td>
                                                 <td>
-                                                    <a href="preview_soal.php?kode_soal=<?php echo $row['kode_soal']; ?>"
-                                                        class="btn btn-sm btn-outline-secondary"><i
-                                                            class="fa fa-eye"></i> Preview</a>
+                                                <a href="preview_soal.php?kode_soal=<?php echo $row['kode_soal']; ?>&opsi=<?php echo $row['jumlah_opsi']; ?>"
+    class="btn btn-sm btn-outline-secondary">
+    <i class="fa fa-eye"></i> Preview
+</a>
+
                                                     <a href="edit_soal.php?id_soal=<?php echo $row['id_soal']; ?>"
                                                         class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
                                                         Edit</a>

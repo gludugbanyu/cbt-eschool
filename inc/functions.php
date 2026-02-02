@@ -112,6 +112,24 @@ function verify_siswa_password($password_input, $stored_password) {
     return ($decrypted_password === $password_input);
 }
 
+function bersihkan_html($html) {
+    $html = trim($html);
+
+    // buang pembungkus <p>...</p>
+    $html = preg_replace('#^<p>|</p>$#', '', $html);
+
+    // buang <p> kosong, <p><br></p>, <p>&nbsp;</p>
+    $html = preg_replace('#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $html);
+
+    // buang <br> sisa
+    $html = preg_replace('#<br\s*/?>#i', '', $html);
+
+    // rapikan spasi
+    $html = trim($html);
+
+    return $html;
+}
+
 
 // Fungsi untuk mendapatkan informasi kredensial yang terenkripsi
 function get_encrypted_credit() {

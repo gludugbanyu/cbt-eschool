@@ -4,6 +4,10 @@ include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('siswa');
 include '../inc/datasiswa.php';
+// Ambil pengaturan reset login
+$qset = mysqli_query($koneksi, "SELECT izinkan_lanjut_ujian FROM pengaturan WHERE id=1");
+$dset = mysqli_fetch_assoc($qset);
+$izinkan_lanjut = $dset['izinkan_lanjut_ujian'] ?? 'tidak';
 
 $kode_soal = $_GET['kode_soal'] ?? '';
 
@@ -61,13 +65,30 @@ if ($data_siswa['kelas'] !== $data_soal['kelas']) {
 }
 
 // Cek jika masih ujian aktif
-$q_jawaban = mysqli_query($koneksi, "SELECT * FROM jawaban_siswa WHERE id_siswa = '$id_siswa' AND kode_soal = '$kode_soal' AND status_ujian = 'Aktif'");
-if (mysqli_num_rows($q_jawaban) > 0) {
-    $_SESSION['alert'] = true;
-    $_SESSION['warning_message'] = 'Status Ujian Masih Aktif! Silakan Reset Login.';
-    header('Location: ujian.php');
-    exit;
+// Cek jika masih ujian aktif
+$q_jawaban = mysqli_query($koneksi, "
+    SELECT status_ujian 
+    FROM jawaban_siswa 
+    WHERE id_siswa = '$id_siswa' 
+    AND kode_soal = '$kode_soal'
+");
+
+$d_jawaban = mysqli_fetch_assoc($q_jawaban);
+
+if ($d_jawaban && $d_jawaban['status_ujian'] == 'Aktif') {
+
+    if ($izinkan_lanjut === 'tidak') {
+        $_SESSION['alert'] = true;
+        $_SESSION['warning_message'] = 'Kamu keluar dari ujian. Hubungi pengawas untuk reset login.';
+        header('Location: ujian.php');
+        exit;
+    }
+
+    // ✅ kalau diizinkan, JANGAN redirect
+    // biarkan tetap di halaman ini supaya isi TOKEN lagi
 }
+
+
 
 // Cek jika siswa sudah pernah mengerjakan
 $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_siswa = '$id_siswa' AND kode_soal = '$kode_soal'");

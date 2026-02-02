@@ -16,6 +16,7 @@ if ($waktu_sinkronisasi < 60) {
 $sembunyikan_nilai = isset($_POST['sembunyikan_nilai']) ? 1 : 0;
 $login_ganda = $_POST['login_ganda'];
 $chat = $_POST['chat'];
+$izinkan_lanjut_ujian = $_POST['izinkan_lanjut_ujian'] ?? 'tidak';
 $logo_path = ''; // default kosong
 
 // Validasi dan handle upload logo
@@ -56,13 +57,14 @@ if (mysqli_num_rows($query) > 0) {
         waktu_sinkronisasi=$waktu_sinkronisasi,
         sembunyikan_nilai=$sembunyikan_nilai,
         chat='$chat',
-        login_ganda='$login_ganda'"
+        login_ganda='$login_ganda',
+        izinkan_lanjut_ujian='$izinkan_lanjut_ujian'"
         . ($logo_path ? ", logo_sekolah='$logo_path'" : "") .
         " WHERE id=1";
 } else {
     // Insert awal (jika belum ada)
-    $sql = "INSERT INTO pengaturan (id, nama_aplikasi, logo_sekolah, warna_tema, waktu_sinkronisasi, sembunyikan_nilai, login_ganda, chat)
-        VALUES (1, '$nama_aplikasi', '$logo_path', '$warna_tema', $waktu_sinkronisasi, $sembunyikan_nilai, '$login_ganda', '$chat')";
+$sql = "INSERT INTO pengaturan (id, nama_aplikasi, logo_sekolah, warna_tema, waktu_sinkronisasi, sembunyikan_nilai, login_ganda, chat, izinkan_lanjut_ujian)
+VALUES (1, '$nama_aplikasi', '$logo_path', '$warna_tema', $waktu_sinkronisasi, $sembunyikan_nilai, '$login_ganda', '$chat', '$izinkan_lanjut_ujian')";
 }
 
 // Eksekusi query

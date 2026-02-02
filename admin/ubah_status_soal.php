@@ -30,7 +30,7 @@ if ($aksi == 'nonaktif') {
 
 // Untuk aksi AKTIF
 if ($aksi == 'aktif') {
-    $kode = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6));
+    $kode = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 5));
     $status = 'Aktif';
 
     // Ambil kode_soal dari tabel soal

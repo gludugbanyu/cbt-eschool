@@ -13,8 +13,12 @@ setTimeout(() => {
 function updateTimer() {
     let menit = Math.floor(waktu / 60);
     let detik = waktu % 60;
+
     document.getElementById('timer').innerText =
         `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+
+    cekTombolSelesai(); // SATU PINTU LOGIKA
+
     waktu--;
 
     if (waktu < 0) {
@@ -22,21 +26,35 @@ function updateTimer() {
     }
 }
 
+
+function cekTombolSelesai() {
+    const submitBtn = document.getElementById('submitBtn');
+    const menit = Math.floor(waktu / 60);
+
+    const diSoalTerakhir = (soalAktif === totalSoal - 1);
+    const waktuMemenuhi  = (batasMenitSelesai === 0) || (menit <= batasMenitSelesai);
+
+    if (diSoalTerakhir && waktuMemenuhi) {
+        submitBtn.style.display = 'inline-block';
+    } else {
+        submitBtn.style.display = 'none';
+    }
+}
+
+
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
 
     prevBtn.style.display = soalAktif > 0 ? 'block' : 'none';
 
     if (soalAktif < totalSoal - 1) {
         nextBtn.style.display = 'block';
-        submitBtn.style.display = 'none';
     } else {
         nextBtn.style.display = 'none';
-        submitBtn.style.display = 'block';
     }
 }
+
 
 function tampilSoal(index) {
     document.querySelectorAll('.question-container').forEach(s => s.classList.remove('active'));
@@ -50,6 +68,7 @@ function tampilSoal(index) {
         document.getElementById('currentQuestionNumber').textContent = currentNo.toString().padStart(2, '0');
 
         updateNavigationButtons();
+        cekTombolSelesai()
 
         window.scrollTo({
             top: 0,
@@ -139,39 +158,147 @@ document.querySelector('.card-header button.close').addEventListener('click', hi
 setInterval(() => {
     document.getElementById('waktu_sisa').value = waktu;
 }, 1000);
+function getSoalBelumDijawab() {
+    let kosong = [];
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        const nomorAsli = btn.getAttribute('data-nomor');
+        const nomorUrut = btn.getAttribute('data-urut');
+
+        const inputs = document.querySelectorAll(`[name^="jawaban[${nomorAsli}]"]`);
+
+        let terisi = false;
+
+        inputs.forEach(input => {
+            if ((input.type === 'radio' || input.type === 'checkbox') && input.checked) {
+                terisi = true;
+            }
+            else if ((input.tagName === 'TEXTAREA' || input.tagName === 'SELECT' || input.type === 'text')
+                && input.value.trim() !== '') {
+                terisi = true;
+            }
+        });
+
+        if (!terisi) {
+            kosong.push({
+                asli: nomorAsli,
+                urut: nomorUrut
+            });
+        }
+    });
+
+    return kosong;
+}
 
 // Tangani klik tombol "Selesai"
 document.getElementById('submitBtn').addEventListener('click', function(e) {
     e.preventDefault();
 
-    const sisaDetik = parseInt(waktu) || 0;
-    const menit = Math.floor(sisaDetik / 60);
-    const detik = sisaDetik % 60;
-    const formatWaktu = `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+    const soalKosong = getSoalBelumDijawab();
 
-    Swal.fire({
-        title: 'Selesaikan Ujian?',
-        html: `
-            Sisa waktu Anda: <strong>${formatWaktu}</strong><br><br>
-            <input type="checkbox" id="konfirmasiCek"> Saya yakin ingin menyelesaikan ujian ini.
-        `,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Selesai',
-        cancelButtonText: 'Batal',
-        preConfirm: () => {
-            const checkbox = document.getElementById('konfirmasiCek');
-            if (!checkbox.checked) {
-                Swal.showValidationMessage('Anda harus menyetujui konfirmasi terlebih dahulu.');
-            }
-            return checkbox.checked;
+    let htmlKosong = '';
+
+    if (soalKosong.length > 0) {
+        htmlKosong += `
+            <div style="text-align:left;margin-bottom:10px;">
+            <b>Soal berikut belum dijawab:</b><br><br>
+        `;
+
+        soalKosong.forEach(s => {
+            htmlKosong += `
+                <button type="button" 
+                        onclick="tampilSoal(${s.urut - 1}); Swal.close();" 
+                        style="margin:3px;padding:5px 10px;border-radius:5px;border:1px solid #ccc;background:#f8d7da;">
+                    No ${s.urut}
+                </button>
+            `;
+        });
+
+        htmlKosong += `</div><hr>`;
+    }
+
+    const sisaDetik = parseInt(waktu) || 0;
+const menit = Math.floor(sisaDetik / 60);
+const detik = sisaDetik % 60;
+const formatWaktu =
+    `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+
+Swal.fire({
+    title: 'Konfirmasi Selesai Ujian',
+    width: 600,
+    html: `
+        <div style="text-align:left">
+
+            <div style="
+                background:#e9f3ff;
+                padding:12px;
+                border-radius:8px;
+                margin-bottom:15px;
+                font-size:16px;">
+                ⏱️ <b>Sisa Waktu:</b> ${formatWaktu}
+            </div>
+
+            ${soalKosong.length > 0 ? `
+                <div style="
+                    background:#fff3cd;
+                    padding:12px;
+                    border-radius:8px;
+                    margin-bottom:10px;">
+                    <b>⚠️ Soal belum dijawab:</b><br><br>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                        ${soalKosong.map(s => `
+                            <button type="button"
+                                onclick="tampilSoal(${s.urut - 1}); Swal.close();"
+                                style="
+                                    padding:6px 10px;
+                                    border-radius:6px;
+                                    border:1px solid #dc3545;
+                                    background:#f8d7da;
+                                    cursor:pointer;">
+                                No ${s.urut}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : `
+                <div style="
+                    background:#e6ffed;
+                    padding:12px;
+                    border-radius:8px;
+                    margin-bottom:10px;">
+                    ✅ Semua soal sudah terjawab
+                </div>
+            `}
+
+            <div style="margin-top:15px">
+                <input type="checkbox" id="konfirmasiCek">
+                <label for="konfirmasiCek">
+                    Saya yakin ingin mengakhiri ujian ini
+                </label>
+            </div>
+
+        </div>
+    `,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Selesai Ujian',
+    cancelButtonText: 'Kembali',
+    preConfirm: () => {
+        const checkbox = document.getElementById('konfirmasiCek');
+        if (!checkbox.checked) {
+            Swal.showValidationMessage('Centang konfirmasi terlebih dahulu.');
+            return false;
         }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('formUjian').submit();
-        }
-    });
+        return true;
+    }
+}).then((result) => {
+    if (result.isConfirmed) {
+        document.getElementById('formUjian').submit();
+    }
 });
+
+});
+
 
 
 // Panggil pertama kali untuk inisialisasi
@@ -179,6 +306,7 @@ updateNavigationButtons();
 // Tampilkan soal pertama saat halaman dimuat
 window.onload = function() {
     tampilSoal(0);
+    cekTombolSelesai();
     setInterval(updateTimer, 1000);
     updateTimer();
 };

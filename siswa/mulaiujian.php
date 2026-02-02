@@ -6,8 +6,9 @@ check_login('siswa');
 include '../inc/datasiswa.php';
 
 $kode_soal = $_POST['kode_soal'] ?? $_GET['kode_soal'] ?? '';
-$token = $_POST['token'];
-$id_siswa = $_POST['id_siswa'];
+$token = $_POST['token'] ?? '';
+$id_siswa = $_POST['id_siswa'] ?? $_SESSION['id_siswa'];
+
 
 if (empty($kode_soal)) {
     $_SESSION['alert'] = true;
@@ -22,6 +23,9 @@ $data_siswa = mysqli_fetch_assoc($q_siswa);
 // Ambil data soal
 $q_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal = '$kode_soal'");
 $data_soal = mysqli_fetch_assoc($q_soal);
+$jumlah_opsi = (int)($data_soal['jumlah_opsi'] ?? 4);
+$opsi_huruf = ['A','B','C','D','E'];
+$batas_menit_selesai = (int)($data_soal['tampil_tombol_selesai'] ?? 0);
 
 if (!$data_soal) {
     $_SESSION['alert'] = true;
@@ -52,12 +56,29 @@ if ($kelas_siswa !== $data_soal['kelas']) {
     header('Location: ujian.php');
     exit;
 }
-if ($token !== $data_soal['token']) {
-    $_SESSION['alert'] = true;
-    $_SESSION['warning_message'] = 'Token tidak Valid.';
-    header('Location: ujian.php');
-    exit;
+// Cek apakah ini siswa lanjut ujian (sudah punya data jawaban_siswa aktif)
+// Cek apakah siswa sudah pernah mulai ujian (punya waktu_sisa)
+$qcek = mysqli_query($koneksi, "
+    SELECT waktu_sisa 
+    FROM jawaban_siswa 
+    WHERE id_siswa='$id_siswa' 
+    AND kode_soal='$kode_soal'
+");
+$dcek = mysqli_fetch_assoc($qcek);
+
+$lanjut_ujian = ($dcek && $dcek['waktu_sisa'] > 0);
+
+
+// Kalau bukan lanjut ujian, baru cek token
+if (!$lanjut_ujian) {
+    if ($token !== $data_soal['token']) {
+        $_SESSION['alert'] = true;
+        $_SESSION['warning_message'] = 'Token tidak Valid.';
+        header('Location: ujian.php');
+        exit;
+    }
 }
+
 
 // Cek jika siswa sudah pernah mengerjakan
 $q_nilai = mysqli_query($koneksi, "SELECT * FROM nilai WHERE id_siswa = '$id_siswa' AND kode_soal = '$kode_soal'");
@@ -136,13 +157,60 @@ $tampilan = $tampil['tampilan_soal'] ?? 'Urut';
 
 // Simpan urutan soal ke session
 if ($tampilan === 'Acak') {
-    $q = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY RAND()");
+
+    // 1️⃣ Pilihan Ganda
+    $pg = mysqli_query($koneksi, "
+        SELECT * FROM butir_soal 
+        WHERE kode_soal='$kode_soal' 
+        AND tipe_soal='Pilihan Ganda'
+        ORDER BY RAND()
+    ");
+
+    // 2️⃣ Pilihan Ganda Kompleks
+    $pgx = mysqli_query($koneksi, "
+        SELECT * FROM butir_soal 
+        WHERE kode_soal='$kode_soal' 
+        AND tipe_soal='Pilihan Ganda Kompleks'
+        ORDER BY RAND()
+    ");
+
+    // 3️⃣ Benar / Salah
+    $bs = mysqli_query($koneksi, "
+        SELECT * FROM butir_soal 
+        WHERE kode_soal='$kode_soal' 
+        AND tipe_soal='Benar/Salah'
+        ORDER BY RAND()
+    ");
+
+    // 4️⃣ Menjodohkan
+    $mj = mysqli_query($koneksi, "
+        SELECT * FROM butir_soal 
+        WHERE kode_soal='$kode_soal' 
+        AND tipe_soal='Menjodohkan'
+        ORDER BY RAND()
+    ");
+
+    // 5️⃣ Uraian (paling akhir)
+    $ur = mysqli_query($koneksi, "
+        SELECT * FROM butir_soal 
+        WHERE kode_soal='$kode_soal' 
+        AND tipe_soal='Uraian'
+        ORDER BY RAND()
+    ");
+
     $_SESSION['soal_order'] = [];
-    while ($s = mysqli_fetch_assoc($q)) {
-        $soal[] = $s;
-        $_SESSION['soal_order'][] = $s['nomer_soal'];
+    $soal = [];
+
+    // Susun sesuai urutan tipe
+    foreach ([$pg, $pgx, $bs, $mj, $ur] as $group) {
+        while ($s = mysqli_fetch_assoc($group)) {
+            $soal[] = $s;
+            $_SESSION['soal_order'][] = $s['nomer_soal'];
+        }
     }
+
 } else {
+
     $q = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY nomer_soal ASC");
     $_SESSION['soal_order'] = [];
     while ($s = mysqli_fetch_assoc($q)) {
@@ -190,6 +258,7 @@ foreach ($matches as $match) {
     <?php include '../inc/cssujian.php'; ?>
     <script>
     const syncInterval = <?= $interval_ms ?>;
+    const batasMenitSelesai = <?= $batas_menit_selesai ?>;
     </script>
 </head>
 
@@ -284,9 +353,8 @@ foreach ($matches as $match) {
 
                                             <?php if ($tipe == 'Pilihan Ganda'): ?>
                                             <?php
-                                                    $huruf_opsi = ['A', 'B', 'C', 'D'];
-                                                    for ($i = 1; $i <= 4; $i++):
-                                                        $huruf = $huruf_opsi[$i - 1];
+                                                    for ($i = 1; $i <= $jumlah_opsi; $i++):
+                                                        $huruf = $opsi_huruf[$i - 1];
                                                     ?>
                                             <label class="option-circle">
                                                 <input type="radio" name="jawaban[<?= $no_asli ?>]"
@@ -302,9 +370,8 @@ foreach ($matches as $match) {
                                                     if (!is_array($jawaban)) {
                                                         $jawaban = [$jawaban];
                                                     }
-                                                    $huruf_opsi = ['A', 'B', 'C', 'D'];
-                                                    for ($i = 1; $i <= 4; $i++):
-                                                        $huruf = $huruf_opsi[$i - 1];
+                                                    for ($i = 1; $i <= $jumlah_opsi; $i++):
+                                                        $huruf = $opsi_huruf[$i - 1];
                                                 ?>
                                             <label class="option-circle">
                                                 <input type="checkbox" name="jawaban[<?= $no_asli ?>][]"
@@ -318,7 +385,7 @@ foreach ($matches as $match) {
 
                                             <?php elseif ($tipe == 'Benar/Salah'): ?>
                                             <table class="matching-table">
-                                                <?php for ($i = 1; $i <= 4; $i++):
+                                                <?php for ($i = 1; $i <= 5; $i++):
                                                             $pernyataan = $s['pilihan_' . $i];
                                                             if (trim($pernyataan) == '')
                                                                 continue;
@@ -420,7 +487,7 @@ foreach ($matches as $match) {
                                                     Berikutnya <i class="fas fa-arrow-right ms-1"></i>
                                                 </button>
                                                 <button type="submit" class="btn btn-success" id="submitBtn"
-                                                    style="display: none; float: right;">
+                                                style="display: none !important; float: right;">
                                                     <i class="fas fa-check-circle me-1"></i> Selesai
                                                 </button>
                                             </div>

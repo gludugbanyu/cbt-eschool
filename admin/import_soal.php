@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
     // Ambil kode_soal dari input form
     $form_kode_soal = isset($_POST['kode_soal']) ? trim($_POST['kode_soal']) : '';
 
+
     if (in_array($file_type, $allowed_types)) {
         $ext = pathinfo($file_name, PATHINFO_EXTENSION);
         $reader = IOFactory::createReader(match(strtolower($ext)) {
@@ -59,12 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
                 $kode_soal      = trim($data[$i][1]);
                 $pertanyaan     = trim($data[$i][2]);
                 $tipe_soal      = trim($data[$i][3]);
-                $pilihan_1      = trim($data[$i][4]);
-                $pilihan_2      = trim($data[$i][5]);
-                $pilihan_3      = trim($data[$i][6]);
-                $pilihan_4      = trim($data[$i][7]);
-                $jawaban_benar  = trim($data[$i][8]);
-                $status_soal    = trim($data[$i][9]);
+                $pilihan_1 = trim($data[$i][4] ?? '');
+                $pilihan_2 = trim($data[$i][5] ?? '');
+                $pilihan_3 = trim($data[$i][6] ?? '');
+                $pilihan_4 = trim($data[$i][7] ?? '');
+                $pilihan_5 = trim($data[$i][8] ?? ''); // boleh kosong kalau opsi 4
+                
+                $jawaban_benar = trim($data[$i][9] ?? '');
+                $status_soal   = trim($data[$i][10] ?? '');
+                
+
 
                 $cek = $koneksi->prepare("SELECT COUNT(*) FROM butir_soal WHERE nomer_soal = ? AND kode_soal = ?");
                 $cek->bind_param("is", $nomer_soal, $kode_soal);
@@ -79,10 +84,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
                 }
 
                 $stmt = $koneksi->prepare("INSERT INTO butir_soal 
-                    (nomer_soal, kode_soal, pertanyaan, tipe_soal, pilihan_1, pilihan_2, pilihan_3, pilihan_4, jawaban_benar, status_soal)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("isssssssss", $nomer_soal, $kode_soal, $pertanyaan, $tipe_soal, 
-                                  $pilihan_1, $pilihan_2, $pilihan_3, $pilihan_4, $jawaban_benar, $status_soal);
+(nomer_soal, kode_soal, pertanyaan, tipe_soal, pilihan_1, pilihan_2, pilihan_3, pilihan_4, pilihan_5, jawaban_benar, status_soal)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+$stmt->bind_param("issssssssss",
+$nomer_soal, 
+$kode_soal, 
+$pertanyaan, 
+$tipe_soal,
+$pilihan_1, 
+$pilihan_2, 
+$pilihan_3, 
+$pilihan_4,
+$pilihan_5,
+$jawaban_benar, 
+$status_soal
+);
+
                 if ($stmt->execute()) {
                     $successCount++;
                 }

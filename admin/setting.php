@@ -131,6 +131,19 @@ include '../inc/dataadmin.php';
                                                         Blokir</option>
                                                 </select>
                                             </div>
+
+                                            <div class="col-12 col-md-6">
+    <label class="form-label">Izinkan Siswa Melanjutkan Ujian Tanpa Reset</label>
+    <select class="form-select" name="izinkan_lanjut_ujian" required>
+        <option value="tidak" <?= $data['izinkan_lanjut_ujian'] === 'tidak' ? 'selected' : '' ?>>
+            Tidak (Harus Reset Admin)
+        </option>
+        <option value="ya" <?= $data['izinkan_lanjut_ujian'] === 'ya' ? 'selected' : '' ?>>
+            Ya (Boleh Masuk Lagi Tanpa Reset)
+        </option>
+    </select>
+</div>
+
                      
 
                                         <div class="col-12 col-md-6">

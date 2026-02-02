@@ -13,9 +13,13 @@ if (!isset($_GET['id_soal']) || !isset($_GET['kode_soal'])) {
 $id_soal = $_GET['id_soal'];
 $kode_soal = $_GET['kode_soal'];
 
+// Deteksi jumlah opsi dari URL, default 4 jika tidak ada
+$jumlah_opsi_url = (isset($_GET['opsi']) && $_GET['opsi'] == '5') ? 5 : 4;
+
 // Ambil data soal utama
 $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal'");
 $data_soal = mysqli_fetch_assoc($query_soal);
+
 if ($data_soal['status'] == 'Aktif') {
     die('
     <!DOCTYPE html>
@@ -50,211 +54,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Harap isi semua field wajib");
     }
 
-    $pertanyaan = mysqli_real_escape_string($koneksi, $_POST['pertanyaan']);
+    $pertanyaan = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pertanyaan']));
+
     $tipe_soal = mysqli_real_escape_string($koneksi, $_POST['tipe_soal']);
     $nomor_soal = mysqli_real_escape_string($koneksi, $_POST['nomor_soal']);
-    // Cek duplikat nomor soal kecuali untuk soal itu sendiri
-$cek_duplikat = mysqli_query($koneksi, "SELECT * FROM butir_soal 
-WHERE nomer_soal = '$nomor_soal' 
-AND kode_soal = '$kode_soal' 
-AND id_soal != '$id_soal'");
 
-if (mysqli_num_rows($cek_duplikat) > 0) {
-echo '
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Peringatan</title>
-    <script src="../assets/js/sweetalert.js"></script>
-</head>
-<body>
-    <script>
-        Swal.fire({
-            icon: "error",
-            title: "Nomor Soal Sudah Ada!",
-            text: "Nomor soal yang Anda masukkan sudah digunakan oleh soal lain.",
-            confirmButtonText: "Kembali"
-        }).then(() => {
-            window.history.back();
-        });
-    </script>
-</body>
-</html>';
-exit();
-}
+    // Cek duplikat nomor soal
+    $cek_duplikat = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE nomer_soal = '$nomor_soal' AND kode_soal = '$kode_soal' AND id_soal != '$id_soal'");
+
+    if (mysqli_num_rows($cek_duplikat) > 0) {
+        echo '<!DOCTYPE html><html><head><script src="../assets/js/sweetalert.js"></script></head><body><script>Swal.fire({icon: "error", title: "Nomor Soal Sudah Ada!", confirmButtonText: "Kembali"}).then(() => { window.history.back(); });</script></body></html>';
+        exit();
+    }
 
     $query = "";
 
     if ($tipe_soal == 'Pilihan Ganda' || $tipe_soal == 'Pilihan Ganda Kompleks') {
-        $pilihan_1 = mysqli_real_escape_string($koneksi, $_POST['pilihan_1']);
-        $pilihan_2 = mysqli_real_escape_string($koneksi, $_POST['pilihan_2']);
-        $pilihan_3 = mysqli_real_escape_string($koneksi, $_POST['pilihan_3']);
-        $pilihan_4 = mysqli_real_escape_string($koneksi, $_POST['pilihan_4']);
+        $p1 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_1'] ?? ''));
+$p2 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_2'] ?? ''));
+$p3 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_3'] ?? ''));
+$p4 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_4'] ?? ''));
+$p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? ''));
+
 
         if (!isset($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0) {
             die("Harap pilih minimal satu jawaban benar");
         }
-
         $jawaban_benar = implode(",", $_POST['jawaban_benar']);
 
-        $query = "UPDATE butir_soal SET 
-                  pertanyaan='$pertanyaan', 
-                  tipe_soal='$tipe_soal',
-                  nomer_soal='$nomor_soal',
-                  pilihan_1='$pilihan_1', 
-                  pilihan_2='$pilihan_2', 
-                  pilihan_3='$pilihan_3', 
-                  pilihan_4='$pilihan_4', 
-                  jawaban_benar='$jawaban_benar'
-                  WHERE id_soal='$id_soal'";
+        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', pilihan_1='$p1', pilihan_2='$p2', pilihan_3='$p3', pilihan_4='$p4', pilihan_5='$p5', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
 
     } elseif ($tipe_soal == 'Benar/Salah') {
-        if (empty($_POST['jawaban_benar'])) {
-            die("Harap pilih jawaban benar");
-        }
-        $jawaban_benar = implode("|", $_POST['jawaban_benar']);
-        $pilihan_1 = mysqli_real_escape_string($koneksi, $_POST['pilihan_1']);
-        $pilihan_2 = mysqli_real_escape_string($koneksi, $_POST['pilihan_2']);
-        $pilihan_3 = mysqli_real_escape_string($koneksi, $_POST['pilihan_3']);
-        $pilihan_4 = mysqli_real_escape_string($koneksi, $_POST['pilihan_4']);
+        $p1 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_1'] ?? ''));
+$p2 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_2'] ?? ''));
+$p3 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_3'] ?? ''));
+$p4 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_4'] ?? ''));
+$p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? ''));
 
-        $query = "UPDATE butir_soal SET 
-                  pertanyaan='$pertanyaan', 
-                  tipe_soal='$tipe_soal',
-                  nomer_soal='$nomor_soal',
-                  pilihan_1='$pilihan_1', 
-                  pilihan_2='$pilihan_2', 
-                  pilihan_3='$pilihan_3', 
-                  pilihan_4='$pilihan_4', 
-                  jawaban_benar='$jawaban_benar'
-                  WHERE id_soal='$id_soal'";
+        $jawaban_benar = implode("|", $_POST['jawaban_benar'] ?? []);
+
+        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', pilihan_1='$p1', pilihan_2='$p2', pilihan_3='$p3', pilihan_4='$p4', pilihan_5='$p5', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
 
     } elseif ($tipe_soal == 'Menjodohkan') {
-    $pasangan_data = [];
-    $pasangan_valid = 0;
-    $pasangan_cek = [];
-    $jawaban_cek = [];
-
-    foreach ($_POST['pasangan_soal'] as $i => $soal) {
-        $jawaban = $_POST['pasangan_jawaban'][$i];
-
-        if (!empty($soal) && !empty($jawaban)) {
-            if (trim($soal) === trim($jawaban)) {
-                echo '
-                <!DOCTYPE html>
-                <html>
-                <head><script src="../assets/js/sweetalert.js"></script></head>
-                <body>
-                    <script>
-                        Swal.fire({
-                            icon: "error",
-                            title: "Pasangan Tidak Valid",
-                            text: "Soal dan jawaban dalam satu baris tidak boleh sama!",
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.history.back();
-                        });
-                    </script>
-                </body>
-                </html>';
-                exit;
+        $pasangan_data = [];
+        foreach ($_POST['pasangan_soal'] as $i => $soal) {
+            $jawaban = $_POST['pasangan_jawaban'][$i];
+            if (!empty($soal) && !empty($jawaban)) {
+                $pasangan_data[] =
+    mysqli_real_escape_string($koneksi, bersihkan_html(trim($soal))) . ":" .
+    mysqli_real_escape_string($koneksi, bersihkan_html(trim($jawaban)));
             }
-
-            $soal_clean = mysqli_real_escape_string($koneksi, trim($soal));
-            $jawaban_clean = mysqli_real_escape_string($koneksi, trim($jawaban));
-            $pasangan_key = $soal_clean . ':' . $jawaban_clean;
-
-            // Cek apakah pasangan sudah ada sebelumnya
-            if (in_array($pasangan_key, $pasangan_cek)) {
-                echo '
-                <!DOCTYPE html>
-                <html>
-                <head><script src="../assets/js/sweetalert.js"></script></head>
-                <body>
-                    <script>
-                        Swal.fire({
-                            icon: "error",
-                            title: "Pasangan Duplikat",
-                            text: "Terdapat pasangan soal dan jawaban yang sama lebih dari sekali!",
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.history.back();
-                        });
-                    </script>
-                </body>
-                </html>';
-                exit;
-            }
-
-            // Cek apakah jawaban sudah digunakan di pasangan lain
-            if (in_array($jawaban_clean, $jawaban_cek)) {
-                echo '
-                <!DOCTYPE html>
-                <html>
-                <head><script src="../assets/js/sweetalert.js"></script></head>
-                <body>
-                    <script>
-                        Swal.fire({
-                            icon: "error",
-                            title: "Jawaban Ganda",
-                            text: "Satu jawaban tidak boleh digunakan untuk lebih dari satu soal!",
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.history.back();
-                        });
-                    </script>
-                </body>
-                </html>';
-                exit;
-            }
-
-            $pasangan_data[] = "$soal_clean:$jawaban_clean";
-            $pasangan_cek[] = $pasangan_key;
-            $jawaban_cek[] = $jawaban_clean;
-            $pasangan_valid++;
         }
-    }
+        $jawaban_benar = implode("|", $pasangan_data);
+        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
 
-    if ($pasangan_valid < 2) {
-        echo '
-        <!DOCTYPE html>
-        <html>
-        <head><script src="../assets/js/sweetalert.js"></script></head>
-        <body>
-            <script>
-                Swal.fire({
-                    icon: "warning",
-                    title: "Minimal 2 Pasangan",
-                    text: "Harap isi minimal dua pasangan soal dan jawaban yang valid!",
-                    confirmButtonText: "OK"
-                }).then(() => {
-                    window.history.back();
-                });
-            </script>
-        </body>
-        </html>';
-        exit;
-    }
+    } elseif ($tipe_soal == 'Uraian') {
+        $jawaban_benar = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['jawaban_benar']));
 
-    $jawaban_benar = implode("|", $pasangan_data);
-
-    $query = "INSERT INTO butir_soal (kode_soal, nomer_soal, pertanyaan, tipe_soal,
-              jawaban_benar, status_soal)
-              VALUES ('$kode_soal', '$nomer_soal', '$pertanyaan', '$tipe_soal',
-              '$jawaban_benar', 'Aktif')";
-} elseif ($tipe_soal == 'Uraian') {
-        if (empty($_POST['jawaban_benar'])) {
-            die("Harap isi jawaban benar");
-        }
-        $jawaban_benar = mysqli_real_escape_string($koneksi, $_POST['jawaban_benar']);
-
-        $query = "UPDATE butir_soal SET 
-                  pertanyaan='$pertanyaan', 
-                  tipe_soal='$tipe_soal',
-                  nomer_soal='$nomor_soal',
-                  jawaban_benar='$jawaban_benar'
-                  WHERE id_soal='$id_soal'";
+        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
     }
 
     if (!empty($query)) {
@@ -278,371 +135,255 @@ exit();
     <script src="../assets/js/jquery-3.6.0.min.js"></script>
     <link href="../assets/summernote/summernote-bs5.css" rel="stylesheet">
     <style>
-    .note-editable img {
-    max-width: 400px !important;
-    max-height: 400px !important;
-    height: auto;
-    width: auto;
-}
-        label.note-form-label{display:none;!important}
-        .no-click {
-  pointer-events: none;
-  background-color: #e9ecef; /* warna Bootstrap untuk disabled */
-  opacity: 1; /* tetap terlihat normal */
-}
+        .note-editable img { max-width: 400px !important; height: auto; }
+        .no-click { pointer-events: none; background-color: #e9ecef; }
+        .border-box { border: 1px solid #ced4da; padding: 15px; border-radius: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <?php include 'sidebar.php'; ?>
-
         <div class="main">
             <?php include 'navbar.php'; ?>
-
             <main class="content">
                 <div class="container-fluid p-0">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Form Edit Butir Soal</h5>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Form Edit Butir Soal</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-2 mb-3">
+                                        <label for="nomor_soal" class="form-label">Nomor Soal</label>
+                                        <input type="number" class="form-control" name="nomor_soal" value="<?= $butir_soal['nomer_soal'] ?>" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="tipe_soal" class="form-label">Tipe Soal</label>
+                                        <select class="form-control no-click" id="tipe_soal" name="tipe_soal" required>
+                                            <option value="Pilihan Ganda" <?= $butir_soal['tipe_soal'] == 'Pilihan Ganda' ? 'selected' : '' ?>>Pilihan Ganda</option>
+                                            <option value="Pilihan Ganda Kompleks" <?= $butir_soal['tipe_soal'] == 'Pilihan Ganda Kompleks' ? 'selected' : '' ?>>Pilihan Ganda Kompleks</option>
+                                            <option value="Benar/Salah" <?= $butir_soal['tipe_soal'] == 'Benar/Salah' ? 'selected' : '' ?>>Benar/Salah</option>
+                                            <option value="Menjodohkan" <?= $butir_soal['tipe_soal'] == 'Menjodohkan' ? 'selected' : '' ?>>Menjodohkan</option>
+                                            <option value="Uraian" <?= $butir_soal['tipe_soal'] == 'Uraian' ? 'selected' : '' ?>>Uraian</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <form method="POST">
-                                        <input type="hidden" name="id_soal" value="<?= $butir_soal['id_soal'] ?>">
-                                        <div class="mb-3" style="max-width:80px;">
-                                            <label for="nomor_soal" class="form-label">Nomor Soal</label>
-                                            <input type="number" class="form-control" id="nomor_soal" name="nomor_soal" value="<?= htmlspecialchars($butir_soal['nomer_soal']) ?>" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="tipe_soal" class="form-label">Tipe Soal</label>
-                                            <select class="form-control no-click" id="tipe_soal" name="tipe_soal" onchange="showFields(this.value)" required>
-                                                <option value="">-- Pilih --</option>
-                                                <option value="Pilihan Ganda" <?= $butir_soal['tipe_soal'] == 'Pilihan Ganda' ? 'selected' : '' ?>>Pilihan Ganda</option>
-                                                <option value="Pilihan Ganda Kompleks" <?= $butir_soal['tipe_soal'] == 'Pilihan Ganda Kompleks' ? 'selected' : '' ?>>Pilihan Ganda Kompleks</option>
-                                                <option value="Benar/Salah" <?= $butir_soal['tipe_soal'] == 'Benar/Salah' ? 'selected' : '' ?>>Benar/Salah</option>
-                                                <option value="Menjodohkan" <?= $butir_soal['tipe_soal'] == 'Menjodohkan' ? 'selected' : '' ?>>Menjodohkan</option>
-                                                <option value="Uraian" <?= $butir_soal['tipe_soal'] == 'Uraian' ? 'selected' : '' ?>>Uraian</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="pertanyaan" class="form-label">Pertanyaan</label>
-                                            <textarea class="form-control" id="pertanyaan" name="pertanyaan" required><?= htmlspecialchars($butir_soal['pertanyaan']) ?></textarea>
-                                            <hr>
-                                        </div>
-                                        
-                                        <!-- Fields for Pilihan Ganda -->
-                                        <div id="pilihan-ganda-fields" class="d-none">
-                                            <div class="mb-3">
-                                                <label for="pilihan_1" class="form-label">Pilihan 1</label>
-                                                <textarea class="form-control" id="pilihan_1" name="pilihan_1" required><?= htmlspecialchars($butir_soal['pilihan_1']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_1" onclick="checkOnlyOne(this)"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="pilihan_2" class="form-label">Pilihan 2</label>
-                                                <textarea class="form-control" id="pilihan_2" name="pilihan_2" required><?= htmlspecialchars($butir_soal['pilihan_2']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_2" onclick="checkOnlyOne(this)"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="pilihan_3" class="form-label">Pilihan 3</label>
-                                                <textarea class="form-control" id="pilihan_3" name="pilihan_3" required><?= htmlspecialchars($butir_soal['pilihan_3']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_3" onclick="checkOnlyOne(this)"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="pilihan_4" class="form-label">Pilihan 4</label>
-                                                <textarea class="form-control" id="pilihan_4" name="pilihan_4" required><?= htmlspecialchars($butir_soal['pilihan_4']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_4" onclick="checkOnlyOne(this)"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                        </div>
 
-                                        <!-- Fields for Pilihan Ganda Kompleks -->
-                                        <div id="pilihan-ganda-kompleks-fields" class="d-none">
-                                            <div class="mb-3">
-                                                <label for="kompleks_1" class="form-label">Pilihan 1</label>
-                                                <textarea type="text" class="form-control" id="kompleks_1" name="pilihan_1"><?= htmlspecialchars($butir_soal['pilihan_1']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_1"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="kompleks_2" class="form-label">Pilihan 2</label>
-                                                <textarea type="text" class="form-control" id="kompleks_2" name="pilihan_2"><?= htmlspecialchars($butir_soal['pilihan_2']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_2"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="kompleks_3" class="form-label">Pilihan 3</label>
-                                                <textarea type="text" class="form-control" id="kompleks_3" name="pilihan_3"><?= htmlspecialchars($butir_soal['pilihan_3']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_3"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="kompleks_4" class="form-label">Pilihan 4</label>
-                                                <textarea type="text" class="form-control" id="kompleks_4" name="pilihan_4"><?= htmlspecialchars($butir_soal['pilihan_4']) ?></textarea>
-                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_4"> Jawaban Benar
-                                                <hr>
-                                            </div>
-                                        </div>
-
-                                        <!-- Benar/Salah -->
-                                        <div id="benar-salah-fields" class="d-none">
-                                            <label>Pernyataan dan Jawaban</label><br><br>
-                                            <div class="form-group">
-                                            <textarea type="text" class="form-control mb-1" id="bs_1" name="pilihan_1" placeholder="Pernyataan 1"><?= htmlspecialchars($butir_soal['pilihan_1']) ?></textarea>
-                                               <label><input type="radio" name="jawaban_benar[0]" value="Benar"> Benar</label>
-                                                <label><input type="radio" name="jawaban_benar[0]" value="Salah"> Salah</label>
-                                                <hr><br><br>
-                                            </div>
-                                            <div class="form-group">
-                                            <textarea type="text" class="form-control mb-1" id="bs_2" name="pilihan_2" placeholder="Pernyataan 2"><?= htmlspecialchars($butir_soal['pilihan_2']) ?></textarea>
-                                              <label><input type="radio" name="jawaban_benar[1]" value="Benar"> Benar</label>
-                                                <label><input type="radio" name="jawaban_benar[1]" value="Salah"> Salah</label>
-                                                <hr><br><br>
-                                            </div>
-                                            <div class="form-group">
-                                            <textarea type="text" class="form-control mb-1" id="bs_3" name="pilihan_3" placeholder="Pernyataan 3"><?= htmlspecialchars($butir_soal['pilihan_3']) ?></textarea>
-                                              <label><input type="radio" name="jawaban_benar[2]" value="Benar"> Benar</label>
-                                                <label><input type="radio" name="jawaban_benar[2]" value="Salah"> Salah</label>
-                                                <hr><br><br>
-                                            </div>
-                                            <div class="form-group">
-                                            <textarea type="text" class="form-control mb-1" id="bs_4" name="pilihan_4" placeholder="Pernyataan 4"><?= htmlspecialchars($butir_soal['pilihan_4']) ?></textarea>
-                                             <label><input type="radio" name="jawaban_benar[3]" value="Benar"> Benar</label>
-                                                <label><input type="radio" name="jawaban_benar[3]" value="Salah"> Salah</label>
-                                                <hr><br><br>
-                                            </div>
-                                        </div>
-
-                                        <!-- Menjodohkan -->
-                                        <div id="menjodohkan-fields" class="d-none">
-                                            <?php 
-                                            $pasangan_data = [];
-                                            if ($butir_soal['tipe_soal'] == 'Menjodohkan') {
-                                                $pasangan_data = explode('|', $butir_soal['jawaban_benar']);
-                                            }
-                                            for ($i = 1; $i <= 8; $i++) : 
-                                                $pair = isset($pasangan_data[$i-1]) ? explode(':', $pasangan_data[$i-1]) : ['', ''];
-                                            ?>
-                                                <div class="row mb-2">
-                                                    <div class="col">
-                                                        <textarea type="text" class="form-control" name="pasangan_soal[]" placeholder="Pilihan <?= $i ?>"><?= htmlspecialchars($pair[0]) ?></textarea>
-                                                    </div>
-                                                    <div class="col">
-                                                        <textarea type="text" class="form-control" name="pasangan_jawaban[]" placeholder="Pasangan <?= $i ?>"><?= htmlspecialchars($pair[1]) ?></textarea>
-                                                    </div>
-                                                </div>
-                                            <?php endfor; ?>
-                                        </div>
-
-                                        <!-- Uraian -->
-                                        <div id="uraian-fields" class="d-none">
-                                            <div class="mb-3">
-                                                <label for="jawaban_benar" class="form-label">Jawaban Benar</label>
-                                                <textarea class="form-control" name="jawaban_benar" rows="3" required><?= htmlspecialchars($butir_soal['jawaban_benar']) ?></textarea>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
-                                        <a href="daftar_butir_soal.php?kode_soal=<?= htmlspecialchars($kode_soal) ?>" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Batal</a>
-                                    </form>
+                                <div class="mb-3">
+                                    <label class="form-label">Pertanyaan</label>
+                                    <textarea class="form-control" id="pertanyaan" name="pertanyaan" required><?= $butir_soal['pertanyaan'] ?></textarea>
                                 </div>
-                            </div>
+                                <hr>
+
+                                <div id="pg-fields" class="d-none">
+                                    <?php 
+                                    $jawaban_arr = explode(',', $butir_soal['jawaban_benar']);
+                                    for ($i = 1; $i <= $jumlah_opsi_url; $i++) : 
+                                    ?>
+                                        <div class="border-box">
+                                            <label class="form-label">Pilihan <?= $i ?></label>
+                                            <textarea class="form-control editor-opsi" name="pilihan_<?= $i ?>"><?= $butir_soal['pilihan_'.$i] ?></textarea>
+                                            <div class="mt-2">
+                                                <input type="checkbox" name="jawaban_benar[]" value="pilihan_<?= $i ?>" class="pg-check" <?= in_array("pilihan_$i", $jawaban_arr) ? 'checked' : '' ?>> Jawaban Benar
+                                            </div>
+                                        </div>
+                                    <?php endfor; ?>
+                                </div>
+
+                                <div id="bs-fields" class="d-none">
+                                    <div id="bs-container">
+                                        <?php 
+                                        $jawaban_bs = explode('|', $butir_soal['jawaban_benar']);
+                                        for ($i = 1; $i <= 5; $i++): 
+                                            $val_pilihan = $butir_soal['pilihan_'.$i];
+                                            if ($i > 1 && empty($val_pilihan)) continue;
+                                        ?>
+                                        <div class="border-box bs-row position-relative" id="bs_row_<?= $i ?>">
+
+                                            <label class="form-label">Pernyataan <?= $i ?></label>
+                                            <textarea class="form-control editor-simple" name="pilihan_<?= $i ?>"><?= $val_pilihan ?></textarea>
+                                            <div class="mt-2">
+                                                <label><input type="radio" name="jawaban_benar[<?= $i-1 ?>]" value="Benar" <?= ($jawaban_bs[$i-1] ?? '') == 'Benar' ? 'checked' : '' ?>> Benar</label>
+                                                <label class="ms-3"><input type="radio" name="jawaban_benar[<?= $i-1 ?>]" value="Salah" <?= ($jawaban_bs[$i-1] ?? '') == 'Salah' ? 'checked' : '' ?>> Salah</label>
+                                                <?php if($i > 1): ?>
+<button type="button"
+        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+        onclick="removeBS(<?= $i ?>)">
+    <i class="fas fa-trash"></i>
+</button>
+<?php endif; ?>
+
+                                            </div>
+                                        </div>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <button type="button" class="btn btn-info btn-sm mb-3" onclick="addBS()"><i class="fas fa-plus"></i> Tambah Pernyataan</button>
+                                </div>
+
+                                <div id="match-fields" class="d-none">
+                                    <div id="match-container">
+                                        <?php 
+                                        $pairs = explode('|', $butir_soal['jawaban_benar']);
+                                        foreach($pairs as $p): 
+                                            $item = explode(':', $p);
+                                        ?>
+                                        <div class="row mb-2 match-row">
+                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_soal[]"><?= $item[0] ?? '' ?></textarea></div>
+                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_jawaban[]"><?= $item[1] ?? '' ?></textarea></div>
+                                            <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <button type="button" class="btn btn-info btn-sm mb-3" onclick="addMatch()"><i class="fas fa-plus"></i> Tambah Pasangan</button>
+                                </div>
+
+                                <div id="uraian-fields" class="d-none">
+                                    <div class="mb-3">
+                                        <label class="form-label">Kunci Jawaban</label>
+                                        <textarea class="form-control" name="jawaban_benar" rows="3"><?= $butir_soal['jawaban_benar'] ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+                                    <a href="daftar_butir_soal.php?kode_soal=<?= $kode_soal ?>" class="btn btn-danger">Batal</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-<?php include '../inc/js.php'; ?>
+
+    <?php include '../inc/js.php'; ?>
     <script src="../assets/summernote/summernote-bs5.js"></script>
     <script>
-        //function bersihkanHTML(html) {
-            //return html.replace(/<(?!\/?(img|br)\b)[^>]*>/gi, '');
-        //}
+$(document).ready(function() {
+    $('#pertanyaan').summernote({ height: 250 });
 
-        $(document).ready(function () {
-        var configEditor = {
-        height: 300,
-        callbacks: {
-            // Hanya tempel teks polos (tanpa format)
-            onPaste: function (e) {
-                e.preventDefault();
-                var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
-                var text = clipboardData.getData('text/plain');
-                document.execCommand("insertText", false, text);
-            },
-
-            // Upload gambar
-            onImageUpload: function (files) {
-                var editor = this;
-                uploadImage(files[0], editor);
-            },
-
-            // Hapus file saat gambar dihapus dari editor
-            onMediaDelete: function (target) {
-                var imageUrl = target[0].src;
-                $.ajax({
-                    url: 'hapus_gambar_editor.php',
-                    method: 'POST',
-                    data: { src: imageUrl },
-                    success: function (response) {
-                        console.log('Gambar dihapus:', response);
-                    },
-                    error: function (err) {
-                        console.error('Gagal menghapus gambar:', err);
-                    }
-                });
-            },
-             // Hapus <p><br></p> awal saat inisialisasi
-            onInit: function () {
-                var $editor = $(this).next('.note-editor').find('.note-editable');
-                setTimeout(function () {
-                    var content = $editor.html().trim();
-                    if (content === '<p><br></p>' || content === '<p><br></p>\n') {
-                        $editor.html('');
-                    }
-                }, 10);
-            }
-
-        },
-        toolbar: [
-            ['insert', ['picture']],
-            ['view', ['codeview']]
-        ]
-    };
-
-            $('#pertanyaan').summernote(configEditor);
-            $('#pilihan_1, #pilihan_2, #pilihan_3, #pilihan_4, #kompleks_1, #kompleks_2, #kompleks_3, #kompleks_4, #bs_1, #bs_2, #bs_3, #bs_4').summernote({
-                ...configEditor,
-                height: 80
-            });
-
-            // Tampilkan fields sesuai tipe soal saat halaman dimuat
-            showFields('<?= $butir_soal["tipe_soal"] ?>');
-            
-            // Set jawaban benar untuk soal yang sedang diedit
-            setTimeout(() => {
-                const tipeSoal = '<?= $butir_soal["tipe_soal"] ?>';
-                const jawabanBenar = '<?= $butir_soal["jawaban_benar"] ?>';
-                
-                if (tipeSoal === 'Pilihan Ganda') {
-                    const checkboxes = document.querySelectorAll('#pilihan-ganda-fields input[name="jawaban_benar[]"]');
-                    checkboxes.forEach(cb => {
-                        cb.checked = jawabanBenar.includes(cb.value);
-                    });
-                } else if (tipeSoal === 'Pilihan Ganda Kompleks') {
-                    const checkboxes = document.querySelectorAll('#pilihan-ganda-kompleks-fields input[name="jawaban_benar[]"]');
-                    const jawabanArray = jawabanBenar.split(',');
-                    checkboxes.forEach(cb => {
-                        cb.checked = jawabanArray.includes(cb.value);
-                    });
-                } else if (tipeSoal === 'Benar/Salah') {
-                    const jawabanArray = jawabanBenar.split('|');
-                    jawabanArray.forEach((val, i) => {
-                        const radio = document.querySelector(`input[name="jawaban_benar[${i}]"][value="${val.trim()}"]`);
-                        if (radio) radio.checked = true;
-                    });
-                }
-            }, 500);
+    function initSimpleEditor(selector) {
+        $(selector).summernote({
+            height: 100,
+            toolbar: [['insert', ['picture']], ['view', ['codeview']]]
         });
+    }
 
-        function uploadImage(file, editor) {
-    let formData = new FormData();
-    formData.append('file', file);
+    initSimpleEditor('.editor-opsi');
+    initSimpleEditor('.editor-simple');
 
-    $.ajax({
-        url: 'uploadeditor.php',
-        method: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function(response) {
-            try {
-                var url = JSON.parse(response).url;
-                $(editor).summernote('insertImage', url, function($image) {
-                    $image.attr('id', 'gbrsoal'); // Tambahkan atribut id
-                });
-            } catch (e) {
-                console.error('Invalid response format');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Upload error:', error);
+    showFields($('#tipe_soal').val());
+
+    $(document).on('click', '.pg-check', function() {
+        if ($('#tipe_soal').val() === 'Pilihan Ganda') {
+            $('.pg-check').not(this).prop('checked', false);
+        }
+    });
+});
+
+function showFields(tipe) {
+    $("#pg-fields, #bs-fields, #match-fields, #uraian-fields")
+        .addClass('d-none')
+        .find('input, textarea').prop('disabled', true);
+
+    if (tipe === 'Pilihan Ganda' || tipe === 'Pilihan Ganda Kompleks') {
+        $("#pg-fields").removeClass('d-none').find('input, textarea').prop('disabled', false);
+    } else if (tipe === 'Benar/Salah') {
+        $("#bs-fields").removeClass('d-none').find('input, textarea').prop('disabled', false);
+    } else if (tipe === 'Menjodohkan') {
+        $("#match-fields").removeClass('d-none').find('input, textarea').prop('disabled', false);
+    } else if (tipe === 'Uraian') {
+        $("#uraian-fields").removeClass('d-none').find('textarea').prop('disabled', false);
+    }
+}
+
+/* ================= BENAR SALAH ================= */
+
+function addBS() {
+    let count = $('.bs-row').length + 1;
+
+    if (count > 5) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Maksimal 5 Pernyataan',
+            text: 'Benar / Salah hanya boleh sampai 5 pernyataan.',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+
+    let html = `
+    <div class="border-box bs-row position-relative" id="bs_row_${count}">
+        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+            onclick="removeBS(${count})">
+            <i class="fas fa-trash"></i>
+        </button>
+
+        <label class="form-label">Pernyataan ${count}</label>
+        <textarea class="form-control editor-simple" name="pilihan_${count}"></textarea>
+        <div class="mt-2">
+            <label><input type="radio" name="jawaban_benar[${count-1}]" value="Benar"> Benar</label>
+            <label class="ms-3"><input type="radio" name="jawaban_benar[${count-1}]" value="Salah"> Salah</label>
+        </div>
+    </div>`;
+
+    $('#bs-container').append(html);
+    $(`[name="pilihan_${count}"]`).summernote({ height: 100, toolbar: [['insert', ['picture']]] });
+}
+
+function removeBS(id) {
+    Swal.fire({
+        icon: 'question',
+        title: 'Hapus pernyataan ini?',
+        showCancelButton: true,
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#bs_row_${id}`).remove();
         }
     });
 }
 
 
-        function showFields(tipeSoal) {
-            const fieldSets = {
-                "Pilihan Ganda": "pilihan-ganda-fields",
-                "Pilihan Ganda Kompleks": "pilihan-ganda-kompleks-fields",
-                "Benar/Salah": "benar-salah-fields",
-                "Menjodohkan": "menjodohkan-fields",
-                "Uraian": "uraian-fields"
-            };
+/* ================= MENJODOHKAN ================= */
 
-            for (const [tipe, id] of Object.entries(fieldSets)) {
-                const el = document.getElementById(id);
-                const inputs = el.querySelectorAll('input, select, textarea');
+function addMatch() {
+    let html = `
+    <div class="row mb-2 match-row border-box position-relative">
+        <div class="col-md-5">
+            <textarea class="form-control" name="pasangan_soal[]" placeholder="Pilihan"></textarea>
+        </div>
+        <div class="col-md-5">
+            <textarea class="form-control" name="pasangan_jawaban[]" placeholder="Pasangan"></textarea>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeRow(this)">
+                <i class="fas fa-trash"></i> Hapus
+            </button>
+        </div>
+    </div>`;
 
-                if (tipeSoal === tipe) {
-                    el.classList.remove("d-none");
-                    el.style.display = 'block';
-                    inputs.forEach(i => {
-                        i.disabled = false;
-                        if (i.dataset.originalRequired === "true") {
-                            i.required = true;
-                        }
-                    });
-                } else {
-                    el.classList.add("d-none");
-                    el.style.display = 'none';
-                    inputs.forEach(i => {
-                        if (i.required) {
-                            i.dataset.originalRequired = "true";
-                        }
-                        i.required = false;
-                        i.disabled = true;
-                    });
-                }
-            }
+    $('#match-container').append(html);
+}
+
+function removeRow(btn) {
+    Swal.fire({
+        icon: 'question',
+        title: 'Hapus pasangan ini?',
+        showCancelButton: true,
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(btn).closest('.match-row').remove();
         }
+    });
+}
+</script>
 
-        function checkOnlyOne(checkbox) {
-            var checkboxes = document.getElementsByName('jawaban_benar[]');
-            checkboxes.forEach((item) => {
-                if (item !== checkbox) item.checked = false;
-            });
-        }
-
-        function validateMenjodohkan() {
-            const kiri = document.querySelectorAll('[name="pasangan_kiri[]"]');
-            const kanan = document.querySelectorAll('[name="pasangan_kanan[]"]');
-
-            for (let i = 0; i < kiri.length; i++) {
-                const kiriVal = kiri[i].value.trim();
-                const kananVal = kanan[i].value.trim();
-
-                const hanyaSatuTerisi = (kiriVal && !kananVal) || (!kiriVal && kananVal);
-
-                if (hanyaSatuTerisi) {
-                    alert(`Baris pasangan ke-${i + 1} harus diisi kedua kolom atau dikosongkan.`);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        document.querySelector("form").addEventListener("submit", function(e) {
-            const tipeSoal = document.getElementById("tipe_soal").value;
-            if (tipeSoal === "Menjodohkan" && !validateMenjodohkan()) {
-                e.preventDefault();
-            }
-        });
-    </script>
 </body>
 </html>

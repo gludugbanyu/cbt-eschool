@@ -138,6 +138,11 @@ if (!empty($kunci_jawaban)) {
         $skor_per_soal[$nomer_kunci] = $skor;
     }
 }
+$q_opsi = mysqli_query($koneksi, "SELECT jumlah_opsi FROM soal WHERE kode_soal='$kode_soal'");
+$d_opsi = mysqli_fetch_assoc($q_opsi);
+$jumlah_opsi = (int)($d_opsi['jumlah_opsi'] ?? 4);
+
+$opsi_huruf = ['A','B','C','D','E'];
 
 $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY nomer_soal ASC");
 ?>
@@ -276,7 +281,6 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
                     $no = (int)$soal['nomer_soal'];
                     $jawab = isset($jawaban_siswa[$no]) ? $jawaban_siswa[$no] : '';
                     $tipe = $soal['tipe_soal'];
-                    $opsi_huruf = ['A', 'B', 'C', 'D'];
                 ?>
                             <div class="row">
                                 <div class="card mb-4">
@@ -292,11 +296,14 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
                         switch ($tipe) {
                             case 'Pilihan Ganda':
                                 echo "<ul>";
-                                for ($i=1; $i<=4; $i++) {
+                                for ($i=1; $i<=$jumlah_opsi; $i++) {
+                                    if (empty($soal["pilihan_$i"])) continue;
+                                
                                     $huruf = $opsi_huruf[$i-1];
                                     $checked = ($jawab == "pilihan_$i") ? "✓" : "";
                                     echo "<li>$huruf. " . $soal["pilihan_$i"] . " $checked</li>";
                                 }
+                                
                                 echo "</ul>";
                                 $benar_num = (int)str_replace("pilihan_", "", $soal['jawaban_benar']);
                                 $benar_huruf = $opsi_huruf[$benar_num - 1];
@@ -306,11 +313,14 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
                             case 'Pilihan Ganda Kompleks':
                                 $jawaban_arr = array_map('trim', explode(',', $jawab));
                                 echo "<ul>";
-                                for ($i=1; $i<=4; $i++) {
+                                for ($i=1; $i<=$jumlah_opsi; $i++) {
+                                    if (empty($soal["pilihan_$i"])) continue;
+                                
                                     $huruf = $opsi_huruf[$i-1];
                                     $checked = in_array("pilihan_$i", $jawaban_arr) ? "✓" : "";
                                     echo "<li>$huruf. " . $soal["pilihan_$i"] . " $checked</li>";
                                 }
+                                
                                 echo "</ul>";
                                 $kunci_arr = array_map('trim', explode(',', $soal['jawaban_benar']));
                                 $huruf_benar = [];
@@ -323,7 +333,7 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
 
                             case 'Benar/Salah':
                                 $pernyataan = [];
-                                for ($i=1; $i<=4; $i++) {
+                                for ($i=1; $i<=5; $i++) {
                                     if (!empty($soal["pilihan_$i"])) {
                                         $pernyataan[] = $soal["pilihan_$i"];
                                     }

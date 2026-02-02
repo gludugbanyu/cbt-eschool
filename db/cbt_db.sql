@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2025 at 11:46 AM
+-- Generation Time: Feb 02, 2026 at 11:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -58,6 +58,7 @@ CREATE TABLE `butir_soal` (
   `pilihan_2` varchar(255) DEFAULT NULL,
   `pilihan_3` varchar(255) DEFAULT NULL,
   `pilihan_4` varchar(255) DEFAULT NULL,
+  `pilihan_5` varchar(255) NOT NULL,
   `jawaban_benar` text DEFAULT NULL,
   `status_soal` enum('Aktif','Tidak Aktif') DEFAULT 'Aktif',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -67,13 +68,19 @@ CREATE TABLE `butir_soal` (
 -- Dumping data for table `butir_soal`
 --
 
-INSERT INTO `butir_soal` (`id_soal`, `nomer_soal`, `kode_soal`, `pertanyaan`, `tipe_soal`, `pilihan_1`, `pilihan_2`, `pilihan_3`, `pilihan_4`, `jawaban_benar`, `status_soal`, `created_at`) VALUES
-(1, 1, 'MAT9-01', 'Sampah anorganik lebih lama terurai dibandingkan dengan sampah organik. Waktu dekomposisi popok sekali pakai lebih lama dari plastik, namun kurang dari kulit sintetis. Berapa waktu dekomposisi yang mungkin dari popok sekali pakai?', 'Pilihan Ganda', '100 tahun', '250 tahun', '375 tahun', '475 tahun', 'pilihan_4', 'Aktif', '2025-06-03 23:55:37'),
-(2, 2, 'MAT9-01', 'Pilih Benar atau Salah pada setiap pernyataan berikut!', 'Benar/Salah', 'Panjang AB = Panjang CD', 'Panjang PQ = Panjang SR', 'Jarak Q ke S = Jarak B ke C', '', 'Benar|Benar|Salah', 'Aktif', '2025-06-03 23:55:37'),
-(3, 3, 'MAT9-01', 'Suatu kali, PT Suka-Suka Kalian mendapatkan pesanan 30 unit tenda dengan bentuk dan ukuran seperti di atas. Waktu penyelesaian yang diperlukan untuk memenuhi seluruh pesanan adalah 20 hari kerja.', 'Benar/Salah', 'Waktu rata-rata pembuatan 3 buah tenda adalah 2 hari.', 'Waktu penyelesaian semua pesanan bisa tepat waktu jika dalam sehari dihasilkan sebuah tenda.', 'Jika pesanan bertambah 5 tenda, lama penyelesaian bertambah 2 hari.', 'Jika dalam sehari dapat dihasilkan 2 tenda, waktu penyelesaian seluruh pesanan menjadi 5 hari lebih cepat.', 'Salah|Salah|Salah|Benar', 'Aktif', '2025-06-03 23:55:37'),
-(4, 4, 'MAT9-01', 'Biskuit merupakan camilan yang banyak digemari sebagai pelengkap minum teh setiap waktu. Berikut komposisi 2 jenis biskuit yang sering dijual di pasaran:', 'Pilihan Ganda Kompleks', 'Komposisi protein Biskuit Lezat adalah 0,02 bagian', 'Komposisi natrium Biskuit Sehat adalah 0,01 bagian', 'Komposisi lemak jenuh Biskuit Lezat adalah 0,16 bagian', 'Komposisi lemak jenuh Biskuit Sehat adalah 0,02 bagian', 'pilihan_1,pilihan_3', 'Aktif', '2025-06-03 23:55:37'),
-(5, 5, 'MAT9-01', 'Pasangkan pernyataan di kolom kiri dengan jawaban yang tepat di kolom kanan dengan menulis huruf di depan nomor yang sesuai!', 'Menjodohkan', '', '', '', '', 'Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7', 'Aktif', '2025-06-03 23:55:37'),
-(6, 6, 'MAT9-01', 'Faktor persekutuan terbesar (FPB) dari 12 dan 18', 'Uraian', '', '', '', '', '6', 'Aktif', '2025-06-03 23:55:37');
+INSERT INTO `butir_soal` (`id_soal`, `nomer_soal`, `kode_soal`, `pertanyaan`, `tipe_soal`, `pilihan_1`, `pilihan_2`, `pilihan_3`, `pilihan_4`, `pilihan_5`, `jawaban_benar`, `status_soal`, `created_at`) VALUES
+(1, 1, 'MAT9-01', 'Sampah anorganik lebih lama terurai dibandingkan dengan sampah organik. Waktu dekomposisi popok sekali pakai lebih lama dari plastik, namun kurang dari kulit sintetis. Berapa waktu dekomposisi yang mungkin dari popok sekali pakai?', 'Pilihan Ganda', '100 tahun', '250 tahun', '375 tahun', '475 tahun', '', 'pilihan_4', 'Aktif', '2025-06-03 23:55:37'),
+(2, 2, 'MAT9-01', 'Pilih Benar atau Salah pada setiap pernyataan berikut!', 'Benar/Salah', 'Panjang AB = Panjang CD', 'Panjang PQ = Panjang SR', 'Jarak Q ke S = Jarak B ke C', '', '', 'Benar|Benar|Salah', 'Aktif', '2025-06-03 23:55:37'),
+(3, 3, 'MAT9-01', 'Suatu kali, PT Suka-Suka Kalian mendapatkan pesanan 30 unit tenda dengan bentuk dan ukuran seperti di atas. Waktu penyelesaian yang diperlukan untuk memenuhi seluruh pesanan adalah 20 hari kerja.', 'Benar/Salah', 'Waktu rata-rata pembuatan 3 buah tenda adalah 2 hari.', 'Waktu penyelesaian semua pesanan bisa tepat waktu jika dalam sehari dihasilkan sebuah tenda.', 'Jika pesanan bertambah 5 tenda, lama penyelesaian bertambah 2 hari.', 'Jika dalam sehari dapat dihasilkan 2 tenda, waktu penyelesaian seluruh pesanan menjadi 5 hari lebih cepat.', '', 'Salah|Salah|Salah|Benar', 'Aktif', '2025-06-03 23:55:37'),
+(4, 4, 'MAT9-01', 'Biskuit merupakan camilan yang banyak digemari sebagai pelengkap minum teh setiap waktu. Berikut komposisi 2 jenis biskuit yang sering dijual di pasaran:', 'Pilihan Ganda Kompleks', 'Komposisi protein Biskuit Lezat adalah 0,02 bagian', 'Komposisi natrium Biskuit Sehat adalah 0,01 bagian', 'Komposisi lemak jenuh Biskuit Lezat adalah 0,16 bagian', 'Komposisi lemak jenuh Biskuit Sehat adalah 0,02 bagian', '', 'pilihan_1,pilihan_3', 'Aktif', '2025-06-03 23:55:37'),
+(5, 5, 'MAT9-01', 'Pasangkan pernyataan di kolom kiri dengan jawaban yang tepat di kolom kanan dengan menulis huruf di depan nomor yang sesuai!', 'Menjodohkan', '', '', '', '', '', 'Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7', 'Aktif', '2025-06-03 23:55:37'),
+(6, 6, 'MAT9-01', 'Faktor persekutuan terbesar (FPB) dari 12 dan 18', 'Uraian', '', '', '', '', '', '6', 'Aktif', '2025-06-03 23:55:37'),
+(7, 1, 'pilihan 5', 'Soal 1', 'Pilihan Ganda', 'sdf', 'asdads', 'asd', 'asd', 'asd', 'pilihan_2', 'Aktif', '2026-02-02 06:31:29'),
+(8, 2, 'pilihan 5', 'asdasd', 'Pilihan Ganda Kompleks', 'asd', 'asd', 'asd', 'asd', 'asd', 'pilihan_4,pilihan_5', 'Aktif', '2026-02-02 06:31:46'),
+(9, 3, 'pilihan 5', 'sadasd', 'Benar/Salah', 'asdasd', 'asdasd', 'Pernyataan 3', '', '', 'Benar|Salah|Salah', 'Aktif', '2026-02-02 06:32:11'),
+(10, 4, 'pilihan 5', 'asasdasd', 'Menjodohkan', NULL, NULL, NULL, NULL, '', 'asdsad 1:asdads 1|asdasd 2:asdasd 2', 'Aktif', '2026-02-02 06:32:24'),
+(11, 5, 'pilihan 5', 'asdasd', 'Uraian', NULL, NULL, NULL, NULL, '', 'asd', 'Aktif', '2026-02-02 06:32:31'),
+(12, 6, 'pilihan 5', 'zxczxczxc', 'Pilihan Ganda', 'sdf', 'zxc', 'zxc', 'zxc', 'xz', 'pilihan_2', 'Aktif', '2026-02-02 06:39:31');
 
 -- --------------------------------------------------------
 
@@ -140,7 +147,10 @@ CREATE TABLE `jawaban_siswa` (
 --
 
 INSERT INTO `jawaban_siswa` (`id_jawaban`, `id_siswa`, `nama_siswa`, `kode_soal`, `total_soal`, `jawaban_siswa`, `waktu_sisa`, `waktu_dijawab`, `status_ujian`) VALUES
-(1, 1, 'Jokowi JK', 'MAT9-01', '', '[6:5][1:pilihan_4][4:pilihan_2,pilihan_3][3:Salah|Salah|Salah|Benar][2:Benar|Salah|Benar][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7]', '56', '2025-06-10 05:12:00', 'Selesai');
+(1, 1, 'Jokowi JK', 'MAT9-01', '', '[6:5][1:pilihan_4][4:pilihan_2,pilihan_3][3:Salah|Salah|Salah|Benar][2:Benar|Salah|Benar][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7]', '56', '2025-06-10 05:12:00', 'Selesai'),
+(6, 5, 'Corbuzier', 'MAT9-01', '', '[4:pilihan_1,pilihan_3][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][1:pilihan_4][2:Benar|Benar|Salah][6:7][3:Salah|Salah|Salah|Benar]', '98', '2026-02-02 04:51:35', 'Selesai'),
+(77, 5, 'Corbuzier', 'pilihan 5', '', '[6:pilihan_2][1:pilihan_2][2:pilihan_4,pilihan_5][3:Benar|Salah|Salah][4:asdsad 1:asdads 1|asdasd 2:asdasd 2][5:asd]', '99', '2026-02-02 07:31:36', 'Aktif'),
+(101, 4, 'Deddy ', 'pilihan 5', '', '[5:sdsdasd][2:pilihan_2][4:asdasd 2:asdads 1][1:pilihan_3][3:Salah][6:pilihan_1]', '104', '2026-02-02 08:24:10', 'Non-Aktif');
 
 -- --------------------------------------------------------
 
@@ -166,6 +176,13 @@ CREATE TABLE `nilai` (
   `status_penilaian` enum('otomatis','perlu_dinilai','selesai') DEFAULT 'otomatis'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `nilai`
+--
+
+INSERT INTO `nilai` (`id_nilai`, `id_siswa`, `nama_siswa`, `kode_soal`, `total_soal`, `jawaban_benar`, `jawaban_salah`, `jawaban_kurang`, `jawaban_siswa`, `kunci`, `nilai`, `nilai_uraian`, `detail_uraian`, `tanggal_ujian`, `status_penilaian`) VALUES
+(3, 5, 'Corbuzier', 'MAT9-01', 6, '5', '0', '1', '[4:pilihan_1,pilihan_3][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][1:pilihan_4][2:Benar|Benar|Salah][6:7][3:Salah|Salah|Salah|Benar]', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', 83.33, 12.93, '[6:12.93]', '2026-02-02 15:08:11', 'perlu_dinilai');
+
 -- --------------------------------------------------------
 
 --
@@ -181,15 +198,16 @@ CREATE TABLE `pengaturan` (
   `sembunyikan_nilai` tinyint(1) DEFAULT 0,
   `login_ganda` enum('izinkan','blokir') DEFAULT 'blokir',
   `chat` varchar(100) NOT NULL,
-  `versi_aplikasi` varchar(20) DEFAULT '1.0.0'
+  `versi_aplikasi` varchar(20) DEFAULT '1.0.0',
+  `izinkan_lanjut_ujian` enum('ya','tidak') NOT NULL DEFAULT 'tidak'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pengaturan`
 --
 
-INSERT INTO `pengaturan` (`id`, `nama_aplikasi`, `logo_sekolah`, `warna_tema`, `waktu_sinkronisasi`, `sembunyikan_nilai`, `login_ganda`, `chat`, `versi_aplikasi`) VALUES
-(1, 'CBT-Eschool', 'logo_1747650742.png', '#2f90c1', 60, 0, 'izinkan', 'izinkan', '1.1.8');
+INSERT INTO `pengaturan` (`id`, `nama_aplikasi`, `logo_sekolah`, `warna_tema`, `waktu_sinkronisasi`, `sembunyikan_nilai`, `login_ganda`, `chat`, `versi_aplikasi`, `izinkan_lanjut_ujian`) VALUES
+(1, 'CBT-Eschool', 'logo_1747650742.png', '#2f90c1', 60, 1, 'izinkan', 'izinkan', '2.0.0', 'tidak');
 
 -- --------------------------------------------------------
 
@@ -237,8 +255,8 @@ INSERT INTO `siswa` (`id_siswa`, `nama_siswa`, `password`, `username`, `kelas`, 
 (1, 'Jokowi JK', 'h7fV3os6WcZ+hNwtoIN5Si9hbEVndnEzRmNodzJlSktYZ2hVMUE9PQ==', '123456', '9', 'A', 'Nonaktif', 'fc41c4223036fdac03b67df191c321e5b10f6d668a1dbbe16318f934a9fe5b5c', '2025-06-10 12:15:20', 'http://localhost/cbt-eschool/siswa/hasil.php', 0),
 (2, 'Prabowo', 'm9MaPSetPwkYW68qNsWwUlUrOW9HNWFlRzJRVENVVi9xNW9vN0E9PQ==', '123457', '9', 'B', 'Nonaktif', 'b21f01ccbda5fcc557d693a0c9466a40afe9e3c1265cf59b2da08061f8edec18', '2025-05-24 00:41:14', 'http://localhost/cbt-eschool/siswa/chat.php', 0),
 (3, 'Agum Gumelar', '5mv6Upz6eP/GpQrkjcebOHcyOFNxV2RRT2xQdkVxRUh0ZVZ0d3c9PQ==', '123458', '9', 'C', 'nonaktif', '', '2025-05-24 22:22:37', 'http://localhost/cbt-eschool/siswa/ujian.php', 0),
-(4, 'Deddy ', '5uKDYI7JoYmjpgBTg8LxUi9YZ2dIVGFucU5FM2wySDYvcmFVQXc9PQ==', '123459', '9', 'D', 'nonaktif', '', '0000-00-00 00:00:00', 'http://localhost/cbt-eschool/siswa/dashboard.php', 1),
-(5, 'Corbuzier', '/SbMMmTczf7Ry0qUn/f6XmhpM1BYS0l6S1F0cmlHSlB3ZjE1cEE9PQ==', '123461', '9', 'E', 'Nonaktif', '', '2025-05-25 02:49:38', 'http://localhost/cbt-eschool/siswa/dashboard.php', 0),
+(4, 'Deddy ', '5uKDYI7JoYmjpgBTg8LxUi9YZ2dIVGFucU5FM2wySDYvcmFVQXc9PQ==', '123459', '9', 'D', 'nonaktif', '', '2026-02-02 16:29:04', 'http://localhost/cbt-eschool/siswa/dashboard.php', 0),
+(5, 'Corbuzier', '/SbMMmTczf7Ry0qUn/f6XmhpM1BYS0l6S1F0cmlHSlB3ZjE1cEE9PQ==', '123461', '9', 'E', 'Nonaktif', '34130709a9675947f5e4593bbb611deb5524e35d1f70d321a675b9103acbae42', '2026-02-02 17:28:00', 'http://localhost/cbt-eschool/siswa/mulaiujian.php', 0),
 (13, 'Erina', 'FQOm8MYUIes79E36AQv1AU5VMVdUanhIaTBVTURVS0hXckFRUXc9PQ==', '721731', '9', 'A', 'Nonaktif', '', '0000-00-00 00:00:00', 'http://localhost/cbt-eschool/siswa/dashboard.php', 1),
 (14, 'Phoebe', 'Dwl3VYW4ysVVEjO67sy6QmdYb2h0NjNFWjhlV3ViamtWY01hc0E9PQ==', '122345', '7', 'C', 'Nonaktif', '9a394ef4a7893401d0185c9a489d7f17483e8e47a105da3ee7174307346d701c', '2025-05-25 21:08:44', 'http://localhost/cbt-eschool/siswa/preview_hasil.php?id_siswa=14&kode_soal=BINDO7-1', 0),
 (15, 'Zevan', 'mG5EAQl0ttZQFaqBXlYCgGdMVkdTMjNQQXZ3VmRKdmFNbTJBeEE9PQ==', '257174', '7', 'D', 'Nonaktif', '', '2025-05-25 00:13:02', 'http://localhost/cbt-eschool/siswa/ujian.php', 0),
@@ -279,15 +297,18 @@ CREATE TABLE `soal` (
   `status` text NOT NULL DEFAULT 'Nonaktif',
   `tampilan_soal` varchar(10) NOT NULL,
   `kunci` text NOT NULL,
-  `token` varchar(6) NOT NULL
+  `token` varchar(6) NOT NULL,
+  `jumlah_opsi` tinyint(1) NOT NULL DEFAULT 4,
+  `tampil_tombol_selesai` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `soal`
 --
 
-INSERT INTO `soal` (`id_soal`, `kode_soal`, `nama_soal`, `mapel`, `kelas`, `waktu_ujian`, `tanggal`, `status`, `tampilan_soal`, `kunci`, `token`) VALUES
-(1, 'MAT9-01', 'Matematika 9', 'Matematika', '9', 90, '2025-06-05', 'Aktif', 'Acak', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', 'XJTHSC');
+INSERT INTO `soal` (`id_soal`, `kode_soal`, `nama_soal`, `mapel`, `kelas`, `waktu_ujian`, `tanggal`, `status`, `tampilan_soal`, `kunci`, `token`, `jumlah_opsi`, `tampil_tombol_selesai`) VALUES
+(1, 'MAT9-01', 'Matematika 9', 'Matematika', '9', 120, '2025-06-05', 'Nonaktif', 'Acak', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', '', 4, 10),
+(3, 'pilihan 5', 'pilihan 5', 'SENI RUPA', '9', 120, '2026-02-02', 'Aktif', 'Acak', '[1:pilihan_2],[2:pilihan_4,pilihan_5],[3:Benar|Salah|Salah],[4:asdsad 1:asdads 1|asdasd 2:asdasd 2],[5:asd],[6:pilihan_2]', 'QKZDC', 5, 109);
 
 --
 -- Indexes for dumped tables
@@ -381,7 +402,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `butir_soal`
 --
 ALTER TABLE `butir_soal`
-  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `chat`
@@ -399,13 +420,13 @@ ALTER TABLE `faq`
 -- AUTO_INCREMENT for table `jawaban_siswa`
 --
 ALTER TABLE `jawaban_siswa`
-  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
 
 --
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
-  MODIFY `id_nilai` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nilai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `siswa`
@@ -423,7 +444,7 @@ ALTER TABLE `skor_game`
 -- AUTO_INCREMENT for table `soal`
 --
 ALTER TABLE `soal`
-  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

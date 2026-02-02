@@ -124,6 +124,9 @@ $kode_soal = $_GET['kode_soal'];
                                     <?php
                                     $query_info = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal' LIMIT 1");
                                     $info_soal = mysqli_fetch_assoc($query_info);
+                                    $jumlah_opsi = intval($info_soal['jumlah_opsi'] ?? 4);
+$opsi_huruf_full = ['A','B','C','D','E'];
+
 
                                     $tipe_soal_count = [];
                                     $query_tipe_soal = mysqli_query($koneksi, "SELECT tipe_soal, COUNT(*) as jumlah FROM butir_soal WHERE kode_soal='$kode_soal' GROUP BY tipe_soal");
@@ -185,36 +188,48 @@ $kode_soal = $_GET['kode_soal'];
 
                                         if ($soal['tipe_soal'] === 'Pilihan Ganda') {
                                             echo "<p class='text-dark'>" . $soal['pertanyaan'] . "</p>";
-                                            $opsi_huruf = ['A', 'B', 'C', 'D'];
-                                            for ($i = 1; $i <= 4; $i++) {
-                                                $opsi_label = $opsi_huruf[$i - 1];
+                                            for ($i = 1; $i <= $jumlah_opsi; $i++) {
+                                                $opsi_label = $opsi_huruf_full[$i - 1];
                                                 $opsi_nama = 'pilihan_' . $i;
                                                 $nilai = $soal[$opsi_nama];
-                                                $checked = (trim($soal['jawaban_benar']) === $opsi_nama) ? 'checked' : '';
-                                                echo "
-                                                <div class='form-check mb-1'>
-                                                    <input class='form-check-input' type='radio' name='preview_radio_{$soal['id_soal']}' value='$nilai' $checked onclick='return false;'>
-                                                    <label class='form-check-label text-dark'>
-                                                        $opsi_label. $nilai
-                                                    </label>
-                                                </div>";
+if (empty(trim($nilai))) continue;
+
+$checked = (trim($soal['jawaban_benar']) === $opsi_nama) ? 'checked' : '';
+
+echo "
+<table style='width:100%; margin-bottom:6px;'>
+<tr>
+    <td style='width:30px; vertical-align:top; font-weight:bold;'>$opsi_label.</td>
+    <td style='width:30px; vertical-align:top;'>
+        <input class='form-check-input' type='radio' $checked onclick='return false;'>
+    </td>
+    <td style='vertical-align:top;'>$nilai</td>
+</tr>
+</table>";
+
                                             }
                                         } elseif ($soal['tipe_soal'] === 'Pilihan Ganda Kompleks') {
                                             echo "<p class='text-dark'>" . $soal['pertanyaan'] . "</p>";
                                             $jawaban_benar = array_map('trim', explode(',', $soal['jawaban_benar']));
-                                            $opsi_huruf = ['A', 'B', 'C', 'D'];
-                                            for ($i = 1; $i <= 4; $i++) {
-                                                $opsi_label = $opsi_huruf[$i - 1];
+                                            for ($i = 1; $i <= $jumlah_opsi; $i++) {
+                                                $opsi_label = $opsi_huruf_full[$i - 1];
                                                 $opsi_nama = 'pilihan_' . $i;
                                                 $nilai = $soal[$opsi_nama];
-                                                $checked = in_array($opsi_nama, $jawaban_benar) ? 'checked' : '';
-                                                echo "
-                                                <div class='form-check mb-1'>
-                                                    <input class='form-check-input' type='checkbox' name='preview_checkbox_{$soal['id_soal']}[]' value='$nilai' $checked onclick='return false;'>
-                                                    <label class='form-check-label text-dark'>
-                                                        $opsi_label. $nilai
-                                                    </label>
-                                                </div>";
+if (empty(trim($nilai))) continue;
+
+$checked = in_array($opsi_nama, $jawaban_benar) ? 'checked' : '';
+
+echo "
+<table style='width:100%; margin-bottom:6px;'>
+<tr>
+    <td style='width:30px; vertical-align:top; font-weight:bold;'>$opsi_label.</td>
+    <td style='width:30px; vertical-align:top;'>
+        <input class='form-check-input' type='checkbox' $checked onclick='return false;'>
+    </td>
+    <td style='vertical-align:top;'>$nilai</td>
+</tr>
+</table>";
+
                                             }
                                         } elseif ($soal['tipe_soal'] === 'Menjodohkan') {
                                             echo "<p class='text-dark'>" . $soal['pertanyaan'] . "</p>";
@@ -236,43 +251,41 @@ $kode_soal = $_GET['kode_soal'];
                                             echo "</tbody></table>";
                                         } elseif ($soal['tipe_soal'] === 'Benar/Salah') {
                                             echo "<p class='text-dark'>" . $soal['pertanyaan'] . "</p>";
-                                            $opsi = [];
-                                            for ($i = 1; $i <= 4; $i++) {
-                                                $opsi_nama = 'pilihan_' . $i;
-                                                $nilai = $soal[$opsi_nama];
-                                                if (!empty($nilai)) {
-                                                    $opsi[] = $nilai;
-                                                }
-                                            }
+                                        
                                             $jawaban_benar = array_map('trim', explode('|', $soal['jawaban_benar']));
                                         
                                             echo "<table style='width:100%; border-collapse:collapse; margin-top:10px;'>
-                                                    <thead>
-                                                        <tr style='background-color:#f0f0f0;'>
-                                                            <th style='border:1px solid black; padding:8px;'>Pernyataan</th>
-                                                            <th style='border:1px solid black; padding:8px; text-align:center;'>Benar</th>
-                                                            <th style='border:1px solid black; padding:8px; text-align:center;'>Salah</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>";
+                                            <thead>
+                                                <tr style='background-color:#f0f0f0;'>
+                                                    <th style='border:1px solid black; padding:8px;'>Pernyataan</th>
+                                                    <th style='border:1px solid black; padding:8px; text-align:center;'>Benar</th>
+                                                    <th style='border:1px solid black; padding:8px; text-align:center;'>Salah</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>";
                                         
-                                            foreach ($opsi as $index => $nilai) {
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                $nilai = trim($soal['pilihan_'.$i]);
+                                                if ($nilai === '') continue;
+                                        
+                                                $index = $i - 1;
                                                 $is_benar = isset($jawaban_benar[$index]) && $jawaban_benar[$index] === 'Benar';
                                                 $is_salah = isset($jawaban_benar[$index]) && $jawaban_benar[$index] === 'Salah';
                                         
                                                 echo "<tr>
-                                                        <td style='border:1px solid black; padding:8px;'>$nilai</td>
-                                                        <td style='border:1px solid black; text-align:center;padding-left:10px;'>
-                                                            <input class='form-check-input' type='radio' name='preview_radio_{$soal['id_soal']}_{$index}' value='Benar' " . ($is_benar ? 'checked' : '') . " onclick='return false;'>
-                                                        </td>
-                                                        <td style='border:1px solid black; text-align:center;padding-left:10px;'>
-                                                            <input class='form-check-input' type='radio' name='preview_radio_{$soal['id_soal']}_{$index}' value='Salah' " . ($is_salah ? 'checked' : '') . " onclick='return false;'>
-                                                        </td>
-                                                    </tr>";
+                                                    <td style='border:1px solid black; padding:8px;'>$nilai</td>
+                                                    <td style='border:1px solid black; text-align:center;padding-left:10px;'>
+                                                        <input class='form-check-input' type='radio' ".($is_benar?'checked':'')." onclick='return false;'>
+                                                    </td>
+                                                    <td style='border:1px solid black; text-align:center;padding-left:10px;'>
+                                                        <input class='form-check-input' type='radio' ".($is_salah?'checked':'')." onclick='return false;'>
+                                                    </td>
+                                                </tr>";
                                             }
                                         
                                             echo "</tbody></table>";
-                                        } elseif ($soal['tipe_soal'] === 'Uraian') {
+                                        }
+                                         elseif ($soal['tipe_soal'] === 'Uraian') {
                                             echo "<p class='text-dark'>Pertanyaan : " . $soal['pertanyaan'] . "</p>";
                                             echo "<p class='mt-2'>Jawaban Benar: <span class='text-dark'>" . $soal['jawaban_benar'] . "</span></p>";
                                         }

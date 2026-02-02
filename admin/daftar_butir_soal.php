@@ -84,8 +84,17 @@ if ($data_soal['status'] == 'Aktif') {
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Daftar Butir Soal</h5>
                                     <br>
-                                    <h2 class=""><strong>Kode Soal:
-                                            <?= htmlspecialchars($data_soal['kode_soal']) ?></strong></h2>
+                                    <h2 class="">
+                                    <strong>Kode Soal: <?= htmlspecialchars($data_soal['kode_soal']) ?></strong>
+                                </h2>
+
+                                <?php if ($data_soal['jumlah_opsi'] == 5): ?>
+                                    <span class="badge bg-info">Jumlah Opsi: 5 (A–E)</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">Jumlah Opsi: 4 (A–D)</span>
+                                <?php endif; ?>
+                                <br><br>
+
                                     <?php
                                 $query_butir = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY id_soal ASC");
                                 $jumlah_pg = 0;
@@ -142,7 +151,7 @@ if ($data_soal['status'] == 'Aktif') {
                                         <a href="soal.php" class="btn btn btn-outline-secondary">
                                             <i class="fas fa-arrow-left"></i> Bank Soal
                                         </a>
-                                        <a href="tambah_butir_soal.php?kode_soal=<?= htmlspecialchars($data_soal['kode_soal']) ?>&nomer_baru=<?= $nomor_baru ?>"
+                                        <a href="tambah_butir_soal.php?kode_soal=<?= htmlspecialchars($data_soal['kode_soal']) ?>&nomer_baru=<?= $nomor_baru ?>&opsi=<?= $data_soal['jumlah_opsi'] ?>"
                                             class="btn btn-primary">
                                             <i class="fas fa-plus"></i> Tambah Soal
                                         </a>
@@ -154,13 +163,13 @@ if ($data_soal['status'] == 'Aktif') {
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a class="dropdown-item"
-                                                        href="preview_soal.php?kode_soal=<?= $kode_soal; ?>">
+                                                    href="preview_soal.php?kode_soal=<?= $kode_soal; ?>&opsi=<?= $data_soal['jumlah_opsi'] ?>">
                                                         <i class="fas fa-eye"></i> Preview
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item"
-                                                        href="export_excel.php?kode_soal=<?= urlencode($kode_soal) ?>">
+                                                    href="export_excel.php?kode_soal=<?= urlencode($kode_soal) ?>&opsi=<?= $data_soal['jumlah_opsi'] ?>">
                                                         <i class="fas fa-file-excel"></i> Export Soal Excel
                                                     </a>
                                                 </li>
@@ -185,27 +194,28 @@ if ($data_soal['status'] == 'Aktif') {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php
-                                            $query_butir = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY id_soal ASC");
-                                            while ($butir = mysqli_fetch_assoc($query_butir)) {
-                                                $json_butir = htmlspecialchars(json_encode($butir), ENT_QUOTES, 'UTF-8');
-                                                echo "<tr>";
-                                                echo "<td>" . htmlspecialchars($butir['nomer_soal']) . "</td>";
-                                                echo "<td>$butir[pertanyaan]</td>";
-                                                echo "<td>" . htmlspecialchars($butir['tipe_soal']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($butir['status_soal']) . "</td>";
-                                                echo "<td>
-                                                        <a href='edit_butir_soal.php?id_soal=" . htmlspecialchars($butir['id_soal']) . "&kode_soal=" . htmlspecialchars($kode_soal) . "' class='btn btn-sm btn-primary'>
-                                                            <i class='fas fa-edit'></i> Edit
-                                                        </a>
-                                                        <button class='btn btn-sm btn-danger btn-hapus' data-kode=" . htmlspecialchars($butir['id_soal']) . ">
-                                                            <i class='fa fa-close'></i> Hapus
-                                                        </button>
-                                                      </td>";
-                                                echo "</tr>";
-                                            }
-                                            ?>
-                                            </tbody>
+    <?php
+    $query_butir = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='$kode_soal' ORDER BY nomer_soal ASC");
+    while ($butir = mysqli_fetch_assoc($query_butir)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($butir['nomer_soal']) . "</td>";
+        echo "<td>" . $butir['pertanyaan'] . "</td>";
+        echo "<td>" . htmlspecialchars($butir['tipe_soal']) . "</td>";
+        echo "<td>" . htmlspecialchars($butir['status_soal']) . "</td>";
+        
+        // Perhatikan link di bawah ini: menambahkan parameter &opsi=
+        echo "<td>
+                <a href='edit_butir_soal.php?id_soal=" . $butir['id_soal'] . "&kode_soal=" . urlencode($kode_soal) . "&opsi=" . $data_soal['jumlah_opsi'] . "' class='btn btn-sm btn-primary'>
+                    <i class='fas fa-edit'></i> Edit
+                </a>
+                <button class='btn btn-sm btn-danger btn-hapus' data-kode='" . $butir['id_soal'] . "'>
+                    <i class='fa fa-close'></i> Hapus
+                </button>
+              </td>";
+        echo "</tr>";
+    }
+    ?>
+</tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -218,6 +228,7 @@ if ($data_soal['status'] == 'Aktif') {
                         <div class="modal-dialog">
                             <form action="import_soal.php" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="kode_soal" value="<?= $kode_soal; ?>">
+                                <input type="hidden" name="opsi" value="<?= $data_soal['jumlah_opsi'] ?>">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="modalImportExcelLabel">Import Soal dari Excel</h5>
