@@ -20,7 +20,6 @@ if (!$koneksi) {
     <title>Kartu Siswa</title>
     <?php include '../inc/css.php'; ?>
 </head>
-
 <body>
     <div class="wrapper">
 
@@ -63,11 +62,18 @@ if (!$koneksi) {
                                     </form>
                                     <!--<button class="btn btn-outline-danger" onclick="exportPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>-->
                                     <?php if (!empty($_GET['kelas']) || !empty($_GET['nama'])): ?>
-                                    <a href="print_kartu.php?kelas=<?php echo urlencode($_GET['kelas']); ?>&nama=<?php echo urlencode($_GET['nama']); ?>"
-                                        target="_blank" class="btn btn-danger">
-                                        <i class="fa-solid fa-file-pdf"></i> Download Pdf
-                                    </a>
-                                    <?php endif; ?>
+<a href="print_kartu.php?kelas=<?php echo urlencode($_GET['kelas']); ?>&nama=<?php echo urlencode($_GET['nama']); ?>"
+    target="_blank" class="btn btn-danger">
+    <i class="fa-solid fa-file-pdf"></i> Download Pdf
+</a>
+
+<a href="print_kartu_biasa.php?kelas=<?php echo urlencode($_GET['kelas']); ?>&nama=<?php echo urlencode($_GET['nama']); ?>"
+   target="_blank"
+   class="btn btn-primary ms-2">
+   <i class="fa fa-print"></i> Print
+</a>
+<?php endif; ?>
+
 
                                     <br><br>
 
