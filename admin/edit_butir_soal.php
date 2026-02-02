@@ -21,28 +21,7 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_
 $data_soal = mysqli_fetch_assoc($query_soal);
 
 if ($data_soal['status'] == 'Aktif') {
-    die('
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Peringatan</title>
-        <script src="../assets/js/sweetalert.js"></script>
-    </head>
-    <body>
-        <script>
-            Swal.fire({
-                icon: "warning",
-                title: "Tidak Bisa Diedit!",
-                text: "Soal ini sudah aktif dan tidak bisa diedit!",
-                showConfirmButton: false,
-                timer: 2000
-            }).then(() => {
-                window.location.href = "soal.php";
-            });
-        </script>
-    </body>
-    </html>
-    ');
+   $swal = "soal_aktif";
 }
 
 // Ambil data butir soal yang akan diedit
@@ -50,79 +29,104 @@ $query_butir = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE id_soal='$
 $butir_soal = mysqli_fetch_assoc($query_butir);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    // VALIDASI WAJIB
     if (empty($_POST['pertanyaan']) || empty($_POST['tipe_soal']) || empty($_POST['nomor_soal'])) {
-        die("Harap isi semua field wajib");
+        $swal = "form_kosong";
     }
 
     $pertanyaan = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pertanyaan']));
-
-    $tipe_soal = mysqli_real_escape_string($koneksi, $_POST['tipe_soal']);
+    $tipe_soal  = mysqli_real_escape_string($koneksi, $_POST['tipe_soal']);
     $nomor_soal = mysqli_real_escape_string($koneksi, $_POST['nomor_soal']);
 
-    // Cek duplikat nomor soal
-    $cek_duplikat = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE nomer_soal = '$nomor_soal' AND kode_soal = '$kode_soal' AND id_soal != '$id_soal'");
+    // CEK DUPLIKAT
+    $cek = mysqli_query($koneksi, "SELECT 1 FROM butir_soal 
+        WHERE nomer_soal='$nomor_soal' 
+        AND kode_soal='$kode_soal' 
+        AND id_soal!='$id_soal'");
 
-    if (mysqli_num_rows($cek_duplikat) > 0) {
-        echo '<!DOCTYPE html><html><head><script src="../assets/js/sweetalert.js"></script></head><body><script>Swal.fire({icon: "error", title: "Nomor Soal Sudah Ada!", confirmButtonText: "Kembali"}).then(() => { window.history.back(); });</script></body></html>';
-        exit();
+    if (mysqli_num_rows($cek) > 0) {
+        $swal = "nomor_duplikat";
     }
 
-    $query = "";
+    // KHUSUS PG WAJIB PILIH JAWABAN
+    if (($tipe_soal == 'Pilihan Ganda' || $tipe_soal == 'Pilihan Ganda Kompleks')
+        && (!isset($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0)) {
+        $swal = "jawaban_kosong";
+    }
 
-    if ($tipe_soal == 'Pilihan Ganda' || $tipe_soal == 'Pilihan Ganda Kompleks') {
-        $p1 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_1'] ?? ''));
-$p2 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_2'] ?? ''));
-$p3 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_3'] ?? ''));
-$p4 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_4'] ?? ''));
-$p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? ''));
+    // ❗ STOP JIKA ADA ERROR
+    if (!isset($swal)) {
 
+        if ($tipe_soal == 'Pilihan Ganda' || $tipe_soal == 'Pilihan Ganda Kompleks') {
 
-        if (!isset($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0) {
-            die("Harap pilih minimal satu jawaban benar");
-        }
-        $jawaban_benar = implode(",", $_POST['jawaban_benar']);
+            $jawaban_benar = implode(",", $_POST['jawaban_benar']);
 
-        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', pilihan_1='$p1', pilihan_2='$p2', pilihan_3='$p3', pilihan_4='$p4', pilihan_5='$p5', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
+            $query = "UPDATE butir_soal SET
+                pertanyaan='$pertanyaan',
+                tipe_soal='$tipe_soal',
+                nomer_soal='$nomor_soal',
+                pilihan_1='".mysqli_real_escape_string($koneksi, $_POST['pilihan_1'])."',
+                pilihan_2='".mysqli_real_escape_string($koneksi, $_POST['pilihan_2'])."',
+                pilihan_3='".mysqli_real_escape_string($koneksi, $_POST['pilihan_3'])."',
+                pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
+                pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
+                jawaban_benar='$jawaban_benar'
+                WHERE id_soal='$id_soal'";
 
-    } elseif ($tipe_soal == 'Benar/Salah') {
-        $p1 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_1'] ?? ''));
-$p2 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_2'] ?? ''));
-$p3 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_3'] ?? ''));
-$p4 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_4'] ?? ''));
-$p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? ''));
+        } elseif ($tipe_soal == 'Benar/Salah') {
 
-        $jawaban_benar = implode("|", $_POST['jawaban_benar'] ?? []);
+            $jawaban_benar = implode("|", $_POST['jawaban_benar'] ?? []);
 
-        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', pilihan_1='$p1', pilihan_2='$p2', pilihan_3='$p3', pilihan_4='$p4', pilihan_5='$p5', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
+            $query = "UPDATE butir_soal SET
+                pertanyaan='$pertanyaan',
+                tipe_soal='$tipe_soal',
+                nomer_soal='$nomor_soal',
+                pilihan_1='".mysqli_real_escape_string($koneksi, $_POST['pilihan_1'])."',
+                pilihan_2='".mysqli_real_escape_string($koneksi, $_POST['pilihan_2'])."',
+                pilihan_3='".mysqli_real_escape_string($koneksi, $_POST['pilihan_3'])."',
+                pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
+                pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
+                jawaban_benar='$jawaban_benar'
+                WHERE id_soal='$id_soal'";
 
-    } elseif ($tipe_soal == 'Menjodohkan') {
-        $pasangan_data = [];
-        foreach ($_POST['pasangan_soal'] as $i => $soal) {
-            $jawaban = $_POST['pasangan_jawaban'][$i];
-            if (!empty($soal) && !empty($jawaban)) {
-                $pasangan_data[] =
-    mysqli_real_escape_string($koneksi, bersihkan_html(trim($soal))) . ":" .
-    mysqli_real_escape_string($koneksi, bersihkan_html(trim($jawaban)));
+        } elseif ($tipe_soal == 'Menjodohkan') {
+
+            $pairs = [];
+            foreach ($_POST['pasangan_soal'] as $i => $s) {
+                $j = $_POST['pasangan_jawaban'][$i];
+                if ($s && $j) $pairs[] = "$s:$j";
             }
+            $jawaban_benar = implode("|", $pairs);
+
+            $query = "UPDATE butir_soal SET
+                pertanyaan='$pertanyaan',
+                tipe_soal='$tipe_soal',
+                nomer_soal='$nomor_soal',
+                jawaban_benar='$jawaban_benar'
+                WHERE id_soal='$id_soal'";
+
+        } else { // Uraian
+
+            $jawaban_benar = mysqli_real_escape_string($koneksi, $_POST['jawaban_benar']);
+
+            $query = "UPDATE butir_soal SET
+                pertanyaan='$pertanyaan',
+                tipe_soal='$tipe_soal',
+                nomer_soal='$nomor_soal',
+                jawaban_benar='$jawaban_benar'
+                WHERE id_soal='$id_soal'";
         }
-        $jawaban_benar = implode("|", $pasangan_data);
-        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
 
-    } elseif ($tipe_soal == 'Uraian') {
-        $jawaban_benar = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['jawaban_benar']));
-
-        $query = "UPDATE butir_soal SET pertanyaan='$pertanyaan', tipe_soal='$tipe_soal', nomer_soal='$nomor_soal', jawaban_benar='$jawaban_benar' WHERE id_soal='$id_soal'";
-    }
-
-    if (!empty($query)) {
         if (mysqli_query($koneksi, $query)) {
             header("Location: daftar_butir_soal.php?kode_soal=$kode_soal&success=1");
             exit();
         } else {
-            die("Gagal menyimpan data: " . mysqli_error($koneksi));
+            $swal = "gagal_simpan";
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -260,18 +264,49 @@ $p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? 
     <?php include '../inc/js.php'; ?>
     <script src="../assets/summernote/summernote-bs5.js"></script>
     <script>
+        function makeEditor(el, height=100) {
+    $(el).summernote({
+        height: height,
+        toolbar: [['insert', ['picture']], ['view', ['codeview']]],
+        callbacks: {
+            onImageUpload: function(files) {
+                sendFile(files[0], $(this));
+            }
+        }
+    });
+}
+
+function sendFile(file, editor) {
+    let data = new FormData();
+    data.append("file", file);
+
+    $.ajax({
+        url: "uploadeditor.php",
+        type: "POST",
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function(res) {
+            let hasil = JSON.parse(res);
+            if (hasil.url) {
+                editor.summernote('focus');
+                editor.summernote('editor.insertImage', hasil.url);
+            }
+        }
+    });
+}
+
 $(document).ready(function() {
-    $('#pertanyaan').summernote({ height: 250 });
 
-    function initSimpleEditor(selector) {
-        $(selector).summernote({
-            height: 100,
-            toolbar: [['insert', ['picture']], ['view', ['codeview']]]
-        });
-    }
+    makeEditor('#pertanyaan', 250);
 
-    initSimpleEditor('.editor-opsi');
-    initSimpleEditor('.editor-simple');
+    $('.editor-opsi').each(function() {
+        makeEditor(this, 100);
+    });
+
+    $('.editor-simple').each(function() {
+        makeEditor(this, 100);
+    });
 
     showFields($('#tipe_soal').val());
 
@@ -280,7 +315,9 @@ $(document).ready(function() {
             $('.pg-check').not(this).prop('checked', false);
         }
     });
+
 });
+
 
 function showFields(tipe) {
     $("#pg-fields, #bs-fields, #match-fields, #uraian-fields")
@@ -329,7 +366,8 @@ function addBS() {
     </div>`;
 
     $('#bs-container').append(html);
-    $(`[name="pilihan_${count}"]`).summernote({ height: 100, toolbar: [['insert', ['picture']]] });
+    makeEditor($(`[name="pilihan_${count}"]`), 100);
+
 }
 
 function removeBS(id) {
@@ -384,6 +422,62 @@ function removeRow(btn) {
     });
 }
 </script>
+<?php if(isset($swal) && $swal == "soal_aktif"): ?>
+<script src="../assets/js/sweetalert.js"></script>
+<script>
+Swal.fire({
+    icon: "warning",
+    title: "Tidak Bisa Diedit!",
+    text: "Soal ini sudah aktif dan tidak bisa diedit!",
+    showConfirmButton: false,
+    timer: 2000
+}).then(() => {
+    window.location.href = "soal.php";
+});
+</script>
+<?php endif; ?>
+<?php if(isset($swal) && $swal == "jawaban_kosong"): ?>
+<script src="../assets/js/sweetalert.js"></script>
+<script>
+Swal.fire({
+    icon: "warning",
+    title: "Jawaban Belum Dipilih",
+    text: "Harap pilih minimal satu jawaban benar!"
+}).then(() => {
+    window.history.back();
+});
+</script>
+<?php endif; ?>
+<?php if(isset($swal) && $swal == "gagal_simpan"): ?>
+<script src="../assets/js/sweetalert.js"></script>
+<script>
+Swal.fire({
+    icon: "error",
+    title: "Gagal Menyimpan",
+    text: "Terjadi kesalahan saat update data!"
+});
+</script>
+<?php endif; ?>
+<?php if(isset($swal) && $swal == "form_kosong"): ?>
+<script src="../assets/js/sweetalert.js"></script>
+<script>
+Swal.fire({
+    icon: "warning",
+    title: "Form Belum Lengkap",
+    text: "Harap isi semua field!"
+});
+</script>
+<?php endif; ?>
+<?php if(isset($swal) && $swal == "nomor_duplikat"): ?>
+<script src="../assets/js/sweetalert.js"></script>
+<script>
+Swal.fire({
+    icon: "error",
+    title: "Nomor Soal Sudah Ada!",
+    text: "Gunakan nomor soal yang lain."
+});
+</script>
+<?php endif; ?>
 
 </body>
 </html>

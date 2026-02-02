@@ -21,34 +21,52 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_
 $data_soal = mysqli_fetch_assoc($query_soal);
 
 if ($data_soal['status'] == 'Aktif') {
-    die('
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Peringatan</title>
-        <script src="../assets/js/sweetalert.js"></script>
-    </head>
-    <body>
-        <script>
-            Swal.fire({
-                icon: "warning",
-                title: "Tidak Bisa Diedit!",
-                text: "Soal ini sudah aktif dan tidak bisa diedit!",
-                showConfirmButton: false,
-                timer: 2000
-            }).then(() => {
-                window.location.href = "soal.php";
-            });
-        </script>
-    </body>
-    </html>
-    ');
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/sweetalert.js"></script>
+</head>
+<body>
+<script>
+Swal.fire({
+    icon: "warning",
+    title: "Tidak Bisa Diedit!",
+    text: "Soal ini sudah aktif dan tidak bisa diedit!",
+    showConfirmButton: false,
+    timer: 2000
+}).then(() => {
+    window.location.href = "soal.php";
+});
+</script>
+</body>
+</html>';
+exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (empty($_POST['pertanyaan']) || empty($_POST['tipe_soal']) || empty($_POST['nomer_soal'])) {
-        die("Harap isi semua field wajib");
-    }
+if (empty($_POST['pertanyaan']) || empty($_POST['tipe_soal']) || empty($_POST['nomer_soal'])) {
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/sweetalert.js"></script>
+</head>
+<body>
+<script>
+Swal.fire({
+    icon: "warning",
+    title: "Form Belum Lengkap",
+    text: "Harap isi semua field wajib!",
+    confirmButtonText: "Kembali"
+}).then(() => { window.history.back(); });
+</script>
+</body>
+</html>';
+exit;
+}
+
+
 
     $pertanyaan = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pertanyaan']));
 
@@ -75,8 +93,29 @@ $p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? 
 
 
         if (!isset($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0) {
-            die("Harap pilih minimal satu jawaban benar");
-        }
+    echo '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script src="../assets/js/sweetalert.js"></script>
+    </head>
+    <body>
+        <script>
+            Swal.fire({
+                icon: "warning",
+                title: "Jawaban Belum Dipilih",
+                text: "Harap pilih minimal satu jawaban benar!",
+                confirmButtonText: "Kembali"
+            }).then(() => {
+                window.history.back();
+            });
+        </script>
+    </body>
+    </html>
+    ';
+    exit;
+}
+
         $jawaban_benar = implode(",", $_POST['jawaban_benar']);
 
         $query = "INSERT INTO butir_soal (kode_soal, nomer_soal, pertanyaan, tipe_soal, pilihan_1, pilihan_2, pilihan_3, pilihan_4, pilihan_5, jawaban_benar, status_soal)
@@ -120,8 +159,26 @@ $p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? 
             header("Location: daftar_butir_soal.php?kode_soal=$kode_soal&success=1");
             exit();
         } else {
-            die("Gagal menyimpan data: " . mysqli_error($koneksi));
-        }
+    echo '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../assets/js/sweetalert.js"></script>
+</head>
+<body>
+<script>
+Swal.fire({
+    icon: "error",
+    title: "Gagal Menyimpan",
+    text: "Terjadi kesalahan saat menyimpan data!",
+    confirmButtonText: "Kembali"
+}).then(() => { window.history.back(); });
+</script>
+</body>
+</html>';
+    exit;
+}
+
     }
 }
 ?>
@@ -236,18 +293,29 @@ $p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? 
     <?php include '../inc/js.php'; ?>
     <script src="../assets/summernote/summernote-bs5.js"></script>
     <script>
+        function makeEditor(el, height=100) {
+    $(el).summernote({
+        height: height,
+        toolbar: [['insert', ['picture']], ['view', ['codeview']]],
+        callbacks: {
+            onImageUpload: function(files) {
+                sendFile(files[0], $(this));
+            }
+        }
+    });
+}
+
 $(document).ready(function() {
 
-    $('#pertanyaan').summernote({ height: 250 });
+    makeEditor('#pertanyaan', 250);
 
-    function initSimpleEditor(selector) {
-        $(selector).summernote({
-            height: 100,
-            toolbar: [['insert', ['picture']], ['view', ['codeview']]]
-        });
-    }
-    initSimpleEditor('.editor-opsi');
-    initSimpleEditor('.editor-simple');
+    $('.editor-opsi').each(function() {
+        makeEditor(this, 100);
+    });
+
+    $('.editor-simple').each(function() {
+        makeEditor(this, 100);
+    });
 
     // Pilihan ganda hanya 1 jika PG biasa
     $(document).on('click', '.pg-check', function() {
@@ -256,7 +324,10 @@ $(document).ready(function() {
             $('.pg-check').not(this).prop('checked', false);
         }
     });
+
 });
+
+
 
 function showFields(tipe) {
     $("#pg-fields, #bs-fields, #match-fields, #uraian-fields")
@@ -307,7 +378,9 @@ function addBS() {
     </div>`;
 
     $('#bs-container').append(html);
-    $(`[name="pilihan_${bsCount}"]`).summernote({ height: 100, toolbar: [['insert', ['picture']]] });
+    makeEditor($(`[name="pilihan_${bsCount}"]`), 100);
+
+
 }
 
 function removeBS(id) {
@@ -360,6 +433,28 @@ function removeRow(btn) {
         }
     });
 }
+
+function sendFile(file, editor) {
+    let data = new FormData();
+    data.append("file", file);
+
+    $.ajax({
+        url: "uploadeditor.php",
+        type: "POST",
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function(res) {
+            let hasil = JSON.parse(res);
+            if (hasil.url) {
+                editor.summernote('focus');
+                editor.summernote('editor.insertImage', hasil.url);
+            }
+        }
+    });
+}
+
+
 </script>
 
 </body>

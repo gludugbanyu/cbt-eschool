@@ -62,19 +62,20 @@ try {
 
     // 2. Duplikasi butir soal TANPA menyertakan id_soal
     $butirAsal = mysqli_query($koneksi, 
-        "SELECT 
-            nomer_soal,
-            pertanyaan,
-            tipe_soal,
-            pilihan_1,
-            pilihan_2,
-            pilihan_3,
-            pilihan_4,
-            jawaban_benar,
-            status_soal
-        FROM butir_soal 
-        WHERE kode_soal = '$oldKode'"
-    );
+    "SELECT 
+        nomer_soal,
+        pertanyaan,
+        tipe_soal,
+        pilihan_1,
+        pilihan_2,
+        pilihan_3,
+        pilihan_4,
+        pilihan_5,
+        jawaban_benar,
+        status_soal
+    FROM butir_soal 
+    WHERE kode_soal = '$oldKode'"
+);
     
     $counter = 1;
     while ($rowButir = mysqli_fetch_assoc($butirAsal)) {
