@@ -4,6 +4,34 @@ include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
 include '../inc/dataadmin.php';
+
+$role = $_SESSION['role'];
+$id_admin = $_SESSION['admin_id'];
+
+$files = [];
+
+if ($role == 'admin') {
+    $directory = "../gambar/";
+    $files = array_diff(scandir($directory), ['..', '.']);
+} else {
+    $q = mysqli_query($koneksi, "
+        SELECT pertanyaan, pilihan_1, pilihan_2, pilihan_3, pilihan_4, pilihan_5
+        FROM butir_soal b
+        JOIN soal s ON b.kode_soal = s.kode_soal
+        WHERE FIND_IN_SET('$id_admin', s.id_pembuat)
+    ");
+
+    while ($r = mysqli_fetch_assoc($q)) {
+        foreach ($r as $kolom) {
+            preg_match_all('/gambar\/([^"]+)/', $kolom, $matches);
+            foreach ($matches[1] as $img) {
+                $files[] = $img;
+            }
+        }
+    }
+
+    $files = array_unique($files);
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,51 +89,75 @@ include '../inc/dataadmin.php';
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php
-                                                $directory = "../gambar/";
-                                                $files = array_diff(scandir($directory), array('..', '.'));
-                                                $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+<?php
+$directory = "../gambar/";
+$validExtensions = ['jpg','jpeg','png','gif','webp'];
 
-                                                $images = array_filter($files, function($file) use ($validExtensions, $directory) {
-                                                    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                                                    return in_array($ext, $validExtensions) && is_file($directory . $file);
-                                                });
+$images = array_filter($files, function($file) use ($validExtensions, $directory) {
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    return in_array($ext, $validExtensions) && file_exists($directory.$file);
+});
 
-                                                usort($images, function($a, $b) use ($directory) {
-                                                    return filemtime($directory . $b) - filemtime($directory . $a);
-                                                });
+usort($images, function($a, $b) use ($directory) {
+    return filemtime($directory . $b) - filemtime($directory . $a);
+});
 
-                                                if (!empty($images)) {
-                                                    foreach ($images as $image) {
-                                                        $timestamp = filemtime($directory . $image);
-                                                        $uploadDate = date("H:i, d F Y", $timestamp);
-                                                        $fileSize = filesize($directory . $image);
-                                                        if ($fileSize >= 1048576) {
-                                                            $fileSizeFormatted = round($fileSize / 1048576, 2) . ' MB';
-                                                        } elseif ($fileSize >= 1024) {
-                                                            $fileSizeFormatted = round($fileSize / 1024, 2) . ' KB';
-                                                        } else {
-                                                            $fileSizeFormatted = $fileSize . ' B';
-                                                        }
-                                                ?>
-                                                        <tr>
-                                                            <td><input type="checkbox" class="checkbox-delete" name="delete_files[]" value="<?= $image ?>"></td>
-                                                            <td><?= $image ?></td>
-                                                            <td><a href="../gambar/<?= $image ?>" target="_blank"><img src="../gambar/<?= $image ?>" width="100" alt="<?= $image ?>"></a></td>
-                                                            <td>
-                                                                <button class="btn btn-outline-secondary copy-btn" data-target="imgTag<?= md5($image) ?>">Copy <i class="fa fa-copy"></i></button>
-                                                                <code id="imgTag<?= md5($image) ?>" style="display: none;">&lt;img src="../gambar/<?= $image ?>"&gt;</code>
-                                                            </td>
-                                                            <td><?= $fileSizeFormatted ?></td>
-                                                            <td><?= $uploadDate ?></td>
-                                                            <td><button type="button" class="btn btn-danger delete-single" data-file="<?= $image ?>">Hapus</button></td>
-                                                        </tr>
-                                                <?php
-                                                    }
-                                                } else {
-                                                    echo '<tr><td colspan="7">Tidak ada gambar yang diupload.</td></tr>';
-                                                }
-                                                ?>
+if (!empty($images)) {
+    foreach ($images as $image) {
+
+        $timestamp = filemtime($directory . $image);
+        $uploadDate = date("H:i, d F Y", $timestamp);
+        $fileSize = filesize($directory . $image);
+
+        if ($fileSize >= 1048576) {
+            $fileSizeFormatted = round($fileSize / 1048576, 2) . ' MB';
+        } elseif ($fileSize >= 1024) {
+            $fileSizeFormatted = round($fileSize / 1024, 2) . ' KB';
+        } else {
+            $fileSizeFormatted = $fileSize . ' B';
+        }
+?>
+<tr>
+    <td><input type="checkbox" class="checkbox-delete" value="<?= $image ?>"></td>
+    <td><?= $image ?></td>
+    <td>
+        <a href="../gambar/<?= $image ?>" target="_blank">
+            <img src="../gambar/<?= $image ?>" width="100">
+        </a>
+    </td>
+    <td>
+        <button class="btn btn-outline-secondary copy-btn" data-target="imgTag<?= md5($image) ?>">
+            Copy <i class="fa fa-copy"></i>
+        </button>
+        <code id="imgTag<?= md5($image) ?>" style="display:none;">
+            &lt;img src="../gambar/<?= $image ?>"&gt;
+        </code>
+    </td>
+    <td><?= $fileSizeFormatted ?></td>
+    <td><?= $uploadDate ?></td>
+    <td>
+        <button type="button" class="btn btn-danger delete-single" data-file="<?= $image ?>">
+            Hapus
+        </button>
+    </td>
+</tr>
+<?php
+    }
+} else {
+    echo '<tr>
+<td></td>
+<td>Tidak ada gambar</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>';
+
+}
+?>
+</tbody>
+
                                             </tbody>
                                         </table>
                                     </div>

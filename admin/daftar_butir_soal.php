@@ -11,6 +11,7 @@ if (!isset($_GET['kode_soal'])) {
 }
 
 $kode_soal = $_GET['kode_soal'];
+only_pemilik_soal_by_kode($kode_soal);
 // Ambil data soal
 $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal'");
 $data_soal = mysqli_fetch_assoc($query_soal);
@@ -208,7 +209,7 @@ if ($data_soal['status'] == 'Aktif') {
                 <a href='edit_butir_soal.php?id_soal=" . $butir['id_soal'] . "&kode_soal=" . urlencode($kode_soal) . "&opsi=" . $data_soal['jumlah_opsi'] . "' class='btn btn-sm btn-primary'>
                     <i class='fas fa-edit'></i> Edit
                 </a>
-                <button class='btn btn-sm btn-danger btn-hapus' data-kode='" . $butir['id_soal'] . "'>
+                <button class='btn btn-sm btn-danger btn-hapus' data-id='" . $butir['id_soal'] . "'>
                     <i class='fa fa-close'></i> Hapus
                 </button>
               </td>";
@@ -290,27 +291,24 @@ if ($data_soal['status'] == 'Aktif') {
         }
     }
 
-    document.querySelectorAll('.btn-hapus').forEach(function(button) {
-        button.addEventListener('click', function() {
-            const kodeSoal = this.getAttribute('data-kode');
+$(document).on('click', '.btn-hapus', function () {
+    const id = $(this).data('id');
 
-            Swal.fire({
-                title: 'Yakin ingin menghapus?',
-                text: "Data soal akan dihapus permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'hapus_butir_soal.php?id_soal=' + encodeURIComponent(
-                        kodeSoal);
-                }
-            });
-        });
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Data soal akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'hapus_butir_soal.php?id_soal=' + id;
+        }
     });
-    </script>
+});
+</script>
+
     <script>
 document.addEventListener("DOMContentLoaded", function() {
     const formImport = document.querySelector('#modalImportExcel form');

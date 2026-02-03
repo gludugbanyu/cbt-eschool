@@ -12,6 +12,9 @@ if (empty($_GET['kode_soal']) || empty($_GET['nomer_baru'])) {
 
 $kode_soal = $_GET['kode_soal'];
 $nomer_baru = $_GET['nomer_baru'];
+only_pemilik_soal_by_kode($kode_soal);
+
+
 
 // Mendeteksi jumlah opsi dari URL, default 4 jika tidak diset
 $jumlah_opsi_url = (isset($_GET['opsi']) && $_GET['opsi'] == '5') ? 5 : 4;
@@ -92,7 +95,8 @@ $p4 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_4'] ?? 
 $p5 = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pilihan_5'] ?? ''));
 
 
-        if (!isset($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0) {
+// Ganti baris pengecekan jawaban_benar dengan ini:
+if (!isset($_POST['jawaban_benar']) || !is_array($_POST['jawaban_benar']) || count($_POST['jawaban_benar']) == 0) {
     echo '
     <!DOCTYPE html>
     <html>

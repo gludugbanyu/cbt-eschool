@@ -396,6 +396,18 @@ $game2 = $_GET['game'] ?? 'scramble';
         }
     });
     </script>
+    <?php if(isset($_GET['akses'])): ?>
+<script src="../assets/swal/sweetalert2.all.min.js"></script>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Akses Ditolak!',
+    text: 'Halaman tersebut hanya bisa diakses oleh Admin.',
+    confirmButtonColor: '#d33'
+});
+</script>
+<?php endif; ?>
+
 </body>
 
 </html>

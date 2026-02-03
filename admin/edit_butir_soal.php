@@ -12,6 +12,7 @@ if (!isset($_GET['id_soal']) || !isset($_GET['kode_soal'])) {
 
 $id_soal = $_GET['id_soal'];
 $kode_soal = $_GET['kode_soal'];
+only_pemilik_soal_by_kode($kode_soal);
 
 // Deteksi jumlah opsi dari URL, default 4 jika tidak ada
 $jumlah_opsi_url = (isset($_GET['opsi']) && $_GET['opsi'] == '5') ? 5 : 4;
@@ -25,7 +26,18 @@ if ($data_soal['status'] == 'Aktif') {
 }
 
 // Ambil data butir soal yang akan diedit
-$query_butir = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE id_soal='$id_soal'");
+$query_butir = mysqli_query($koneksi, "
+    SELECT b.*
+    FROM butir_soal b
+    JOIN soal s ON b.kode_soal = s.kode_soal
+    WHERE b.id_soal='$id_soal'
+    AND s.kode_soal='$kode_soal'
+");
+if(mysqli_num_rows($query_butir) == 0){
+    $_SESSION['error'] = "Butir soal tidak valid.";
+    header("Location: soal.php");
+    exit;
+}
 $butir_soal = mysqli_fetch_assoc($query_butir);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -72,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
                 pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
                 jawaban_benar='$jawaban_benar'
-                WHERE id_soal='$id_soal'";
+                WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
+";
 
         } elseif ($tipe_soal == 'Benar/Salah') {
 
@@ -88,7 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
                 pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
                 jawaban_benar='$jawaban_benar'
-                WHERE id_soal='$id_soal'";
+                WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
+";
 
         } elseif ($tipe_soal == 'Menjodohkan') {
 
@@ -104,7 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 tipe_soal='$tipe_soal',
                 nomer_soal='$nomor_soal',
                 jawaban_benar='$jawaban_benar'
-                WHERE id_soal='$id_soal'";
+                WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
+";
 
         } else { // Uraian
 
@@ -115,7 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 tipe_soal='$tipe_soal',
                 nomer_soal='$nomor_soal',
                 jawaban_benar='$jawaban_benar'
-                WHERE id_soal='$id_soal'";
+                WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
+";
         }
 
         if (mysqli_query($koneksi, $query)) {

@@ -12,6 +12,7 @@ if (!isset($_GET['kode_soal'])) {
 }
 
 $kode_soal = $_GET['kode_soal'];
+only_pemilik_soal_by_kode($kode_soal);
 ?>
 <!DOCTYPE html>
 <html lang="en">

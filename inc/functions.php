@@ -51,6 +51,10 @@ function authenticate_user($username, $password_input, $role) {
             if (verify_admin_password($password_input, $stored_password)) {
                 $_SESSION[$role . '_logged_in'] = true;
                 $_SESSION[$role . '_id'] = $user['id'];
+
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['admin_username'] = $user['username'];
+        $_SESSION['admin_nama'] = $user['nama_admin'];
                 return true;
             }
         } else {
@@ -129,7 +133,12 @@ function bersihkan_html($html) {
 
     return $html;
 }
-
+function only_admin(){
+    if(($_SESSION['role'] ?? '') != 'admin'){
+        header("Location: dashboard.php?akses=1");
+        exit;
+    }
+}
 
 // Fungsi untuk mendapatkan informasi kredensial yang terenkripsi
 function get_encrypted_credit() {
@@ -144,6 +153,66 @@ function get_encrypted_credit() {
     }
 
     return null;
+}
+// Fungsi untuk pemilik soal
+function only_pemilik_soal_by_id($id_soal){
+    global $koneksi;
+
+    $role = $_SESSION['role'] ?? '';
+    $id_admin = $_SESSION['admin_id'] ?? 0;
+
+    if($role == 'admin'){
+        return;
+    }
+
+    $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE id_soal='$id_soal'");
+    $d = mysqli_fetch_assoc($q);
+
+    if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
+        $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
+        header("Location: soal.php?akses=1");
+        exit;
+    }
+}
+
+
+function only_pemilik_soal_by_kode($kode_soal){
+    global $koneksi;
+
+    $role = $_SESSION['role'] ?? '';
+    $id_admin = $_SESSION['admin_id'] ?? 0;
+
+    if($role == 'admin'){
+        return;
+    }
+
+    $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE kode_soal='$kode_soal'");
+    $d = mysqli_fetch_assoc($q);
+
+    if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
+        $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
+        header("Location: soal.php?akses=1");
+        exit;
+    }
+}
+function only_preview_soal_by_kode($kode_soal){
+    global $koneksi;
+
+    $role = $_SESSION['role'] ?? '';
+    $id_admin = $_SESSION['admin_id'] ?? 0;
+
+    if($role == 'admin'){
+        return;
+    }
+
+    $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE kode_soal='$kode_soal'");
+    $d = mysqli_fetch_assoc($q);
+
+    if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
+        $_SESSION['warning_message'] = 'Anda tidak punya akses!';
+        header("Location: hasil.php?akses=1");
+        exit;
+    }
 }
 
 // Ambil teks terenkripsi

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2026 at 11:28 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Waktu pembuatan: 03 Feb 2026 pada 17.44
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admins`
+-- Struktur dari tabel `admins`
 --
 
 CREATE TABLE `admins` (
@@ -32,20 +32,21 @@ CREATE TABLE `admins` (
   `username` varchar(50) NOT NULL,
   `nama_admin` text NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` enum('admin','editor') NOT NULL DEFAULT 'editor'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `admins`
+-- Dumping data untuk tabel `admins`
 --
 
-INSERT INTO `admins` (`id`, `username`, `nama_admin`, `password`, `created_at`) VALUES
-(1, 'gludug', 'Admin', '$2y$10$/RMEibFbfc45T0gmAM7H4u9CGhjKCkjFe/ZnQnTS6qc0JFEbOsaoW', '2025-05-05 09:13:31');
+INSERT INTO `admins` (`id`, `username`, `nama_admin`, `password`, `created_at`, `role`) VALUES
+(1, 'gludug', 'Admin', '$2y$10$/RMEibFbfc45T0gmAM7H4u9CGhjKCkjFe/ZnQnTS6qc0JFEbOsaoW', '2025-05-05 09:13:31', 'admin');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `butir_soal`
+-- Struktur dari tabel `butir_soal`
 --
 
 CREATE TABLE `butir_soal` (
@@ -65,7 +66,7 @@ CREATE TABLE `butir_soal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `butir_soal`
+-- Dumping data untuk tabel `butir_soal`
 --
 
 INSERT INTO `butir_soal` (`id_soal`, `nomer_soal`, `kode_soal`, `pertanyaan`, `tipe_soal`, `pilihan_1`, `pilihan_2`, `pilihan_3`, `pilihan_4`, `pilihan_5`, `jawaban_benar`, `status_soal`, `created_at`) VALUES
@@ -74,18 +75,23 @@ INSERT INTO `butir_soal` (`id_soal`, `nomer_soal`, `kode_soal`, `pertanyaan`, `t
 (3, 3, 'MAT9-01', 'Suatu kali, PT Suka-Suka Kalian mendapatkan pesanan 30 unit tenda dengan bentuk dan ukuran seperti di atas. Waktu penyelesaian yang diperlukan untuk memenuhi seluruh pesanan adalah 20 hari kerja.', 'Benar/Salah', 'Waktu rata-rata pembuatan 3 buah tenda adalah 2 hari.', 'Waktu penyelesaian semua pesanan bisa tepat waktu jika dalam sehari dihasilkan sebuah tenda.', 'Jika pesanan bertambah 5 tenda, lama penyelesaian bertambah 2 hari.', 'Jika dalam sehari dapat dihasilkan 2 tenda, waktu penyelesaian seluruh pesanan menjadi 5 hari lebih cepat.', '', 'Salah|Salah|Salah|Benar', 'Aktif', '2025-06-03 23:55:37'),
 (4, 4, 'MAT9-01', 'Biskuit merupakan camilan yang banyak digemari sebagai pelengkap minum teh setiap waktu. Berikut komposisi 2 jenis biskuit yang sering dijual di pasaran:', 'Pilihan Ganda Kompleks', 'Komposisi protein Biskuit Lezat adalah 0,02 bagian', 'Komposisi natrium Biskuit Sehat adalah 0,01 bagian', 'Komposisi lemak jenuh Biskuit Lezat adalah 0,16 bagian', 'Komposisi lemak jenuh Biskuit Sehat adalah 0,02 bagian', '', 'pilihan_1,pilihan_3', 'Aktif', '2025-06-03 23:55:37'),
 (5, 5, 'MAT9-01', 'Pasangkan pernyataan di kolom kiri dengan jawaban yang tepat di kolom kanan dengan menulis huruf di depan nomor yang sesuai!', 'Menjodohkan', '', '', '', '', '', 'Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7', 'Aktif', '2025-06-03 23:55:37'),
-(6, 6, 'MAT9-01', 'Faktor persekutuan terbesar (FPB) dari 12 dan 18', 'Uraian', '', '', '', '', '', '6', 'Aktif', '2025-06-03 23:55:37'),
-(7, 1, 'pilihan 5', 'Soal 1', 'Pilihan Ganda', 'sdf', 'asdads', 'asd', 'asd', 'asd', 'pilihan_2', 'Aktif', '2026-02-02 06:31:29'),
-(8, 2, 'pilihan 5', 'asdasd', 'Pilihan Ganda Kompleks', 'asd', 'asd', 'asd', 'asd', 'asd', 'pilihan_4,pilihan_5', 'Aktif', '2026-02-02 06:31:46'),
-(9, 3, 'pilihan 5', 'sadasd', 'Benar/Salah', 'asdasd', 'asdasd', 'Pernyataan 3', '', '', 'Benar|Salah|Salah', 'Aktif', '2026-02-02 06:32:11'),
-(10, 4, 'pilihan 5', 'asasdasd', 'Menjodohkan', NULL, NULL, NULL, NULL, '', 'asdsad 1:asdads 1|asdasd 2:asdasd 2', 'Aktif', '2026-02-02 06:32:24'),
-(11, 5, 'pilihan 5', 'asdasd', 'Uraian', NULL, NULL, NULL, NULL, '', 'asd', 'Aktif', '2026-02-02 06:32:31'),
-(12, 6, 'pilihan 5', 'zxczxczxc', 'Pilihan Ganda', 'sdf', 'zxc', 'zxc', 'zxc', 'xz', 'pilihan_2', 'Aktif', '2026-02-02 06:39:31');
+(6, 6, 'MAT9-01', 'Faktor persekutuan terbesar (FPB) dari 12 dan 18...', 'Uraian', '', '', '', '', '', '6', 'Aktif', '2025-06-03 23:55:37'),
+(49, 1, 'IPS9', 'Soal 1 iki soal sopo sing edit', 'Pilihan Ganda', 'sdf', 'asdads', 'asd', 'asd', 'asd', 'pilihan_2', 'Aktif', '2026-02-03 13:26:20'),
+(50, 2, 'IPS9', 'asdasd', 'Pilihan Ganda Kompleks', 'asd', 'asd', 'asd', 'asd', 'asd', 'pilihan_4,pilihan_5', 'Aktif', '2026-02-03 13:26:20'),
+(51, 3, 'IPS9', 'sadasd', 'Benar/Salah', 'asdasd', 'asdasd', 'Pernyataan 3', '', '', 'Benar|Salah|Salah', 'Aktif', '2026-02-03 13:26:20'),
+(52, 4, 'IPS9', 'asasdasd', 'Menjodohkan', '', '', '', '', '', 'asdsad 1:asdads 1|asdasd 2:asdasd 2', 'Aktif', '2026-02-03 13:26:20'),
+(53, 5, 'IPS9', 'asdasd', 'Uraian', '', '', '', '', '', 'asd', 'Aktif', '2026-02-03 13:26:20'),
+(54, 6, 'IPS9', 'fuyji&nbsp;', 'Pilihan Ganda', 'sdf', 'zxc', 'zxc', 'zxc', 'xz', 'pilihan_2', 'Aktif', '2026-02-03 13:26:20'),
+(55, 7, 'IPS9', 'Sampah anorganik lebih lama terurai dibandingkan dengan sampah organik. Waktu dekomposisi popok sekali pakai lebih lama dari plastik, namun kurang dari kulit sintetis. Berapa waktu dekomposisi yang mungkin dari popok sekali pakai?', 'Pilihan Ganda', '100 tahun', '250 tahun', '375 tahun', '475 tahun', '475 tahun', 'pilihan_4', 'Aktif', '2026-02-03 13:26:20'),
+(56, 8, 'IPS9', 'Pilih Benar atau Salah pada setiap pernyataan berikut!', 'Benar/Salah', 'Panjang AB = Panjang CD', 'Panjang PQ = Panjang SR', 'Jarak Q ke S = Jarak B ke C', '', '', 'Benar|Benar|Salah', 'Aktif', '2026-02-03 13:26:20'),
+(57, 9, 'IPS9', 'Suatu kali, PT Suka-Suka Kalian mendapatkan pesanan 30 unit tenda dengan bentuk dan ukuran seperti di atas. Waktu penyelesaian yang diperlukan untuk memenuhi seluruh pesanan adalah 20 hari kerja.</p><p><img style=\"width: 250px;\" src=\"../gambar/6980c351dcd4f.jpg\">', 'Benar/Salah', 'Waktu rata-rata pembuatan 3 buah tenda adalah 2 hari.', 'Waktu penyelesaian semua pesanan bisa tepat waktu jika dalam sehari dihasilkan sebuah tenda.', 'Jika pesanan bertambah 5 tenda, lama penyelesaian bertambah 2 hari.', 'Jika dalam sehari dapat dihasilkan 2 tenda, waktu penyelesaian seluruh pesanan menjadi 5 hari lebih cepat.', 'Jika dalam sehari dapat dihasilkan 2 tenda, waktu penyelesaian seluruh pesanan menjadi 5 hari lebih cepat.', 'Salah|Salah|Salah|Benar|Benar', 'Aktif', '2026-02-03 13:26:20'),
+(58, 10, 'IPS9', 'Biskuit merupakan camilan yang banyak digemari sebagai pelengkap minum teh setiap waktu. Berikut komposisi 2 jenis biskuit yang sering dijual di pasaran:', 'Pilihan Ganda Kompleks', 'Komposisi protein Biskuit Lezat adalah 0,02 bagian', 'Komposisi natrium Biskuit Sehat adalah 0,01 bagian', 'Komposisi lemak jenuh Biskuit Lezat adalah 0,16 bagian', 'Komposisi lemak jenuh Biskuit Sehat adalah 0,02 bagian', 'Komposisi lemak jenuh Biskuit Sehat adalah 0,02 bagian', 'pilihan_1,pilihan_3', 'Aktif', '2026-02-03 13:26:20'),
+(59, 11, 'IPS9', 'Pasangkan pernyataan di kolom kiri dengan jawaban yang tepat di kolom kanan dengan menulis huruf di depan nomor yang sesuai!', 'Menjodohkan', '', '', '', '', '', 'Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7', 'Aktif', '2026-02-03 13:26:20');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat`
+-- Struktur dari tabel `chat`
 --
 
 CREATE TABLE `chat` (
@@ -97,10 +103,17 @@ CREATE TABLE `chat` (
   `role` enum('siswa','admin') NOT NULL DEFAULT 'siswa'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `chat`
+--
+
+INSERT INTO `chat` (`id`, `id_user`, `pesan`, `waktu`, `deleted`, `role`) VALUES
+(75, 1, '🔥', '2026-02-02 22:21:25', 0, 'admin');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `faq`
+-- Struktur dari tabel `faq`
 --
 
 CREATE TABLE `faq` (
@@ -110,7 +123,7 @@ CREATE TABLE `faq` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `faq`
+-- Dumping data untuk tabel `faq`
 --
 
 INSERT INTO `faq` (`id`, `question`, `answer`) VALUES
@@ -127,7 +140,7 @@ INSERT INTO `faq` (`id`, `question`, `answer`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jawaban_siswa`
+-- Struktur dari tabel `jawaban_siswa`
 --
 
 CREATE TABLE `jawaban_siswa` (
@@ -143,19 +156,18 @@ CREATE TABLE `jawaban_siswa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `jawaban_siswa`
+-- Dumping data untuk tabel `jawaban_siswa`
 --
 
 INSERT INTO `jawaban_siswa` (`id_jawaban`, `id_siswa`, `nama_siswa`, `kode_soal`, `total_soal`, `jawaban_siswa`, `waktu_sisa`, `waktu_dijawab`, `status_ujian`) VALUES
-(1, 1, 'Jokowi JK', 'MAT9-01', '', '[6:5][1:pilihan_4][4:pilihan_2,pilihan_3][3:Salah|Salah|Salah|Benar][2:Benar|Salah|Benar][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7]', '56', '2025-06-10 05:12:00', 'Selesai'),
-(6, 5, 'Corbuzier', 'MAT9-01', '', '[4:pilihan_1,pilihan_3][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][1:pilihan_4][2:Benar|Benar|Salah][6:7][3:Salah|Salah|Salah|Benar]', '98', '2026-02-02 04:51:35', 'Selesai'),
-(77, 5, 'Corbuzier', 'pilihan 5', '', '[6:pilihan_2][1:pilihan_2][2:pilihan_4,pilihan_5][3:Benar|Salah|Salah][4:asdsad 1:asdads 1|asdasd 2:asdasd 2][5:asd]', '99', '2026-02-02 07:31:36', 'Aktif'),
-(101, 4, 'Deddy ', 'pilihan 5', '', '[5:sdsdasd][2:pilihan_2][4:asdasd 2:asdads 1][1:pilihan_3][3:Salah][6:pilihan_1]', '104', '2026-02-02 08:24:10', 'Non-Aktif');
+(1, 5, 'Corbuzier', 'pilihan 5', '', '[6:pilihan_1][7:pilihan_4][1:pilihan_2][2:pilihan_1][10:pilihan_2,pilihan_3][3:Benar|Salah|Salah][8:Salah|Salah|Benar][9:Salah|Salah|Benar|Salah|Benar][4:asdsad 1:asdads 1|asdasd 2:asdasd 2][11:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][12:7][5:dsafsdf]', '116', '2026-02-02 15:32:14', 'Selesai'),
+(7, 5, 'Corbuzier', 'MAT9-01', '', '[1:pilihan_4][4:pilihan_3,pilihan_4][3:Salah|Salah|Salah][2:Benar|Salah|Salah][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][6:6]', '120', '2026-02-03 15:14:05', 'Selesai'),
+(9, 5, 'Corbuzier', 'IPS9', '', '[1:pilihan_2][6:pilihan_1][7:pilihan_5][2:pilihan_2][10:pilihan_4,pilihan_5][3:Benar|Salah|Benar][9:Salah|Salah|Salah|Benar|Benar][8:Benar|Salah|Benar][11:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][4:asdsad 1:asdads 1|asdasd 2:asdasd 2][5:asdasd]', '90', '2026-02-03 15:16:04', 'Selesai');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nilai`
+-- Struktur dari tabel `nilai`
 --
 
 CREATE TABLE `nilai` (
@@ -177,16 +189,17 @@ CREATE TABLE `nilai` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `nilai`
+-- Dumping data untuk tabel `nilai`
 --
 
 INSERT INTO `nilai` (`id_nilai`, `id_siswa`, `nama_siswa`, `kode_soal`, `total_soal`, `jawaban_benar`, `jawaban_salah`, `jawaban_kurang`, `jawaban_siswa`, `kunci`, `nilai`, `nilai_uraian`, `detail_uraian`, `tanggal_ujian`, `status_penilaian`) VALUES
-(3, 5, 'Corbuzier', 'MAT9-01', 6, '5', '0', '1', '[4:pilihan_1,pilihan_3][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][1:pilihan_4][2:Benar|Benar|Salah][6:7][3:Salah|Salah|Salah|Benar]', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', 83.33, 12.93, '[6:12.93]', '2026-02-02 15:08:11', 'perlu_dinilai');
+(2, 5, 'Corbuzier', 'MAT9-01', 6, '2', '1', '3', '[1:pilihan_4][4:pilihan_3,pilihan_4][3:Salah|Salah|Salah][2:Benar|Salah|Salah][5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][6:6]', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', 56.94, 15.52, '[6:15.52]', '2026-02-03 22:15:18', 'perlu_dinilai'),
+(3, 5, 'Corbuzier', 'IPS9', 11, '4', '4', '3', '[1:pilihan_2][6:pilihan_1][7:pilihan_5][2:pilihan_2][10:pilihan_4,pilihan_5][3:Benar|Salah|Benar][9:Salah|Salah|Salah|Benar|Benar][8:Benar|Salah|Benar][11:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7][4:asdsad 1:asdads 1|asdasd 2:asdasd 2][5:asdasd]', '[1:pilihan_2],[2:pilihan_4,pilihan_5],[3:Benar|Salah|Salah],[4:asdsad 1:asdads 1|asdasd 2:asdasd 2],[5:asd],[6:pilihan_2],[7:pilihan_4],[8:Benar|Benar|Salah],[9:Salah|Salah|Salah|Benar|Benar],[10:pilihan_1,pilihan_3],[11:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7]', 45.45, 9.09, '[5:9.09]', '2026-02-03 22:17:03', 'perlu_dinilai');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengaturan`
+-- Struktur dari tabel `pengaturan`
 --
 
 CREATE TABLE `pengaturan` (
@@ -203,16 +216,16 @@ CREATE TABLE `pengaturan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pengaturan`
+-- Dumping data untuk tabel `pengaturan`
 --
 
 INSERT INTO `pengaturan` (`id`, `nama_aplikasi`, `logo_sekolah`, `warna_tema`, `waktu_sinkronisasi`, `sembunyikan_nilai`, `login_ganda`, `chat`, `versi_aplikasi`, `izinkan_lanjut_ujian`) VALUES
-(1, 'CBT-Eschool', 'logo_1747650742.png', '#2f90c1', 60, 1, 'izinkan', 'izinkan', '2.0.0', 'tidak');
+(1, 'CBT-Eschool', 'logo_1747650742.png', '#343a40', 60, 1, 'izinkan', 'izinkan', '2.0.3', 'tidak');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `profil`
+-- Struktur dari tabel `profil`
 --
 
 CREATE TABLE `profil` (
@@ -221,7 +234,7 @@ CREATE TABLE `profil` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `profil`
+-- Dumping data untuk tabel `profil`
 --
 
 INSERT INTO `profil` (`id`, `encrypt`) VALUES
@@ -230,7 +243,7 @@ INSERT INTO `profil` (`id`, `encrypt`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `siswa`
+-- Struktur dari tabel `siswa`
 --
 
 CREATE TABLE `siswa` (
@@ -248,7 +261,7 @@ CREATE TABLE `siswa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `siswa`
+-- Dumping data untuk tabel `siswa`
 --
 
 INSERT INTO `siswa` (`id_siswa`, `nama_siswa`, `password`, `username`, `kelas`, `rombel`, `status`, `session_token`, `last_activity`, `page_url`, `force_logout`) VALUES
@@ -256,7 +269,7 @@ INSERT INTO `siswa` (`id_siswa`, `nama_siswa`, `password`, `username`, `kelas`, 
 (2, 'Prabowo', 'm9MaPSetPwkYW68qNsWwUlUrOW9HNWFlRzJRVENVVi9xNW9vN0E9PQ==', '123457', '9', 'B', 'Nonaktif', 'b21f01ccbda5fcc557d693a0c9466a40afe9e3c1265cf59b2da08061f8edec18', '2025-05-24 00:41:14', 'http://localhost/cbt-eschool/siswa/chat.php', 0),
 (3, 'Agum Gumelar', '5mv6Upz6eP/GpQrkjcebOHcyOFNxV2RRT2xQdkVxRUh0ZVZ0d3c9PQ==', '123458', '9', 'C', 'nonaktif', '', '2025-05-24 22:22:37', 'http://localhost/cbt-eschool/siswa/ujian.php', 0),
 (4, 'Deddy ', '5uKDYI7JoYmjpgBTg8LxUi9YZ2dIVGFucU5FM2wySDYvcmFVQXc9PQ==', '123459', '9', 'D', 'nonaktif', '', '2026-02-02 16:29:04', 'http://localhost/cbt-eschool/siswa/dashboard.php', 0),
-(5, 'Corbuzier', '/SbMMmTczf7Ry0qUn/f6XmhpM1BYS0l6S1F0cmlHSlB3ZjE1cEE9PQ==', '123461', '9', 'E', 'Nonaktif', '34130709a9675947f5e4593bbb611deb5524e35d1f70d321a675b9103acbae42', '2026-02-02 17:28:00', 'http://localhost/cbt-eschool/siswa/mulaiujian.php', 0),
+(5, 'Corbuzier', '/SbMMmTczf7Ry0qUn/f6XmhpM1BYS0l6S1F0cmlHSlB3ZjE1cEE9PQ==', '123461', '9', 'E', 'Nonaktif', '', '2026-02-03 22:17:07', 'http://localhost/cbt-eschool/siswa/dashboard.php', 0),
 (13, 'Erina', 'FQOm8MYUIes79E36AQv1AU5VMVdUanhIaTBVTURVS0hXckFRUXc9PQ==', '721731', '9', 'A', 'Nonaktif', '', '0000-00-00 00:00:00', 'http://localhost/cbt-eschool/siswa/dashboard.php', 1),
 (14, 'Phoebe', 'Dwl3VYW4ysVVEjO67sy6QmdYb2h0NjNFWjhlV3ViamtWY01hc0E9PQ==', '122345', '7', 'C', 'Nonaktif', '9a394ef4a7893401d0185c9a489d7f17483e8e47a105da3ee7174307346d701c', '2025-05-25 21:08:44', 'http://localhost/cbt-eschool/siswa/preview_hasil.php?id_siswa=14&kode_soal=BINDO7-1', 0),
 (15, 'Zevan', 'mG5EAQl0ttZQFaqBXlYCgGdMVkdTMjNQQXZ3VmRKdmFNbTJBeEE9PQ==', '257174', '7', 'D', 'Nonaktif', '', '2025-05-25 00:13:02', 'http://localhost/cbt-eschool/siswa/ujian.php', 0),
@@ -269,7 +282,7 @@ INSERT INTO `siswa` (`id_siswa`, `nama_siswa`, `password`, `username`, `kelas`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `skor_game`
+-- Struktur dari tabel `skor_game`
 --
 
 CREATE TABLE `skor_game` (
@@ -283,11 +296,12 @@ CREATE TABLE `skor_game` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `soal`
+-- Struktur dari tabel `soal`
 --
 
 CREATE TABLE `soal` (
   `id_soal` int(11) NOT NULL,
+  `id_pembuat` varchar(100) NOT NULL,
   `kode_soal` varchar(200) NOT NULL,
   `nama_soal` varchar(255) NOT NULL,
   `mapel` varchar(100) NOT NULL,
@@ -303,44 +317,44 @@ CREATE TABLE `soal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `soal`
+-- Dumping data untuk tabel `soal`
 --
 
-INSERT INTO `soal` (`id_soal`, `kode_soal`, `nama_soal`, `mapel`, `kelas`, `waktu_ujian`, `tanggal`, `status`, `tampilan_soal`, `kunci`, `token`, `jumlah_opsi`, `tampil_tombol_selesai`) VALUES
-(1, 'MAT9-01', 'Matematika 9', 'Matematika', '9', 120, '2025-06-05', 'Nonaktif', 'Acak', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', '', 4, 10),
-(3, 'pilihan 5', 'pilihan 5', 'SENI RUPA', '9', 120, '2026-02-02', 'Aktif', 'Acak', '[1:pilihan_2],[2:pilihan_4,pilihan_5],[3:Benar|Salah|Salah],[4:asdsad 1:asdads 1|asdasd 2:asdasd 2],[5:asd],[6:pilihan_2]', 'QKZDC', 5, 109);
+INSERT INTO `soal` (`id_soal`, `id_pembuat`, `kode_soal`, `nama_soal`, `mapel`, `kelas`, `waktu_ujian`, `tanggal`, `status`, `tampilan_soal`, `kunci`, `token`, `jumlah_opsi`, `tampil_tombol_selesai`) VALUES
+(1, '1', 'MAT9-01', 'Matematika 9', 'Matematika', '9', 120, '2025-06-05', 'Aktif', 'Acak', '[1:pilihan_4],[2:Benar|Benar|Salah],[3:Salah|Salah|Salah|Benar],[4:pilihan_1,pilihan_3],[5:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7],[6:6]', 'DUANO', 4, 0),
+(6, '1', 'IPS9', 'pilihan 5 (Copy)', 'SENI RUPA', '9', 90, '2026-02-03', 'Aktif', 'Acak', '[1:pilihan_2],[2:pilihan_4,pilihan_5],[3:Benar|Salah|Salah],[4:asdsad 1:asdads 1|asdasd 2:asdasd 2],[5:asd],[6:pilihan_2],[7:pilihan_4],[8:Benar|Benar|Salah],[9:Salah|Salah|Salah|Benar|Benar],[10:pilihan_1,pilihan_3],[11:Bilangan prima antara 10 dan 15:11 dan 13|Volume kubus dengan rusuk 4 cm:64 cm|Luas persegi dengan sisi 6 cm:36 cm|Nilai x dari 2x+5=19:7]', 'DSNJB', 5, 0);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `admins`
+-- Indeks untuk tabel `admins`
 --
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `butir_soal`
+-- Indeks untuk tabel `butir_soal`
 --
 ALTER TABLE `butir_soal`
   ADD PRIMARY KEY (`id_soal`);
 
 --
--- Indexes for table `chat`
+-- Indeks untuk tabel `chat`
 --
 ALTER TABLE `chat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `faq`
+-- Indeks untuk tabel `faq`
 --
 ALTER TABLE `faq`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `jawaban_siswa`
+-- Indeks untuk tabel `jawaban_siswa`
 --
 ALTER TABLE `jawaban_siswa`
   ADD PRIMARY KEY (`id_jawaban`),
@@ -349,109 +363,109 @@ ALTER TABLE `jawaban_siswa`
   ADD KEY `kode_soal` (`kode_soal`);
 
 --
--- Indexes for table `nilai`
+-- Indeks untuk tabel `nilai`
 --
 ALTER TABLE `nilai`
   ADD PRIMARY KEY (`id_nilai`),
   ADD UNIQUE KEY `unique_siswa_soal` (`id_siswa`,`kode_soal`);
 
 --
--- Indexes for table `pengaturan`
+-- Indeks untuk tabel `pengaturan`
 --
 ALTER TABLE `pengaturan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `profil`
+-- Indeks untuk tabel `profil`
 --
 ALTER TABLE `profil`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `siswa`
+-- Indeks untuk tabel `siswa`
 --
 ALTER TABLE `siswa`
   ADD PRIMARY KEY (`id_siswa`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `skor_game`
+-- Indeks untuk tabel `skor_game`
 --
 ALTER TABLE `skor_game`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_siswa` (`id_siswa`);
 
 --
--- Indexes for table `soal`
+-- Indeks untuk tabel `soal`
 --
 ALTER TABLE `soal`
   ADD PRIMARY KEY (`id_soal`),
   ADD UNIQUE KEY `kode_soal` (`kode_soal`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `admins`
+-- AUTO_INCREMENT untuk tabel `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `butir_soal`
+-- AUTO_INCREMENT untuk tabel `butir_soal`
 --
 ALTER TABLE `butir_soal`
-  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
--- AUTO_INCREMENT for table `chat`
+-- AUTO_INCREMENT untuk tabel `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
--- AUTO_INCREMENT for table `faq`
+-- AUTO_INCREMENT untuk tabel `faq`
 --
 ALTER TABLE `faq`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `jawaban_siswa`
+-- AUTO_INCREMENT untuk tabel `jawaban_siswa`
 --
 ALTER TABLE `jawaban_siswa`
-  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `id_jawaban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `nilai`
+-- AUTO_INCREMENT untuk tabel `nilai`
 --
 ALTER TABLE `nilai`
-  MODIFY `id_nilai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_nilai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `siswa`
+-- AUTO_INCREMENT untuk tabel `siswa`
 --
 ALTER TABLE `siswa`
   MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `skor_game`
+-- AUTO_INCREMENT untuk tabel `skor_game`
 --
 ALTER TABLE `skor_game`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `soal`
+-- AUTO_INCREMENT untuk tabel `soal`
 --
 ALTER TABLE `soal`
-  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_soal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `skor_game`
+-- Ketidakleluasaan untuk tabel `skor_game`
 --
 ALTER TABLE `skor_game`
   ADD CONSTRAINT `skor_game_ibfk_1` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`);

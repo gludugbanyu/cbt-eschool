@@ -105,15 +105,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="col-12 col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-title mb-0">Ubah Profil Admin</h5>
+                                    <h5 class="card-title mb-0">Ubah Profil</h5>
                                 </div>
                                 <div class="card-body">
                                     <form method="post">
                                         <div class="mb-3">
-                                            <label>Nama Admin</label>
-                                            <input type="text" name="nama_admin" class="form-control" value="<?= htmlspecialchars($admin['nama_admin']) ?>" required>
+                                            <label>Username</label>
+                                            <input type="text" class="form-control bg-light" 
+                                                value="<?= htmlspecialchars($admin['username']) ?>" 
+                                                readonly style="cursor:not-allowed;">
+                                            <small class="text-muted">Username tidak dapat diubah.</small>
                                         </div>
                                         <hr>
+                                        <div class="mb-3">
+                                            <label>Nama</label>
+                                            <input type="text" name="nama_admin" class="form-control" value="<?= htmlspecialchars($admin['nama_admin']) ?>" required>
+                                        </div>
                                         <div class="mb-3">
                                             <label>Password Lama</label>
                                             <input type="password" name="password_lama" class="form-control">

@@ -3,6 +3,7 @@ session_start();
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
+
 include '../inc/dataadmin.php';
 
 // Pastikan ID soal ada di URL
@@ -12,7 +13,7 @@ if (!isset($_GET['id_soal'])) {
 }
 
 $id_soal = $_GET['id_soal'];
-
+only_pemilik_soal_by_id($id_soal);
 // Ambil data soal berdasarkan ID
 $query = "SELECT * FROM soal WHERE id_soal = '$id_soal'";
 $result = mysqli_query($koneksi, $query);

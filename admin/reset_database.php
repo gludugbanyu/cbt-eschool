@@ -3,6 +3,7 @@ session_start();
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
+only_admin();
 include '../inc/dataadmin.php';
 
 ?>

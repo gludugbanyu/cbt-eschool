@@ -1,7 +1,12 @@
 <?php
 session_start();
 include '../koneksi/koneksi.php';
+include '../inc/functions.php';  
+check_login('admin');
 
+// ⛔ KUNCI DI SINI
+$oldKode = mysqli_real_escape_string($koneksi, $_POST['old_kode'] ?? '');
+only_pemilik_soal_by_kode($oldKode);
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -9,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$oldKode = mysqli_real_escape_string($koneksi, $_POST['old_kode']);
 $newKode = mysqli_real_escape_string($koneksi, $_POST['new_kode']);
 
 // Validasi kode baru

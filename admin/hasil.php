@@ -32,13 +32,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $where .= " AND s.nama_siswa LIKE '%$nama_siswa%'";
     }
 
-    $query = "SELECT n.id_nilai, n.id_siswa, s.nama_siswa, s.kelas, s.rombel, n.kode_soal, n.total_soal, 
-                n.status_penilaian, n.jawaban_benar, n.jawaban_salah, n.jawaban_kurang, 
-                n.nilai, n.nilai_uraian, n.tanggal_ujian
-              FROM nilai n
-              JOIN siswa s ON n.id_siswa = s.id_siswa
-              WHERE $where
-              ORDER BY n.tanggal_ujian DESC";
+    $id_admin = $_SESSION['admin_id'] ?? 0;
+$role = $_SESSION['role'] ?? '';
+
+$filter_owner = "";
+
+// Kalau bukan admin, batasi hanya soal miliknya
+if ($role != 'admin') {
+    $filter_owner = " AND FIND_IN_SET('$id_admin', so.id_pembuat)";
+}
+
+$query = "SELECT n.id_nilai, n.id_siswa, s.nama_siswa, s.kelas, s.rombel, 
+                n.kode_soal, n.total_soal, 
+                n.status_penilaian, n.jawaban_benar, n.jawaban_salah, 
+                n.jawaban_kurang, n.nilai, n.nilai_uraian, n.tanggal_ujian
+          FROM nilai n
+          JOIN siswa s ON n.id_siswa = s.id_siswa
+          JOIN soal so ON so.kode_soal = n.kode_soal
+          WHERE $where $filter_owner
+          ORDER BY n.tanggal_ujian DESC";
+
 
     $result = mysqli_query($koneksi, $query);
 
@@ -146,6 +159,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php include 'navbar.php'; ?>
             <main class="content">
                 <div class="container-fluid p-0">
+<?php
+$id_admin = $_SESSION['admin_id'] ?? 0;
+$role = $_SESSION['role'] ?? '';
+
+$filter_owner = "";
+if ($role != 'admin') {
+    $filter_owner = "WHERE FIND_IN_SET('$id_admin', so.id_pembuat)";
+}
+
+$qCompact = mysqli_query($koneksi, "
+    SELECT 
+        so.kode_soal,
+        so.id_pembuat,
+        SUM(CASE WHEN n.nilai_uraian <= 0 THEN 1 ELSE 0 END) AS belum,
+        SUM(CASE WHEN n.nilai_uraian > 0 THEN 1 ELSE 0 END) AS sudah
+    FROM soal so
+    LEFT JOIN nilai n ON n.kode_soal = so.kode_soal
+    $filter_owner
+    GROUP BY so.kode_soal
+    ORDER BY so.kode_soal ASC
+");
+?>
+
+<div class="card shadow-sm border-0 mb-3">
+    <div class="card-body p-2">
+
+        <div class="fw-bold mb-2">
+            Ringkasan Koreksi per Kode Soal
+        </div>
+
+        <div style="max-height:120px; overflow-y:auto;">
+            <table class="table table-sm table-bordered mb-0" style="font-size:12px;">
+                <thead class="table-light">
+                    <tr>
+                        <th>Kode</th>
+                        <th class="text-center text-danger">Belum</th>
+                        <th class="text-center text-success">Sudah</th>
+                    </tr>
+                </thead>
+                <tbody>
+<?php while($c = mysqli_fetch_assoc($qCompact)): ?>
+
+<?php
+$ids = explode(',', $c['id_pembuat']);
+$nama_list = [];
+
+foreach($ids as $id){
+    $id = trim($id);
+    $qNama = mysqli_query($koneksi,"SELECT nama_admin FROM admins WHERE id='$id'");
+    if($dNama = mysqli_fetch_assoc($qNama)){
+        $nama_list[] = $dNama['nama_admin'];
+    }
+}
+?>
+
+<tr>
+    <td>
+        <strong><?= $c['kode_soal'] ?></strong><br>
+        <?php foreach($nama_list as $nm): ?>
+            <span class="badge bg-dark me-1"><?= $nm ?></span>
+        <?php endforeach; ?>
+    </td>
+    <td class="text-center text-danger fw-bold"><?= $c['belum'] ?? 0 ?></td>
+    <td class="text-center text-success fw-bold"><?= $c['sudah'] ?? 0 ?></td>
+</tr>
+
+<?php endwhile; ?>
+</tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</div>
                     <div class="card shadow">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Daftar Nilai Ujian</h5>
@@ -180,13 +269,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
 
                                 <div class="col-md-3">
-                                    <label for="kode_soal" class="form-label">Kode Ujian</label>
+                                    <label for="kode_soal" class="form-label">Kode Soal</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
                                         <select class="form-select" name="kode_soal" id="kode_soal">
                                             <option value="">Semua Kode</option>
                                             <?php
-                                            $qSoal = mysqli_query($koneksi, "SELECT DISTINCT kode_soal FROM nilai");
+                                            $id_admin = $_SESSION['admin_id'] ?? 0;
+                                            $role = $_SESSION['role'] ?? '';
+
+                                            $filter_owner = "";
+                                            if ($role != 'admin') {
+                                                $filter_owner = "WHERE FIND_IN_SET('$id_admin', id_pembuat)";
+                                            }
+
+                                            $qSoal = mysqli_query($koneksi, "
+                                                SELECT kode_soal 
+                                                FROM soal 
+                                                $filter_owner
+                                                ORDER BY kode_soal ASC
+                                            ");
+
                                             while ($soal = mysqli_fetch_assoc($qSoal)) {
                                                 echo "<option value='{$soal['kode_soal']}'>{$soal['kode_soal']}</option>";
                                             }
@@ -335,6 +438,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
     </script>
+     <?php if(isset($_GET['akses'])): ?>
+<script src="../assets/swal/sweetalert2.all.min.js"></script>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Akses Ditolak!',
+    text: 'Halaman tersebut hanya bisa diakses oleh Pemilik Soal.',
+    confirmButtonColor: '#d33'
+});
+</script>
+<?php endif; ?>
 
     <!-- Modal Koreksi -->
     <div class="modal fade" id="modalKoreksiUraian" tabindex="-1">

@@ -11,6 +11,7 @@ if (!isset($_GET['kode_soal']) || !isset($_GET['id_siswa'])) {
 }
 
 $kode_soal = $_GET['kode_soal'];
+only_preview_soal_by_kode($kode_soal);
 $id_siswa = $_GET['id_siswa'];
 
 // Ambil data nilai, nama siswa dan tanggal ujian dari tabel nilai

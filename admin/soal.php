@@ -4,18 +4,29 @@ include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
 include '../inc/dataadmin.php';
+$id_admin = $_SESSION['admin_id'];
+$role     = $_SESSION['role'];
+
+$where = "";
+if ($role != 'admin') {
+    $where = "WHERE FIND_IN_SET('$id_admin', s.id_pembuat)";
+}
+
 $query = "
     SELECT 
         s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, 
         s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, 
-        s.token, s.jumlah_opsi,   -- ✅ TAMBAH INI
+        s.token, s.jumlah_opsi,
+        s.id_pembuat,
         COUNT(b.id_soal) AS jumlah_butir
     FROM soal s
     LEFT JOIN butir_soal b ON s.kode_soal = b.kode_soal
+    $where
     GROUP BY 
         s.id_soal, s.kode_soal, s.nama_soal, s.mapel, s.kelas, 
         s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, 
-        s.token, s.jumlah_opsi   -- ✅ TAMBAH INI
+        s.token, s.jumlah_opsi,
+        s.id_pembuat
 ";
 $result = mysqli_query($koneksi, $query);
 
@@ -72,6 +83,7 @@ if (!$result) {
                                             <tr>
                                                 <th>No</th>
                                                 <th>Kode Soal</th>
+                                                <th>Pembuat / korektor</th>
                                                 <th>Mapel</th>
                                                 <th>Kls</th>
                                                 <th>Jmlh</th>
@@ -90,6 +102,30 @@ if (!$result) {
                                             <tr>
                                                 <td><?php echo $no++; ?></td>
                                                 <td><?php echo $row['kode_soal']; ?></td>
+                                                <td>
+                                                <?php
+                                                $ids = $row['id_pembuat'];
+                                                $users = mysqli_query($koneksi, "SELECT id, nama_admin FROM admins WHERE FIND_IN_SET(id, '$ids')");
+                                                $nama_list = [];
+                                                while($u = mysqli_fetch_assoc($users)){
+                                                    $nama_list[] = $u['nama_admin'];
+                                                }
+                                                ?>
+                                                <?php foreach($nama_list as $nama): ?>
+                                                    <span class="badge bg-dark me-1 mb-1">
+                                                        <i class="fa fa-user"></i> <?= $nama; ?>
+                                                    </span>
+                                                <?php endforeach; ?>
+                                                <?php if($_SESSION['role']=='admin'): ?>
+                                                <br>
+                                                <button 
+                                                class="btn btn-sm btn-outline-primary mt-1 btn-akses"
+                                                data-id="<?= $row['id_soal']; ?>"
+                                                data-current="<?= $ids; ?>">
+                                                <i class="fa fa-users"></i> Atur Akses
+                                                </button>
+                                                <?php endif; ?>
+                                                </td>
                                                 <td><?php echo $row['mapel']; ?></td>
                                                 <td><?php echo $row['kelas']; ?></td>
                                                 <td><?php echo $row['jumlah_butir']; ?></td>
@@ -271,6 +307,50 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
 
 
     });
+
+    document.querySelectorAll('.btn-akses').forEach(btn=>{
+    btn.addEventListener('click', function(){
+        const idSoal = this.dataset.id;
+        const current = this.dataset.current;
+
+        fetch('get_admin_list.php?current=' + current)
+
+        .then(res=>res.text())
+        .then(html=>{
+
+            Swal.fire({
+                title: 'Atur Akses User',
+                html: html,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                preConfirm: ()=>{
+                    let selected = [];
+                    document.querySelectorAll('.chk-admin:checked').forEach(c=>{
+                        selected.push(c.value);
+                    });
+                    return selected.join(',');
+                }
+            }).then(result=>{
+                if(result.isConfirmed){
+                    fetch('update_akses_soal.php',{
+                        method:'POST',
+                        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                        body:`id_soal=${idSoal}&ids=${result.value}`
+                    }).then(res=>res.json())
+                    .then(r=>{
+                        if(r.status=='ok'){
+                            Swal.fire('Berhasil','Akses diperbarui','success')
+                            .then(()=>location.reload());
+                        }
+                    });
+                }
+            });
+
+        });
+    });
+});
+
     </script>
     <?php if (isset($_SESSION['success'])): ?>
     <script>
@@ -307,6 +387,17 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
     </script>
     <?php unset($_SESSION['success_message']); ?>
     <?php endif; ?>
+            <?php if(isset($_GET['akses'])): ?>
+<script src="../assets/swal/sweetalert2.all.min.js"></script>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Akses Ditolak!',
+    text: 'Halaman tersebut hanya bisa diakses oleh Pemilik.',
+    confirmButtonColor: '#d33'
+});
+</script>
+<?php endif; ?>
     <?php if (isset($_SESSION['warning_message'])): ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -321,6 +412,7 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
     </script>
     <?php unset($_SESSION['warning_message']); ?>
     <?php endif; ?>
+
 </body>
 
 </html>

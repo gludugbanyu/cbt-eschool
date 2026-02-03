@@ -6,6 +6,7 @@ require_once '../assets/phpqrcode/qrlib.php';
 include '../inc/dataadmin.php';
 // Cek jika sudah login
 check_login('admin');
+only_admin();
 // Pastikan koneksi berhasil
 if (!$koneksi) {
     die("Koneksi database gagal: " . mysqli_connect_error());

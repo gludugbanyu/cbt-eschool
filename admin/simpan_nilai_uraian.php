@@ -7,7 +7,7 @@ include '../inc/dataadmin.php';
 $id_siswa = $_POST['id_siswa'] ?? '';
 $kode_soal = $_POST['kode_soal'] ?? '';
 $nilai_per_soal = $_POST['nilai'] ?? [];
-
+only_preview_soal_by_kode($kode_soal);
 // Validasi input
 if(empty($id_siswa) || empty($kode_soal)) {
     die(json_encode(['status' => 'error', 'message' => 'Data tidak valid']));

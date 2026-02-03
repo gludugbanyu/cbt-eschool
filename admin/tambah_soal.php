@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $waktu_ujian = mysqli_real_escape_string($koneksi, $_POST['waktu_ujian']);
     $tanggal = mysqli_real_escape_string($koneksi, $_POST['tanggal']);
     $jumlah_opsi   = mysqli_real_escape_string($koneksi, $_POST['jumlah_opsi']);
+$tampil_tombol_selesai = mysqli_real_escape_string($koneksi, $_POST['tampil_tombol_selesai']);
+$id_admin = $_SESSION['admin_id'];
+
 
     // Cek duplikasi kode_soal
     $cek_kode = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal = '$kode_soal'");
@@ -23,9 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $query = "INSERT INTO soal 
-            (kode_soal, nama_soal, mapel, kelas, waktu_ujian, tampilan_soal, tanggal, jumlah_opsi)
-          VALUES 
-            ('$kode_soal', '$nama_soal', '$mapel', '$kelas', '$waktu_ujian', '$tampilan_soal', '$tanggal', '$jumlah_opsi')";
+        (kode_soal, nama_soal, mapel, kelas, waktu_ujian, tampilan_soal, tanggal, jumlah_opsi, tampil_tombol_selesai, id_pembuat)
+      VALUES 
+        ('$kode_soal', '$nama_soal', '$mapel', '$kelas', '$waktu_ujian', '$tampilan_soal', '$tanggal', '$jumlah_opsi', '$tampil_tombol_selesai', '$id_admin')";
+
 
 
     if (mysqli_query($koneksi, $query)) {

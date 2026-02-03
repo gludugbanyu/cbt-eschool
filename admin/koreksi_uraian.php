@@ -7,6 +7,7 @@ include '../inc/dataadmin.php';
 
 $id_siswa = $_POST['id_siswa'] ?? '';
 $kode_soal = $_POST['kode_soal'] ?? '';
+only_preview_soal_by_kode($kode_soal);
 
 if (empty($id_siswa) || empty($kode_soal)) {
     die("Data tidak valid!");

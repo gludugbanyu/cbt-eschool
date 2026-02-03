@@ -3,6 +3,7 @@ session_start();
 include '../koneksi/koneksi.php'; // Pastikan di sini sudah ada variabel $key
 include '../inc/functions.php';
 check_login('admin');
+only_admin();
 
 function encrypt_data($data, $key) {
     $iv = openssl_random_pseudo_bytes(16);

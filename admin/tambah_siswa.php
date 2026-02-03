@@ -4,6 +4,7 @@ include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 include '../inc/dataadmin.php';
 check_login('admin');
+only_admin();
 
 if (isset($_POST['submit'])) {
     $nama = htmlspecialchars($_POST['nama_siswa']);
