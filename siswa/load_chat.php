@@ -16,16 +16,20 @@ $my_role = $isAdmin ? 'admin' : 'siswa';
 
 // Ambil 50 pesan terbaru (admin dan siswa)
 $q_chat = mysqli_query($koneksi, "
-    SELECT c.*, 
-           CASE 
-               WHEN c.role = 'siswa' THEN s.nama_siswa 
-               ELSE 'Admin' 
-           END AS nama_pengirim
-    FROM (
-        SELECT * FROM chat WHERE deleted = 0 ORDER BY waktu DESC LIMIT 50
-    ) c 
-    LEFT JOIN siswa s ON c.role = 'siswa' AND c.id_user = s.id_siswa
-    ORDER BY c.waktu ASC
+    SELECT c.*,
+       CASE
+           WHEN c.role = 'siswa' THEN s.nama_siswa
+           WHEN c.role = 'admin' THEN a.nama_admin
+       END AS nama_pengirim
+FROM (
+    SELECT * FROM chat WHERE deleted = 0 ORDER BY waktu DESC LIMIT 50
+) c
+LEFT JOIN siswa s 
+    ON c.role = 'siswa' AND c.id_user = s.id_siswa
+LEFT JOIN admins a
+    ON c.role = 'admin' AND c.id_user = a.id
+ORDER BY c.waktu ASC
+
 ");
 
 
@@ -77,9 +81,40 @@ echo nl2br(htmlspecialchars($chat['pesan']));
 echo '<span class="chat-timestamp">' . date('H:i', strtotime($chat['waktu'])) . '</span>';
 echo '</div>';
 
-// Hapus pesan (admin selalu bisa, user hanya dalam 60 detik)
-$isAdmin = isset($_SESSION['admin_id']);
-if ($isAdmin || ($isMe && (time() - strtotime($chat['waktu']) <= 60))) {
+$roleSession = $_SESSION['role'] ?? 'siswa'; // admin / editor / siswa
+$myAdminId   = $_SESSION['admin_id'] ?? 0;
+$mySiswaId   = $_SESSION['siswa_id'] ?? 0;
+
+$selisih = time() - strtotime($chat['waktu']);
+$bisa_hapus = false;
+
+// ✅ ADMIN boleh hapus semua chat kapan saja
+if ($roleSession === 'admin') {
+    $bisa_hapus = true;
+}
+
+// ✅ EDITOR hanya boleh hapus chat miliknya sendiri (chat admin) <=15 detik
+elseif ($roleSession === 'editor') {
+    if (
+        $chat['role'] === 'admin' &&
+        $chat['id_user'] == $myAdminId &&
+        $selisih <= 15
+    ) {
+        $bisa_hapus = true;
+    }
+}
+
+// ✅ SISWA hanya boleh hapus chat miliknya sendiri <=15 detik
+elseif ($chat['role'] === 'siswa') {
+    if (
+        $chat['id_user'] == $mySiswaId &&
+        $selisih <= 15
+    ) {
+        $bisa_hapus = true;
+    }
+}
+
+if ($bisa_hapus) {
     echo '<br><a href="#" class="delete-chat" data-id="' . $chat['id'] . '" title="Hapus pesan">';
     echo '<small style="font-size:10px;"><i class="fas fa-close"></i> Hapus</small></a>';
 }
