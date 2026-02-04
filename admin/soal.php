@@ -59,6 +59,7 @@ if (!$result) {
     }
 .row-alarm {
     border-left: 8px solid #dc3545 !important;
+    background-color: #efefef !important;
 }
 #soalTable td:last-child .btn {
     margin-right: 4px;
@@ -86,7 +87,7 @@ if (!$result) {
                                 <div class="card-body table-wrapper">
                                     <a href="tambah_soal.php" class="btn btn-primary mb-3"><i class="fas fa-plus"></i>
                                         Tambah Soal Baru</a>
-                                    <table id="soalTable" class="table table-striped">
+                                    <table id="soalTable" class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
