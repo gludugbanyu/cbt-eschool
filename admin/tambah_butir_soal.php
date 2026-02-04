@@ -232,7 +232,7 @@ Swal.fire({
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 d-none" id="box-pertanyaan">
                                     <label class="form-label">Pertanyaan</label>
                                     <textarea class="form-control" id="pertanyaan" name="pertanyaan" required></textarea>
                                 </div>
@@ -282,7 +282,7 @@ Swal.fire({
                                     </div>
                                 </div>
 
-                                <div class="mt-3">
+                                <div class="mt-3 d-none" id="box-simpan">
                                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                                     <a href="daftar_butir_soal.php?kode_soal=<?= $kode_soal ?>" class="btn btn-danger">Batal</a>
                                 </div>
@@ -459,6 +459,38 @@ function sendFile(file, editor) {
 }
 
 
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    const tipeSelect   = document.getElementById('tipe_soal');
+    const boxPertanyaan = document.getElementById('box-pertanyaan');
+    const boxSimpan     = document.getElementById('box-simpan');
+
+    function toggleAwal(){
+        if(!tipeSelect.value){
+            boxPertanyaan.classList.add('d-none');
+            boxSimpan.classList.add('d-none');
+        }else{
+            boxPertanyaan.classList.remove('d-none');
+            boxSimpan.classList.remove('d-none');
+        }
+    }
+
+    // pertama kali load
+    toggleAwal();
+
+    // saat pilih tipe
+    tipeSelect.addEventListener('change', function(){
+        toggleAwal();
+
+        // penting: refresh summernote setelah muncul
+        setTimeout(function(){
+            $('#pertanyaan').summernote('reset');
+        }, 200);
+    });
+
+});
 </script>
 
 </body>
