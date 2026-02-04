@@ -9,7 +9,7 @@ $error = '';
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
+$page_signature = hash('sha256', $_SESSION['csrf_token'] . 'CBT-ESCOOL');
 // Redirect jika sudah login
 if (isset($_SESSION['siswa_logged_in']) && $_SESSION['siswa_logged_in'] === true) {
     header("Location: dashboard.php");
@@ -23,6 +23,13 @@ if (isset($_GET['status']) && $_GET['status'] === 'multi') {
 
 // Proses form login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $expected_sign = hash('sha256', $_SESSION['csrf_token'] . 'CBT-ESCOOL');
+
+    if (!isset($_POST['page_sign']) || $_POST['page_sign'] !== $expected_sign) {
+        header("Location: ../error_page.php");
+        exit;
+    }
+
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $captcha_input = $_POST['captcha'] ?? '';
@@ -155,6 +162,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 14px;
         }
     }
+    .card-bottom-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+#enc{
+    opacity: .8;
+}
+.card-meta-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid #f1f1f1;
+    font-size: 12px;
+    color: #9aa0a6;
+}
+
+#enc{
+    opacity: .7;
+}
+
+.admin-meta{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #9aa0a6;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: .3px;
+    transition: .2s ease;
+}
+
+.admin-meta i{
+    font-size: 13px;
+}
+
+.admin-meta:hover{
+    color: #0d6efd;
+}
+
 </style>
 
 </head>
@@ -194,6 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endif; ?>
                         <form action="" method="POST" class="mt-3" id="loginForm">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                            <input type="hidden" name="page_sign" id="page_sign">
                             <div class="mb-3">
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Username" required autocomplete="off"> 
                             </div>
@@ -213,8 +266,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             <button type="submit" class="btn btn-primary w-100" id="loginButton">Login <i class="fa fa-sign-in"></i></button>
                         </form><br>
-                        <div id="enc" style="font-size:13px;">
-                            <p></p>
+                        <div class="card-meta-footer">
+                        <div id="enc" data-sign="<?= $page_signature ?>"></div>
+                            <a href="../admin" class="admin-meta">
+                                <i class="fa fa-user-shield"></i>
+                                <span>Admin Panel</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -255,25 +312,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     });
 
-    function checkIfEncDeleted() {
-        var encElement = document.getElementById("enc");
-
-        if (!encElement) {
-            var loginButton = document.getElementById("loginButton");
-            loginButton.disabled = true;  
-            loginButton.style.cursor = "not-allowed";  
-            loginButton.style.opacity = "0.6";  
-            window.location.href = "../error_page.php";  
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+    var enc = document.getElementById("enc");
+    if (enc) {
+        document.getElementById("page_sign").value = enc.dataset.sign;
     }
+});
 
-    setInterval(checkIfEncDeleted, 500);
-
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-        var loginButton = document.getElementById("loginButton");
-        if (loginButton.disabled) {
-            event.preventDefault();  
-        }
-    });
 </script>
 </html>

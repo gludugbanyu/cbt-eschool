@@ -9,7 +9,7 @@ $error = '';
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
+$page_signature = hash('sha256', $_SESSION['csrf_token'] . 'CBT-ESCOOL');
 // Redirect jika sudah login
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     header("Location: dashboard.php");
@@ -17,6 +17,14 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $expected_sign = hash('sha256', $_SESSION['csrf_token'] . 'CBT-ESCOOL');
+
+    if (!isset($_POST['page_sign']) || $_POST['page_sign'] !== $expected_sign) {
+        header("Location: ../error_page.php");
+        exit;
+    }
+
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $captcha_input = trim($_POST['captcha'] ?? '');
@@ -171,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php endif; ?>
                             <form action="" method="POST" class="mt-3" id="loginForm" autocomplete="off">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="page_sign" id="page_sign">
                                 <div class="mb-3">
                                     <input type="text" class="form-control" id="username" name="username"
                                         placeholder="Username" required autocomplete="off">
@@ -195,9 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <button type="submit" class="btn btn-primary w-100" id="loginButton">Login <i
                                         class="fa fa-sign-in"></i></button>
                             </form><br>
-                            <div id="enc" style="font-size:13px;">
-                                <p></p>
-                            </div>
+                            <div id="enc" data-sign="<?= $page_signature ?>" style="font-size:13px;"></div>
                         </div>
                     </div>
                 </div>
@@ -230,34 +237,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }, 4000);
 
         document.addEventListener("DOMContentLoaded", function() {
-            var base64Text = "<?php echo $encryptedText; ?>";
-            if (base64Text) {
-                var decodedText = atob(base64Text);
-                document.getElementById("enc").innerHTML = decodedText;
-            }
-        });
+    var base64Text = "<?php echo $encryptedText; ?>";
+    if (base64Text) {
+        var decodedText = atob(base64Text);
+        document.getElementById("enc").innerHTML = decodedText;
+    }
 
-        function checkIfEncDeleted() {
-            var encElement = document.getElementById("enc");
+    var enc = document.getElementById("enc");
+    if (enc) {
+        document.getElementById("page_sign").value = enc.dataset.sign;
+    }
+});
 
-            if (!encElement) {
-                var loginButton = document.getElementById("loginButton");
-                loginButton.disabled = true;
-                loginButton.style.cursor = "not-allowed";
-                loginButton.style.opacity = "0.6";
-
-                window.location.href = "../error_page.php";
-            }
-        }
-
-        setInterval(checkIfEncDeleted, 500);
-
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            var loginButton = document.getElementById("loginButton");
-            if (loginButton.disabled) {
-                event.preventDefault();
-            }
-        });
         </script>
 </body>
 

@@ -1,26 +1,31 @@
 <?php
 session_start();
-include '../koneksi/koneksi.php';
-include '../inc/functions.php';
-check_login('admin');
-only_admin();
-
-include '../inc/dataadmin.php';
-
 header('Content-Type: application/json');
 
+include '../koneksi/koneksi.php';
+
+// VALIDASI LOGIN KHUSUS AJAX
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    echo json_encode(['status' => 'error', 'message' => 'Silakan login ulang.']);
+    exit;
+}
+
+// VALIDASI ROLE
+if (($_SESSION['role'] ?? '') !== 'admin') {
+    echo json_encode(['status' => 'error', 'message' => 'Halaman tersebut hanya bisa diakses oleh Admin.']);
+    exit;
+}
+
+// VALIDASI METHOD
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
     echo json_encode(['status' => 'error', 'message' => 'Metode tidak diizinkan.']);
     exit;
 }
 
-// Eksekusi hapus semua chat
-$query = mysqli_query($koneksi, "DELETE FROM skor_game");
-
-if ($query) {
+// HAPUS DATA
+if (mysqli_query($koneksi, "DELETE FROM skor_game")) {
     echo json_encode(['status' => 'ok', 'message' => 'Semua data telah dihapus.']);
 } else {
-    http_response_code(500);
     echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data.']);
 }
+exit;
