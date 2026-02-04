@@ -60,6 +60,10 @@ if (!$result) {
 .row-alarm {
     border-left: 8px solid #dc3545 !important;
 }
+#soalTable td:last-child .btn {
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
     </style>
 </head>
 
@@ -96,9 +100,8 @@ if (!$result) {
                                                 <th>Tombol Selesai</th>
                                                 <th>Tgl Ujian</th>
                                                 <th>Tampilan</th>
-                                                <th>Status</th>
                                                 <th>Token</th>
-                                                <th>Generate</th>
+                                                <th>On/Off</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -107,7 +110,14 @@ if (!$result) {
                                             <?php $alarm = ($row['status'] == 'Aktif'); ?>
                                             <tr class="<?= $alarm ? 'row-alarm' : '' ?>">
                                                 <td><?php echo $no++; ?></td>
-                                                <td><?php echo $row['kode_soal']; ?></td>
+                                                <td><?php echo $row['kode_soal']; ?><br>
+                                                                                                    
+                                                        <!-- Status -->
+                                                        <?php if ($row['status'] == 'Aktif') { ?>
+                                                            <span class="badge bg-success me-1">Aktif</span>
+                                                        <?php } else { ?>
+                                                            <span class="badge bg-danger me-1">Nonaktif</span>
+                                                        <?php } ?></td>
                                                 <td>
                                                 <?php
                                                 $ids = $row['id_pembuat'];
@@ -224,45 +234,91 @@ if (!$result) {
                                                     <?= date('d/m/Y', strtotime($row['tanggal'])) ?>
                                                 </span></td>
                                                 <td><?php echo $row['tampilan_soal']; ?></td>
-                                                <td>
-                                                    <?php if ($row['status'] == 'Aktif') { ?>
-                                                    <span class="badge bg-success">Aktif</span>
-                                                    <?php } else { ?>
-                                                    <span class="badge bg-danger">Nonaktif</span>
-                                                    <?php } ?>
-                                                </td>
-                                                <td><?php echo $row['token']; ?></td>
-                                                <td>
-                                                    <?php if ($row['status'] == 'Aktif') { ?>
-                                                    <a href="generate_token.php?id_soal=<?php echo $row['id_soal']; ?>"
-                                                        class="btn btn-sm btn-outline-secondary"><i
-                                                            class="fa fa-history"></i> Token</a>
-                                                    <?php } else { ?>
-                                                    <?php } ?>
-                                                    <?php if ($row['status'] == 'Aktif') { ?>
-                                                    <a href="ubah_status_soal.php?id_soal=<?= $row['id_soal']; ?>&aksi=nonaktif"
-                                                        class="btn btn-sm btn-secondary"><i class="fa fa-toggle-off"
-                                                            aria-hidden="true"></i> Nonaktifkan</a>
-                                                    <?php } else { ?>
-                                                    <a href="ubah_status_soal.php?id_soal=<?= $row['id_soal']; ?>&aksi=aktif"
-                                                        class="btn btn-sm btn-info"><i class="fa fa-toggle-on"
-                                                            aria-hidden="true"></i> Aktifkan</a>
-                                                    <?php } ?>
-                                                </td>
-                                                <td>
-                                                <a href="preview_soal.php?kode_soal=<?php echo $row['kode_soal']; ?>&opsi=<?php echo $row['jumlah_opsi']; ?>"
-                                                    class="btn btn-sm btn-outline-secondary">
-                                                    <i class="fa fa-eye"></i> view
-                                                </a>
+                                                    <td style="white-space:nowrap;">
+                                                        <!-- Token -->
+                                                         <?= $row['token']; ?>
+                                                        <!-- Generate Token -->
+                                                        <?php if ($row['status'] == 'Aktif') { ?>
+                                                            <a href="generate_token.php?id_soal=<?= $row['id_soal']; ?>"
+                                                            class="btn btn-outline-secondary btn-sm p-0 rounded-circle d-inline-flex align-items-center justify-content-center"
+                                                            style="width:26px;height:26px;"
+                                                            title="Generate Token">
+                                                                <i class="fa fa-history" style="font-size:10px;"></i>
+                                                            </a>
+                                                        <?php } ?>
 
-                                                <a href="<?= $alarm ? '#' : 'edit_soal.php?id_soal='.$row['id_soal']; ?>" class="btn btn-sm btn-primary <?= $alarm ? 'disabled opacity-50' : '' ?>"><i class="fa fa-edit"></i> Edit</a>
-                                                <a href="#" class="btn btn-sm btn-info btn-duplicate <?= $alarm ? 'disabled opacity-50' : '' ?>" data-kode="<?php echo $row['kode_soal']; ?>"><i class="fa fa-copy"></i> Duplikat</a>
-                                                <a href="<?= $alarm ? '#' : 'daftar_butir_soal.php?kode_soal='.$row['kode_soal']; ?>"
-                                                class="btn btn-sm btn-success <?= $alarm ? 'disabled opacity-50' : '' ?>">
-                                                <i class="fa fa-plus"></i> Input
-                                                </a>                                                
-                                                <button class="btn btn-danger btn-sm btn-hapus <?= $alarm ? 'disabled opacity-50' : '' ?>"  data-kode="<?= $row['kode_soal']; ?>"><i class="fa fa-close" aria-hidden="true"></i> Hapus</button>
-                                                </td>
+                                                    </td>
+                                                 <td style="white-space:nowrap;">
+                                                    <?php if ($row['status'] == 'Aktif') { ?>
+                                                        <a href="ubah_status_soal.php?id_soal=<?= $row['id_soal']; ?>&aksi=nonaktif"
+                                                        class="text-decoration-none">
+                                                        
+                                                            <span class="btn btn-sm p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn-danger align-middle"
+                                                                style="width:28px;height:28px;">
+                                                                <i class="fa fa-toggle-off" style="font-size:13px;"></i>
+                                                            </span>
+
+                                                            <span class="ms-1 text-danger align-middle" style="font-size:12px;">
+                                                                Nonaktifkan
+                                                            </span>
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        <a href="ubah_status_soal.php?id_soal=<?= $row['id_soal']; ?>&aksi=aktif"
+                                                        class="text-decoration-none">
+
+                                                            <span class="btn btn-sm p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn-success align-middle"
+                                                                style="width:28px;height:28px;">
+                                                                <i class="fa fa-toggle-on" style="font-size:13px;"></i>
+                                                            </span>
+
+                                                            <span class="ms-1 text-success align-middle" style="font-size:12px;">
+                                                                Aktifkan
+                                                            </span>
+                                                        </a>
+                                                    <?php } ?>
+                                                    </td>
+                                               <td style="white-space:nowrap;">
+    <!-- Preview -->
+    <a href="preview_soal.php?kode_soal=<?= $row['kode_soal']; ?>&opsi=<?= $row['jumlah_opsi']; ?>"
+       class="btn btn-light btn-sm rounded-circle me-1"
+       style="width:30px;height:30px;border:1px solid #ccc;"
+       title="Preview Soal">
+        <i class="fa fa-eye"></i>
+    </a>
+
+    <!-- Edit -->
+    <a href="<?= $alarm ? '#' : 'edit_soal.php?id_soal='.$row['id_soal']; ?>"
+       class="btn btn-primary btn-sm rounded-circle me-1 <?= $alarm ? 'disabled opacity-50' : '' ?>"
+       style="width:30px;height:30px;"
+       title="Edit Soal">
+        <i class="fa fa-edit"></i>
+    </a>
+
+    <!-- Duplikat -->
+    <a href="#"
+       class="btn btn-info btn-sm rounded-circle me-1 btn-duplicate <?= $alarm ? 'disabled opacity-50' : '' ?>"
+       data-kode="<?= $row['kode_soal']; ?>"
+       style="width:30px;height:30px;"
+       title="Duplikat Soal">
+        <i class="fa fa-copy"></i>
+    </a>
+
+    <!-- Input Butir -->
+    <a href="<?= $alarm ? '#' : 'daftar_butir_soal.php?kode_soal='.$row['kode_soal']; ?>"
+       class="btn btn-success btn-sm rounded-circle me-1 <?= $alarm ? 'disabled opacity-50' : '' ?>"
+       style="width:30px;height:30px;"
+       title="Input Butir Soal">
+        <i class="fa fa-plus"></i>
+    </a>
+
+    <!-- Hapus -->
+    <button class="btn btn-danger btn-sm rounded-circle btn-hapus <?= $alarm ? 'disabled opacity-50' : '' ?>"
+            data-kode="<?= $row['kode_soal']; ?>"
+            style="width:30px;height:30px;"
+            title="Hapus Soal">
+        <i class="fa fa-trash"></i>
+    </button>
+</td>
                                             </tr>
                                             <?php } ?>
                                         </tbody>

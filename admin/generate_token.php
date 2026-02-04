@@ -47,7 +47,7 @@ if ($data_soal['status'] == 'Nonaktif') {
     </html>
     ');
 } else {  // Kondisi lain jika soal statusnya aktif atau jika ada logika lain
-    $kode = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6));
+    $kode = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 5));
     $status = 'Aktif';
     $query = "UPDATE soal SET status = '$status', token = '$kode' WHERE id_soal = '$id_soal'";
     
