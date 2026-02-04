@@ -204,15 +204,23 @@ if ($data_soal['status'] == 'Aktif') {
         echo "<td>" . htmlspecialchars($butir['tipe_soal']) . "</td>";
         echo "<td>" . htmlspecialchars($butir['status_soal']) . "</td>";
         
-        // Perhatikan link di bawah ini: menambahkan parameter &opsi=
         echo "<td>
-                <a href='edit_butir_soal.php?id_soal=" . $butir['id_soal'] . "&kode_soal=" . urlencode($kode_soal) . "&opsi=" . $data_soal['jumlah_opsi'] . "' class='btn btn-sm btn-primary'>
-                    <i class='fas fa-edit'></i> Edit
-                </a>
-                <button class='btn btn-sm btn-danger btn-hapus' data-id='" . $butir['id_soal'] . "'>
-                    <i class='fa fa-close'></i> Hapus
-                </button>
-              </td>";
+        <button 
+            class='btn btn-sm btn-outline-dark'
+            onclick=\"lihatSoal('".$kode_soal."', ".$butir['nomer_soal'].")\">
+            <i class='fa fa-eye'></i> Lihat
+        </button>
+        
+        <a href='edit_butir_soal.php?id_soal=" . $butir['id_soal'] . "&kode_soal=" . urlencode($kode_soal) . "&opsi=" . $data_soal['jumlah_opsi'] . "' class='btn btn-sm btn-primary'>
+            <i class='fas fa-edit'></i> Edit
+        </a>
+        
+        <button class='btn btn-sm btn-danger btn-hapus' data-id='" . $butir['id_soal'] . "'>
+            <i class='fa fa-close'></i> Hapus
+        </button>
+        </td>";
+        
+
         echo "</tr>";
     }
     ?>
@@ -262,7 +270,45 @@ if ($data_soal['status'] == 'Aktif') {
         </div>
     </div>
     <?php include '../inc/js.php'; ?>
+    <!-- MODAL PREVIEW SOAL -->
+    <div class="modal fade" id="modalSoal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">Preview Butir Soal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body" id="isiModalSoal" style="max-height:90vh;overflow:auto;">
+                Loading...
+            </div>
+
+        </div>
+    </div>
+</div>
+
     <script>
+    function lihatSoal(kode, nomor){
+        const modalEl = document.getElementById('modalSoal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        // tampilkan loading dulu
+        document.getElementById('isiModalSoal').innerHTML = 'Loading...';
+
+        // ambil isi soal via AJAX
+        fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('isiModalSoal').innerHTML = html;
+            });
+
+        modal.show();
+    }
+    </script>
+<script>
     $(document).ready(function() {
         $('#butirsoal').DataTable({
             "paging": true,

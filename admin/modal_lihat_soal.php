@@ -3,7 +3,6 @@ session_start();
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
-include '../inc/dataadmin.php';
 
 if (!isset($_GET['kode_soal']) || !isset($_GET['nomor'])) {
     exit('Parameter kurang');
@@ -12,203 +11,186 @@ if (!isset($_GET['kode_soal']) || !isset($_GET['nomor'])) {
 $kode_soal = $_GET['kode_soal'];
 $nomor     = (int)$_GET['nomor'];
 
-only_pemilik_soal_by_kode($kode_soal);
+/* ambil jumlah opsi dari tabel soal */
+$qInfo = mysqli_query($koneksi,"SELECT jumlah_opsi FROM soal WHERE kode_soal='$kode_soal'");
+$jInfo = mysqli_fetch_assoc($qInfo);
+$jumlah_opsi = intval($jInfo['jumlah_opsi'] ?? 4);
 
-$query_info = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal' LIMIT 1");
-$info_soal = mysqli_fetch_assoc($query_info);
-$jumlah_opsi = intval($info_soal['jumlah_opsi'] ?? 4);
 $opsi_huruf_full = ['A','B','C','D','E'];
 
 $soalQ = mysqli_query($koneksi,"
     SELECT * FROM butir_soal 
     WHERE kode_soal='$kode_soal' 
-    AND nomer_soal='$nomor'
+    AND nomer_soal=$nomor
 ");
 $soal = mysqli_fetch_assoc($soalQ);
 
+if(!$soal){
+    exit("Soal tidak ditemukan");
+}
+
 $jawaban_benar = $soal['jawaban_benar'];
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview Soal</title>
-<?php include '../inc/css.php'; ?>
 
 <style>
-body{
-    background:#f4f6f9;
-    height:auto !important;
-    overflow:auto !important;
+.preview-soal img{
+    max-width:450px;
+    max-height:300px;
 }
-.card-utama{
+.preview-soal table{
     width:100%;
-    max-width:100%;
+    margin-bottom:6px;
+}
+.preview-soal td{
+    vertical-align:top;
+}
+.preview-header{
+    background:grey;
+    color:white;
+    padding:6px;
+}
+.preview-no{
+    background:black;
+    color:white;
+    padding:4px 6px;
+}
+.form-check-input:checked{
+    background-color:#198754 !important;
+    border-color:#198754 !important;
+}
+.table-garis{
+    border-collapse: collapse;
+    width: 100%;
+    margin-top:10px;
+}
+.table-garis,
+.table-garis th,
+.table-garis td{
+    border:1px solid #333 !important;
+}
+.table-garis th{
+    background:#f2f2f2;
+    text-align:center;
 }
 </style>
-</head>
 
-<body>
+<div class="preview-soal p-3">
 
-<div style="padding:20px;">
+<div class="preview-header">
+    <b class="preview-no">No. <?= $soal['nomer_soal'] ?></b>
+    <i>(<?= $soal['tipe_soal'] ?>)</i>
+</div>
 
-    <!-- Tombol Close -->
-    <div style="text-align:right; margin-bottom:10px;">
-        <button onclick="tutupModal()" 
-        style="background:#dc3545;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">
-    ✕ Close
-</button>
+<p class="mt-3"><?= $soal['pertanyaan'] ?></p>
 
-    </div>
+<?php if(!empty($soal['gambar'])): ?>
+<img src="../assets/img/butir_soal/<?= $soal['gambar'] ?>">
+<?php endif; ?>
 
-    <div class="card">
-        <div class="card-body card-utama">
+<hr>
 
 <?php
-echo "<div class='mb-4 p-3 border rounded bg-white oke'>";
-echo "<h5 style='background-color:grey;padding:5px;color:white'>
-<b style='padding:5px;background-color:black;color:white;'>No. ".$soal['nomer_soal']."</b>  
-<i>(".$soal['tipe_soal'].")</i></h5>";
-
-echo "<p class='text-dark'>".$soal['pertanyaan']."</p>";
-
+/* ================= PILIHAN GANDA ================= */
 if ($soal['tipe_soal'] === 'Pilihan Ganda') {
 
-for ($i = 1; $i <= $jumlah_opsi; $i++) {
-    $opsi_label = $opsi_huruf_full[$i - 1];
-    $opsi_nama = 'pilihan_' . $i;
-    $nilai = $soal[$opsi_nama];
-    if (empty(trim($nilai))) continue;
+for ($i=1;$i<=$jumlah_opsi;$i++){
+    $opsi = $soal['pilihan_'.$i];
+    if(trim($opsi)=='') continue;
 
-    $checked = (trim($jawaban_benar) === $opsi_nama) ? 'checked' : '';
+    $huruf = $opsi_huruf_full[$i-1];
+    $checked = ($jawaban_benar == 'pilihan_'.$i) ? 'checked' : '';
 
     echo "
-    <table style='width:100%; margin-bottom:6px;'>
-    <tr>
-        <td style='width:30px; vertical-align:top; font-weight:bold;'>$opsi_label.</td>
-        <td style='width:30px; vertical-align:top;'>
-            <input class='form-check-input' type='radio' $checked onclick='return false;'>
-        </td>
-        <td style='vertical-align:top;'>$nilai</td>
-    </tr>
+    <table>
+        <tr>
+            <td width='30'><b>$huruf.</b></td>
+            <td width='30'>
+                <input class='form-check-input' type='radio' $checked disabled>
+            </td>
+            <td>$opsi</td>
+        </tr>
     </table>";
 }
-
 }
 
+/* ================= PG KOMPLEKS ================= */
 elseif ($soal['tipe_soal'] === 'Pilihan Ganda Kompleks') {
 
-$jawaban_benar = array_map('trim', explode(',', $jawaban_benar));
+$jawaban = explode(',', $jawaban_benar);
 
-for ($i = 1; $i <= $jumlah_opsi; $i++) {
-    $opsi_label = $opsi_huruf_full[$i - 1];
-    $opsi_nama = 'pilihan_' . $i;
-    $nilai = $soal[$opsi_nama];
-    if (empty(trim($nilai))) continue;
+for ($i=1;$i<=$jumlah_opsi;$i++){
+    $opsi = $soal['pilihan_'.$i];
+    if(trim($opsi)=='') continue;
 
-    $checked = in_array($opsi_nama, $jawaban_benar) ? 'checked' : '';
+    $huruf = $opsi_huruf_full[$i-1];
+    $checked = in_array('pilihan_'.$i, $jawaban) ? 'checked' : '';
 
     echo "
-    <table style='width:100%; margin-bottom:6px;'>
-    <tr>
-        <td style='width:30px; vertical-align:top; font-weight:bold;'>$opsi_label.</td>
-        <td style='width:30px; vertical-align:top;'>
-            <input class='form-check-input' type='checkbox' $checked onclick='return false;'>
-        </td>
-        <td style='vertical-align:top;'>$nilai</td>
-    </tr>
+    <table>
+        <tr>
+            <td width='30'><b>$huruf.</b></td>
+            <td width='30'>
+                <input class='form-check-input' type='checkbox' $checked disabled>
+            </td>
+            <td>$opsi</td>
+        </tr>
     </table>";
 }
-
 }
 
+/* ================= BENAR SALAH ================= */
 elseif ($soal['tipe_soal'] === 'Benar/Salah') {
 
-$jawaban_benar = array_map('trim', explode('|', $jawaban_benar));
+$jawab = explode('|',$jawaban_benar);
 
-echo "<table style='width:100%; border-collapse:collapse; margin-top:10px;'>
-<thead>
-<tr style='background-color:#f0f0f0;'>
-<th style='border:1px solid black; padding:8px;'>Pernyataan</th>
-<th style='border:1px solid black; padding:8px; text-align:center;'>Benar</th>
-<th style='border:1px solid black; padding:8px; text-align:center;'>Salah</th>
-</tr>
-</thead><tbody>";
+echo "<table border='1' class='table-garis'>
+<tr>
+<th>Pernyataan</th>
+<th>Benar</th>
+<th>Salah</th>
+</tr>";
 
-for ($i = 1; $i <= 5; $i++) {
-    $nilai = trim($soal['pilihan_'.$i]);
-    if ($nilai === '') continue;
+for($i=1;$i<=5;$i++){
+    $opsi = $soal['pilihan_'.$i];
+    if(trim($opsi)=='') continue;
 
-    $index = $i - 1;
-    $is_benar = isset($jawaban_benar[$index]) && $jawaban_benar[$index] === 'Benar';
-    $is_salah = isset($jawaban_benar[$index]) && $jawaban_benar[$index] === 'Salah';
+    $benar = ($jawab[$i-1]=='Benar') ? 'checked':'';
+    $salah = ($jawab[$i-1]=='Salah') ? 'checked':'';
 
     echo "<tr>
-    <td style='border:1px solid black; padding:8px;'>$nilai</td>
-    <td style='border:1px solid black; text-align:center;'>
-        <input class='form-check-input' type='radio' ".($is_benar?'checked':'')." onclick='return false;'>
-    </td>
-    <td style='border:1px solid black; text-align:center;'>
-        <input class='form-check-input' type='radio' ".($is_salah?'checked':'')." onclick='return false;'>
-    </td>
+    <td>$opsi</td>
+    <td align='center'><input class='form-check-input' type='radio' $benar disabled></td>
+    <td align='center'><input class='form-check-input' type='radio' $salah disabled></td>
     </tr>";
 }
-
-echo "</tbody></table>";
-
+echo "</table>";
 }
 
+/* ================= MENJODOHKAN ================= */
 elseif ($soal['tipe_soal'] === 'Menjodohkan') {
 
-$pasangan = explode('|', $jawaban_benar);
+$pasangan = explode('|',$jawaban_benar);
 
-echo "<table style='width:100%; border-collapse: collapse; margin-top:10px;'>
-<thead>
+echo "<table border='1' class='table-garis'>
 <tr>
-<th style='border:1px solid #000; padding:5px;'>Pilihan</th>
-<th style='border:1px solid #000; padding:5px;'>Pasangan</th>
-</tr>
-</thead><tbody>";
+<th>Pilihan</th>
+<th>Pasangan</th>
+</tr>";
 
-foreach ($pasangan as $pair) {
-    if (strpos($pair, ':') !== false) {
-        [$kiri, $kanan] = explode(':', $pair, 2);
-        echo "<tr>
-        <td style='border:1px solid #000; padding:5px;'>$kiri</td>
-        <td style='border:1px solid #000; padding:5px;'>$kanan</td>
-        </tr>";
-    }
+foreach($pasangan as $p){
+    list($kiri,$kanan) = explode(':',$p);
+    echo "<tr>
+    <td>$kiri</td>
+    <td>$kanan</td>
+    </tr>";
+}
+echo "</table>";
 }
 
-echo "</tbody></table>";
-
-}
-
+/* ================= URAIAN ================= */
 elseif ($soal['tipe_soal'] === 'Uraian') {
-    echo "<p><b>Jawaban Benar:</b><br>".$jawaban_benar."</p>";
+    echo "<div class='mt-3'><b>Jawaban Benar:</b><br>$jawaban_benar</div>";
 }
-
-echo "</div>";
 ?>
 
-        </div>
-    </div>
-
 </div>
-<script>
-function resizeIframe(){
-    const h = document.body.scrollHeight;
-    window.parent.document.getElementById('frameSoal').style.height = h + 'px';
-}
-window.onload = resizeIframe;
-</script>
-<script>
-function tutupModal(){
-    // suruh parent (halaman analisa) yang nutup modal
-    window.parent.$('#modalSoal').modal('hide');
-}
-</script>
-
-</body>
-</html>

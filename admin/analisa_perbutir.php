@@ -76,7 +76,12 @@ while($j=mysqli_fetch_assoc($qJenis)){
 /* ================= STATISTIK PAKAI SKOR ASLI ================= */
 $stat=[];
 
-$qnilai=mysqli_query($koneksi,"SELECT jawaban_siswa FROM nilai WHERE kode_soal='$kode_soal'");
+$qnilai=mysqli_query($koneksi,"
+    SELECT jawaban_siswa, detail_uraian
+    FROM nilai 
+    WHERE kode_soal='$kode_soal'
+");
+
 while($row=mysqli_fetch_assoc($qnilai)){
 
     $jawab=parseJS($row['jawaban_siswa']);
@@ -96,7 +101,19 @@ while($row=mysqli_fetch_assoc($qnilai)){
         $kj = strtolower(trim($isi_kunci));
         $tipe = $tipe_map[$no] ?? '';
 
-        if($tipe=='uraian') continue;
+        if($tipe=='uraian'){
+
+            // ambil skor dari kolom yang BENAR
+            $du = parseJS($row['detail_uraian'] ?? '');
+        
+            $skorU = floatval($du[$no] ?? 0);
+        
+            $stat[$no]['skor'] += $skorU;
+        
+            continue;
+        }
+        
+        
 
         $skor = 0;
 
@@ -408,24 +425,44 @@ function printAnalisa(){
     window.print();
 }
 </script>
-<!-- MODAL PREVIEW SOAL -->
-<div class="modal fade" id="modalSoal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-body p-0">
-        <iframe id="frameSoal" style="width:100%;height:90vh;border:0;"></iframe>
-      </div>
+ <!-- MODAL PREVIEW SOAL -->
+ <div class="modal fade" id="modalSoal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">Preview Butir Soal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body" id="isiModalSoal" style="max-height:90vh;overflow:auto;">
+                Loading...
+            </div>
+
+        </div>
     </div>
-  </div>
 </div>
 
-<script>
-function lihatSoal(kode, nomor){
-    $('#modalSoal').modal('show');
-    document.getElementById('frameSoal').src =
-        'modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor;
-}
-</script>
+    <script>
+    function lihatSoal(kode, nomor){
+        const modalEl = document.getElementById('modalSoal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        // tampilkan loading dulu
+        document.getElementById('isiModalSoal').innerHTML = 'Loading...';
+
+        // ambil isi soal via AJAX
+        fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('isiModalSoal').innerHTML = html;
+            });
+
+        modal.show();
+    }
+    </script>
 </tbody>
 </table>
 </div>
