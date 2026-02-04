@@ -402,11 +402,26 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
         .then(html=>{
 
             Swal.fire({
-                title: 'Atur Akses User',
-                html: html,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: 'Simpan',
+                    title: 'Atur Akses User',
+                    html: html,
+                    width: 600,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+
+                    didOpen: () => {
+
+                        // SEARCH ADMIN
+                        document.getElementById('searchAdmin')
+                        .addEventListener('keyup', function(){
+                            let val = this.value.toLowerCase();
+                            document.querySelectorAll('.admin-item').forEach(el=>{
+                                el.style.display =
+                                    el.innerText.toLowerCase().includes(val) ? '' : 'none';
+                            });
+                        });
+
+                    },
                 preConfirm: ()=>{
                     let selected = [];
                     document.querySelectorAll('.chk-admin:checked').forEach(c=>{
