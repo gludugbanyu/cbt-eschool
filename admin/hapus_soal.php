@@ -5,34 +5,45 @@ include '../inc/functions.php';
 check_login('admin');
 
 if (isset($_GET['kode_soal'])) {
+
     $kode_soal = mysqli_real_escape_string($koneksi, $_GET['kode_soal']);
     only_pemilik_soal_by_kode($kode_soal);
-    $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal'");
-    $data_soal = mysqli_fetch_assoc($query_soal);
 
-     
+    $q = mysqli_query($koneksi, "SELECT status FROM soal WHERE kode_soal='$kode_soal'");
+    $d = mysqli_fetch_assoc($q);
 
-    if ($data_soal['status'] == 'Aktif') {
-        $_SESSION['error'] = "Soal ini sudah aktif dan tidak bisa dihapus!.";
-    header('Location: soal.php');
-    exit();
+    if ($d['status'] == 'Aktif') {
+        $_SESSION['error'] = "Soal aktif tidak bisa dihapus!";
+        header('Location: soal.php');
+        exit();
     }
 
-    // Hapus butir soal
-    mysqli_query($koneksi, "DELETE FROM butir_soal WHERE kode_soal = '$kode_soal'");
+    mysqli_begin_transaction($koneksi);
 
-    // Hapus soal
-    if (mysqli_query($koneksi, "DELETE FROM soal WHERE kode_soal = '$kode_soal'")) {
-        $_SESSION['success'] = 'Soal berhasil dihapus.';
-    } else {
-        $_SESSION['error'] = 'Gagal menghapus soal: ' . mysqli_error($koneksi);
+    try {
+
+        // 1️⃣ Hapus nilai siswa dulu
+        mysqli_query($koneksi, "DELETE FROM nilai WHERE kode_soal='$kode_soal'");
+
+        // 2️⃣ Hapus butir soal
+        mysqli_query($koneksi, "DELETE FROM butir_soal WHERE kode_soal='$kode_soal'");
+
+        // 3️⃣ Hapus soal
+        mysqli_query($koneksi, "DELETE FROM soal WHERE kode_soal='$kode_soal'");
+
+        mysqli_commit($koneksi);
+
+        $_SESSION['success'] = "Soal & seluruh nilai siswa berhasil dihapus.";
+
+    } catch (Exception $e) {
+
+        mysqli_rollback($koneksi);
+        $_SESSION['error'] = "Gagal menghapus: " . $e->getMessage();
     }
 
-    header('Location: soal.php');
-    exit();
 } else {
-    $_SESSION['error'] = "Parameter kode_soal tidak ditemukan.";
-    header('Location: soal.php');
-    exit();
+    $_SESSION['error'] = "Parameter tidak ditemukan.";
 }
-?>
+
+header('Location: soal.php');
+exit();

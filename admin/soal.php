@@ -275,35 +275,58 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
             });
         });
         document.querySelectorAll('.btn-hapus').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const kodeSoal = this.getAttribute('data-kode');
+    button.addEventListener('click', function() {
+        const kodeSoal = this.getAttribute('data-kode');
 
-                Swal.fire({
-                    title: 'Konfirmasi Hapus',
-                    html: 'Ketik <strong>HAPUS</strong> untuk menghapus data soal ini.',
-                    input: 'text',
-                    inputPlaceholder: 'Ketik HAPUS di sini',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Hapus',
-                    confirmButtonColor: '#d33',
-                    cancelButtonText: 'Batal',
-                    preConfirm: (inputValue) => {
-                        if (inputValue !== 'HAPUS') {
-                            Swal.showValidationMessage(
-                                'Anda harus mengetik "HAPUS" dengan benar (huruf besar semua)'
-                                );
-                        }
-                        return inputValue;
+        fetch('cek_nilai_soal.php?kode_soal=' + kodeSoal)
+        .then(res => res.json())
+        .then(data => {
+
+            let warningText = '';
+
+            if(data.jumlah > 0){
+                warningText = `
+                ⚠️ <b>PERINGATAN KERAS</b><br><br>
+                Soal ini sudah dikerjakan oleh <b>${data.jumlah} siswa</b>.<br>
+                Jika dihapus:<br>
+                • Semua nilai siswa akan ikut terhapus<br>
+                • Analisa soal akan hilang<br><br>
+                Ketik <b>HAPUS SEMUA</b> untuk melanjutkan.
+                `;
+            }else{
+                warningText = `
+                Soal ini belum pernah dikerjakan siswa.<br>
+                Ketik <b>HAPUS</b> untuk menghapus.
+                `;
+            }
+
+            Swal.fire({
+                title: 'Konfirmasi Hapus Soal',
+                html: warningText,
+                input: 'text',
+                inputPlaceholder: 'Ketik sesuai perintah di atas',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
+                confirmButtonColor: '#d33',
+                preConfirm: (val)=>{
+                    if(data.jumlah > 0 && val !== 'HAPUS SEMUA'){
+                        Swal.showValidationMessage('Harus ketik: HAPUS SEMUA');
                     }
-                }).then((result) => {
-                    if (result.isConfirmed && result.value === 'HAPUS') {
-                        window.location.href = 'hapus_soal.php?kode_soal=' +
-                            encodeURIComponent(kodeSoal);
+                    if(data.jumlah == 0 && val !== 'HAPUS'){
+                        Swal.showValidationMessage('Harus ketik: HAPUS');
                     }
-                });
+                }
+            }).then((r)=>{
+                if(r.isConfirmed){
+                    window.location.href = 'hapus_soal.php?kode_soal=' + kodeSoal;
+                }
             });
+
         });
+    });
+});
+
 
 
     });
