@@ -18,6 +18,7 @@ $query = "
         s.tampilan_soal, s.status, s.tanggal, s.waktu_ujian, 
         s.token, s.jumlah_opsi,
         s.id_pembuat,
+        s.tampil_tombol_selesai,
         COUNT(b.id_soal) AS jumlah_butir
     FROM soal s
     LEFT JOIN butir_soal b ON s.kode_soal = b.kode_soal
@@ -56,6 +57,9 @@ if (!$result) {
     table td {
         text-align: left !important;
     }
+.row-alarm {
+    border-left: 8px solid #dc3545 !important;
+}
     </style>
 </head>
 
@@ -89,6 +93,7 @@ if (!$result) {
                                                 <th>Jmlh</th>
                                                 <th>Opsi</th>
                                                 <th>Durasi (menit)</th>
+                                                <th>Tombol Selesai</th>
                                                 <th>Tgl Ujian</th>
                                                 <th>Tampilan</th>
                                                 <th>Status</th>
@@ -99,7 +104,8 @@ if (!$result) {
                                         </thead>
                                         <tbody>
                                             <?php $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
-                                            <tr>
+                                            <?php $alarm = ($row['status'] == 'Aktif'); ?>
+                                            <tr class="<?= $alarm ? 'row-alarm' : '' ?>">
                                                 <td><?php echo $no++; ?></td>
                                                 <td><?php echo $row['kode_soal']; ?></td>
                                                 <td>
@@ -128,66 +134,66 @@ if (!$result) {
                                                 </td>
                                                 <td><?php echo $row['mapel']; ?></td>
                                                 <td style="min-width:180px">
-<?php
-$kelas_list = array_map('trim', explode(',', $row['kelas']));
+                                                <?php
+                                                $kelas_list = array_map('trim', explode(',', $row['kelas']));
 
-$romawi = [
-    'I'=>1,'II'=>2,'III'=>3,'IV'=>4,'V'=>5,'VI'=>6,
-    'VII'=>7,'VIII'=>8,'IX'=>9,'X'=>10,'XI'=>11,'XII'=>12
-];
+                                                $romawi = [
+                                                    'I'=>1,'II'=>2,'III'=>3,'IV'=>4,'V'=>5,'VI'=>6,
+                                                    'VII'=>7,'VIII'=>8,'IX'=>9,'X'=>10,'XI'=>11,'XII'=>12
+                                                ];
 
-$getAngkaKelas = function($text) use ($romawi){
-    preg_match('/^([A-ZIVXLC0-9]+)([A-Z]+)/', $text, $m);
-    $kelas = $m[1] ?? '';
+                                                $getAngkaKelas = function($text) use ($romawi){
+                                                    preg_match('/^([A-ZIVXLC0-9]+)([A-Z]+)/', $text, $m);
+                                                    $kelas = $m[1] ?? '';
 
-    if (is_numeric($kelas)) return (int)$kelas;
-    return $romawi[$kelas] ?? 0;
-};
+                                                    if (is_numeric($kelas)) return (int)$kelas;
+                                                    return $romawi[$kelas] ?? 0;
+                                                };
 
-// URUTKAN
-usort($kelas_list, function($a, $b) use ($getAngkaKelas){
-    $na = $getAngkaKelas($a);
-    $nb = $getAngkaKelas($b);
+                                                // URUTKAN
+                                                usort($kelas_list, function($a, $b) use ($getAngkaKelas){
+                                                    $na = $getAngkaKelas($a);
+                                                    $nb = $getAngkaKelas($b);
 
-    if ($na == $nb) return strcmp($a, $b);
-    return $na - $nb;
-});
+                                                    if ($na == $nb) return strcmp($a, $b);
+                                                    return $na - $nb;
+                                                });
 
-// WARNA SIKLUS 3
-foreach($kelas_list as $kr){
-    $angka = $getAngkaKelas($kr);
-    $mod = $angka % 3;
+                                                // WARNA SIKLUS 3
+                                                foreach($kelas_list as $kr){
+                                                    $angka = $getAngkaKelas($kr);
+                                                    $mod = $angka % 3;
 
-    if ($mod == 1) {
-        $warna = 'bg-success';   // Grup A → 1,4,7,10
-    } elseif ($mod == 2) {
-        $warna = 'bg-primary';   // Grup B → 2,5,8,11
-    } else {
-        $warna = 'bg-danger';    // Grup C → 3,6,9,12
-    }
+                                                    if ($mod == 1) {
+                                                        $warna = 'bg-success';   // Grup A → 1,4,7,10
+                                                    } elseif ($mod == 2) {
+                                                        $warna = 'bg-primary';   // Grup B → 2,5,8,11
+                                                    } else {
+                                                        $warna = 'bg-danger';    // Grup C → 3,6,9,12
+                                                    }
 
-    echo '<span class="badge '.$warna.' me-1 mb-1">'.$kr.'</span>';
-}
-?>
-<?php if($_SESSION['role']=='admin'): ?>
-<br>
-<?php
-$list_kelas = array_filter($kelas_list); // hasil setelah di-trim & diurut
-$total_kelas = count($list_kelas);
-?>
+                                                    echo '<span class="badge '.$warna.' me-1 mb-1">'.$kr.'</span>';
+                                                }
+                                                ?>
+                                                <?php if($_SESSION['role']=='admin'): ?>
+                                                <br>
+                                                <?php
+                                                $list_kelas = array_filter($kelas_list); // hasil setelah di-trim & diurut
+                                                $total_kelas = count($list_kelas);
+                                                ?>
 
-<?php if($_SESSION['role']=='admin'): ?>
-<br>
-<button 
-class="btn btn-sm btn-outline-secondary mt-1 btn-kelas"
-data-id="<?= $row['id_soal']; ?>"
-data-current="<?= htmlspecialchars($row['kelas']); ?>">
-<i class="fa fa-layer-group"></i> 
-Atur Kelas (<?= $total_kelas ?>)
-</button>
-<?php endif; ?>
-<?php endif; ?>
-</td>
+                                                <?php if($_SESSION['role']=='admin'): ?>
+                                                <br>
+                                                <button 
+                                                class="btn btn-sm btn-outline-secondary mt-1 btn-kelas"
+                                                data-id="<?= $row['id_soal']; ?>"
+                                                data-current="<?= htmlspecialchars($row['kelas']); ?>">
+                                                <i class="fa fa-layer-group"></i> 
+                                                Atur Kelas (<?= $total_kelas ?>)
+                                                </button>
+                                                <?php endif; ?>
+                                                <?php endif; ?>
+                                                </td>
                                                 <td><?php echo $row['jumlah_butir']; ?></td>
                                                 <td>
                                                     <?php if ($row['jumlah_opsi'] == 5): ?>
@@ -198,8 +204,25 @@ Atur Kelas (<?= $total_kelas ?>)
                                                 </td>
                                                 <td><i class="fa fa-clock" aria-hidden="true"></i>
                                                     <?php echo $row['waktu_ujian']; ?></td>
-                                                <td><i class="fa fa-calendar-alt" aria-hidden="true"></i>
-                                                    <?php echo date('d M Y', strtotime($row['tanggal'])); ?></td>
+                                                 <td>
+                                                    <?php
+                                                    $ts = (int)$row['tampil_tombol_selesai'];
+
+                                                    if ($ts === 0) {
+                                                        echo '<span class="badge bg-success">
+                                                                Selalu Muncul
+                                                            </span>';
+                                                    } else {
+                                                        echo '<span class="badge bg-warning text-white">
+                                                                ' . $ts . ' menit terakhir
+                                                            </span>';
+                                                    }
+                                                    ?>
+                                                    </td>
+                                                <td><span class="badge bg-primary">
+                                                    <i class="fa fa-calendar-alt me-1"></i> 
+                                                    <?= date('d/m/Y', strtotime($row['tanggal'])) ?>
+                                                </span></td>
                                                 <td><?php echo $row['tampilan_soal']; ?></td>
                                                 <td>
                                                     <?php if ($row['status'] == 'Aktif') { ?>
@@ -228,24 +251,17 @@ Atur Kelas (<?= $total_kelas ?>)
                                                 </td>
                                                 <td>
                                                 <a href="preview_soal.php?kode_soal=<?php echo $row['kode_soal']; ?>&opsi=<?php echo $row['jumlah_opsi']; ?>"
-    class="btn btn-sm btn-outline-secondary">
-    <i class="fa fa-eye"></i> Preview
-</a>
+                                                    class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fa fa-eye"></i> view
+                                                </a>
 
-                                                    <a href="edit_soal.php?id_soal=<?php echo $row['id_soal']; ?>"
-                                                        class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
-                                                        Edit</a>
-                                                    <a href="#" class="btn btn-sm btn-info btn-duplicate" data-kode="<?php echo $row['kode_soal']; ?>">
-                                                        <i class="fa fa-copy"></i> Duplikat
-                                                    </a>
-                                                    <a href="daftar_butir_soal.php?kode_soal=<?php echo $row['kode_soal']; ?>"
-                                                        class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Input
-                                                        Soal</a>
-                                                    <button class="btn btn-danger btn-sm btn-hapus"
-                                                        data-kode="<?= $row['kode_soal']; ?>">
-                                                        <i class="fa fa-close" aria-hidden="true"></i>
-                                                        Hapus
-                                                    </button>
+                                                <a href="<?= $alarm ? '#' : 'edit_soal.php?id_soal='.$row['id_soal']; ?>" class="btn btn-sm btn-primary <?= $alarm ? 'disabled opacity-50' : '' ?>"><i class="fa fa-edit"></i> Edit</a>
+                                                <a href="#" class="btn btn-sm btn-info btn-duplicate <?= $alarm ? 'disabled opacity-50' : '' ?>" data-kode="<?php echo $row['kode_soal']; ?>"><i class="fa fa-copy"></i> Duplikat</a>
+                                                <a href="<?= $alarm ? '#' : 'daftar_butir_soal.php?kode_soal='.$row['kode_soal']; ?>"
+                                                class="btn btn-sm btn-success <?= $alarm ? 'disabled opacity-50' : '' ?>">
+                                                <i class="fa fa-plus"></i> Input
+                                                </a>                                                
+                                                <button class="btn btn-danger btn-sm btn-hapus <?= $alarm ? 'disabled opacity-50' : '' ?>"  data-kode="<?= $row['kode_soal']; ?>"><i class="fa fa-close" aria-hidden="true"></i> Hapus</button>
                                                 </td>
                                             </tr>
                                             <?php } ?>
