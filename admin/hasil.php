@@ -85,7 +85,8 @@ $query = "SELECT n.id_nilai, n.id_siswa, s.nama_siswa, s.kelas, s.rombel,
                           class='btn btn-sm btn-secondary'>
                           <i class='fa fa-eye'></i> Preview
                        </a>";
-            
+
+           
             $koreksiBtn = '';
             if ($row['status_penilaian'] === 'perlu_dinilai') {
                 $btnClass = ($row['nilai_uraian'] <= 0) ? 'outline-danger' : 'outline-info';
@@ -295,6 +296,11 @@ foreach($ids as $id){
                                             }
                                             ?>
                                         </select>
+
+                                                                                <!-- TOMBOL ANALISA -->
+                                        <button type="button" id="btnAnalisa" class="btn btn-info">
+                                            <i class="fa fa-chart-bar"></i> Analisa Soal
+                                        </button>
                                     </div>
                                 </div>
 
@@ -437,6 +443,22 @@ foreach($ids as $id){
             }).fail(() => Swal.fire('Error', 'Gagal menyimpan nilai', 'error'));
         });
     });
+
+    // Tombol Analisa
+$('#btnAnalisa').on('click', function(){
+    var kode = $('#kode_soal').val();
+
+    if(!kode){
+        Swal.fire({
+            icon: 'warning',
+            title: 'Pilih Kode Soal dulu!'
+        });
+        return;
+    }
+
+    window.open('analisa_perbutir.php?kode_soal=' + kode, '_blank');
+});
+
     </script>
      <?php if(isset($_GET['akses'])): ?>
 <script src="../assets/swal/sweetalert2.all.min.js"></script>
