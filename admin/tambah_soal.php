@@ -8,7 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $kode_soal = mysqli_real_escape_string($koneksi, $_POST['kode_soal']);
     $nama_soal = mysqli_real_escape_string($koneksi, $_POST['nama_soal']);
     $mapel = mysqli_real_escape_string($koneksi, $_POST['mapel']);
-    $kelas = mysqli_real_escape_string($koneksi, $_POST['kelas']);
+    $kelas = implode(',', $_POST['kelasrombel']);
+$kelas = mysqli_real_escape_string($koneksi, $kelas);
     $tampilan_soal = mysqli_real_escape_string($koneksi, $_POST['tampilan_soal']);
     $waktu_ujian = mysqli_real_escape_string($koneksi, $_POST['waktu_ujian']);
     $tanggal = mysqli_real_escape_string($koneksi, $_POST['tanggal']);
@@ -67,8 +68,12 @@ $id_admin = $_SESSION['admin_id'];
                                 <div class="card-body">
                                     <?php
                                         // Ambil data kelas dari tabel siswa secara DISTINCT
-                                        $query_kelas = "SELECT DISTINCT kelas FROM siswa ORDER BY kelas ASC";
-                                        $result_kelas = mysqli_query($koneksi, $query_kelas);
+                                        $query_kelas = "
+SELECT DISTINCT kelas, rombel 
+FROM siswa 
+ORDER BY kelas, rombel
+";
+$result_kelas = mysqli_query($koneksi, $query_kelas);
                                         ?>
                                     <form method="POST">
                                         <div class="mb-3">
@@ -85,14 +90,19 @@ $id_admin = $_SESSION['admin_id'];
                                         </div>
                                         <div class="mb-3">
                                             <label for="kelas" class="form-label">Kelas</label>
-                                            <select class="form-control" id="kelas" name="kelas" required>
-                                                <option value="">-- Pilih Kelas --</option>
-                                                <?php while ($kelas_row = mysqli_fetch_assoc($result_kelas)): ?>
-                                                    <option value="<?php echo $kelas_row['kelas']; ?>">
-                                                        <?php echo $kelas_row['kelas']; ?>
-                                                    </option>
-                                                <?php endwhile; ?>
-                                            </select>
+                                            <div class="mb-3">
+    <label class="form-label">Pilih Kelas & Rombel</label>
+    <div style="max-height:200px;overflow:auto;border:1px solid #ddd;padding:10px;border-radius:6px;">
+        <?php while ($row = mysqli_fetch_assoc($result_kelas)): 
+            $kr = $row['kelas'].$row['rombel'];
+        ?>
+            <label class="me-3">
+                <input type="checkbox" name="kelasrombel[]" value="<?= $kr; ?>">
+                <b><?= $kr; ?></b>
+            </label><br>
+        <?php endwhile; ?>
+    </div>
+</div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="waktu_ujian" class="form-label">Waktu Ujian (Menit)</label>

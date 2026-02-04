@@ -57,9 +57,11 @@ if (strtotime($tanggal_hari_ini) < strtotime($tanggal_soal)) {
     header('Location: ujian.php');
     exit;
 }
-if ($data_siswa['kelas'] !== $data_soal['kelas']) {
+$kr_siswa = $data_siswa['kelas'].$data_siswa['rombel'];
+
+if (!in_array($kr_siswa, explode(',', $data_soal['kelas']))) {
     $_SESSION['alert'] = true;
-    $_SESSION['warning_message'] = 'Soal ini bukan untuk kelas kamu.';
+    $_SESSION['warning_message'] = 'Soal ini bukan untuk kelas & rombel kamu.';
     header('Location: ujian.php');
     exit;
 }

@@ -5,8 +5,17 @@ include '../inc/functions.php';
 check_login('siswa');
 include '../inc/datasiswa.php'; // diasumsikan variabel $id_siswa dan $kelas_siswa tersedia di sini
 
-$query = mysqli_query($koneksi, "SELECT * FROM soal WHERE status='Aktif' AND kelas='$kelas_siswa' ORDER BY tanggal DESC");
+$kelas  = $_SESSION['kelas'];
+$rombel = $_SESSION['rombel'];
 
+$kr = $kelas.$rombel;
+
+$query = mysqli_query($koneksi, "
+SELECT * FROM soal 
+WHERE status='Aktif' 
+AND FIND_IN_SET('$kr', kelas)
+ORDER BY tanggal DESC
+");
 $data = [];
 while ($row = mysqli_fetch_assoc($query)) {
     $kode_soal = $row['kode_soal'];

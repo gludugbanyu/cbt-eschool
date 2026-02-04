@@ -79,32 +79,6 @@
     margin-top: 20px;
 }
 
-.question-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 15px;
-}
-
-.question-nav button {
-    min-width: 40px;
-}
-
-#loadingOverlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    color: white;
-}
-
 #autoSaveStatus {
     display: none;
     background-color: #28a745;
@@ -163,20 +137,6 @@
     margin-top: 20px;
 }
 
-#loadingOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.3s ease;
-}
-
 .spinner-container {
     text-align: center;
     color: white;
@@ -185,10 +145,6 @@
 .spinner-border {
     width: 3rem;
     height: 3rem;
-}
-
-* Animasi smooth */ .question-nav-container {
-    transition: all 0.3s ease;
 }
 
 /* Scrollbar custom */
@@ -209,21 +165,6 @@
     background: #555;
 }
 
-.nav-btn {
-    width: 40px;
-    height: 40px;
-    border: 2px solid grey !important;
-    /* Warna outline biru */
-    color: grey !important;
-    background: transparent;
-    border-radius: 50%;
-    margin: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    font-size: 14px;
-}
-
 /* Tombol sudah diisi */
 .nav-btn[data-answered="true"] {
     background-color: #198754;
@@ -231,19 +172,37 @@
     border-color: #198754 !important;
     color: white !important;
 }
-
+.nav-btn[data-incomplete="true"] {
+    background-color: #484848;
+    /* Warna hijau */
+    border-color: #484848 !important;
+    color: white !important;
+}
 /* Indicator dot untuk soal terjawab */
-.nav-btn[data-answered="true"]::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: -3px;
-    width: 10px;
-    height: 10px;
-    background: #ffc107;
-    /* Warna kuning */
-    border-radius: 50%;
-    border: 1px solid white;
+/* DOT KUNING = lengkap */
+.nav-btn[data-answered="true"]::after{
+    content:'';
+    position:absolute;
+    top:-3px;
+    right:-3px;
+    width:10px;
+    height:10px;
+    background:#ffc107;
+    border-radius:50%;
+    border:1px solid white;
+}
+
+/* DOT MERAH = belum lengkap */
+.nav-btn[data-incomplete="true"]::after{
+    content:'';
+    position:absolute;
+    top:-3px;
+    right:-3px;
+    width:10px;
+    height:10px;
+    background:#dc3545;
+    border-radius:50%;
+    border:1px solid white;
 }
 
 /* Hover Effect */
@@ -327,9 +286,9 @@ input[type="checkbox"]:checked {
     /* Warna border hijau */
 }
 
-.table,
-.table th,
-.table td {
+.question-container table,
+.question-container td,
+.question-container th {
     border: 1px solid black !important;
 }
 
@@ -350,77 +309,10 @@ td {
     /* supaya kelihatan vertical center */
 }
 
-.question-nav-container {
-    margin-top: 20px;
-}
-
-.question-nav-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-}
-
-.question-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    max-height: 200px;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    margin-bottom: 10px;
-}
-
-.question-nav.collapsed {
-    max-height: 0;
-}
-
-.question-nav-btn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.question-nav-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.question-nav-btn.active {
-    background-color: <?=$warna_tema ?>;
-    color: white;
-    border-color: <?=$warna_tema ?>;
-}
-
-.question-nav-btn.answered {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
-}
-
-.tempatsoal {
-    min-height: 380px;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-    max-height: 200px;
-    overflow-y: auto;
-    transition: max-height 0.3s ease-out;
 }
 
 .dropdown-wide {
@@ -495,12 +387,63 @@ main.content {
     /* Untuk menghilangkan gap */
 }
 
-.question-nav-container {
-    display: block;
-    margin-top: 10px;
+/* ===== NAVIGASI SOAL FINAL BERSIH ===== */
+
+.question-nav-container{
+    position: fixed;
+    bottom: 90px;
+    right: 15px;
+    z-index: 1100;
+    width: min(92vw, 420px);
+    max-height: 65vh;
+    overflow-y: auto;
+    display: none;
 }
 
-.question-nav-container.show {
-    display: none;
+/* GRID RESPONSIVE */
+.question-nav{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 6px;
+    justify-items: center;
+}
+
+/* TOMBOL BULAT STABIL */
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid grey !important;
+    color: grey !important;
+    background: transparent;
+    border-radius: 50%;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px){
+    .question-nav-container{
+        width: 92vw;
+        right: 4vw;
+        bottom: 80px;
+    }
+}
+
+@media (max-width: 480px){
+    .question-nav-container{
+        width: 94vw;
+        right: 3vw;
+        bottom: 75px;
+        max-height: 70vh;
+    }
+
+    .nav-btn{
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
 }
 </style>

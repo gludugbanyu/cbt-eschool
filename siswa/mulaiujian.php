@@ -50,9 +50,11 @@ if (strtotime($tanggal_hari_ini) < strtotime($tanggal_soal)) {
     header('Location: ujian.php');
     exit;
 }
-if ($kelas_siswa !== $data_soal['kelas']) {
+$kr_siswa = $kelas_siswa.$rombel_siswa;
+
+if (!in_array($kr_siswa, explode(',', $data_soal['kelas']))) {
     $_SESSION['alert'] = true;
-    $_SESSION['warning_message'] = 'Soal ini bukan untuk kelas kamu.';
+    $_SESSION['warning_message'] = 'Soal ini bukan untuk kelas & rombel kamu.';
     header('Location: ujian.php');
     exit;
 }
@@ -497,8 +499,7 @@ foreach ($matches as $match) {
                                         style="border:none;position: fixed; bottom: 80px; right: 20px; z-index: 1000; width: 50px; height: 50px;background-color:<?php echo htmlspecialchars($warna_tema); ?>;">
                                         <i class="fas fa-list"></i>
                                     </button>
-                                    <div class="question-nav-container"
-                                        style="position: fixed; bottom: 100px; right: 20px; z-index: 1100; max-height: 60vh;max-width: 59vh; overflow-y: auto; display: none;">
+                                    <div class="question-nav-container">
                                         <div class="card shadow">
                                             <div class="card-header text-white"
                                                 style="background-color:<?php echo htmlspecialchars($warna_tema); ?>;">

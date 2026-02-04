@@ -158,6 +158,18 @@ document.querySelector('.card-header button.close').addEventListener('click', hi
 setInterval(() => {
     document.getElementById('waktu_sisa').value = waktu;
 }, 1000);
+function getSoalBelumLengkap() {
+    let belumLengkap = [];
+
+    document.querySelectorAll('.nav-btn[data-incomplete="true"]').forEach(btn => {
+        belumLengkap.push({
+            asli: btn.getAttribute('data-nomor'),
+            urut: btn.getAttribute('data-urut')
+        });
+    });
+
+    return belumLengkap;
+}
 function getSoalBelumDijawab() {
     let kosong = [];
 
@@ -195,12 +207,13 @@ document.getElementById('submitBtn').addEventListener('click', function(e) {
     e.preventDefault();
 
     const soalKosong = getSoalBelumDijawab();
+    const soalBelumLengkap = getSoalBelumLengkap();
 
     let htmlKosong = '';
 
     if (soalKosong.length > 0) {
         htmlKosong += `
-            <div style="text-align:left;margin-bottom:10px;">
+            <div style="text-align:center;margin-bottom:10px;">
             <b>Soal berikut belum dijawab:</b><br><br>
         `;
 
@@ -224,61 +237,86 @@ const formatWaktu =
     `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
 
 Swal.fire({
+    didOpen: () => {
+
+        const adaBermasalah = document.querySelectorAll(
+            '.nav-btn:not([data-answered="true"])'
+        ).length > 0;
+
+        if (adaBermasalah) {
+            Swal.getConfirmButton().disabled = true;
+            Swal.getConfirmButton().innerText = 'Lengkapi semua soal dulu';
+        }
+
+        // ⬇⬇ TAMBAHKAN DI SINI ⬇⬇
+        const timerEl = document.getElementById('swalTimer');
+
+        const interval = setInterval(() => {
+            let menit = Math.floor(waktu / 60);
+            let detik = waktu % 60;
+
+            timerEl.innerText =
+                `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+
+            if (waktu <= 0) clearInterval(interval);
+        }, 1000);
+
+    },
     title: 'Konfirmasi Selesai Ujian',
     width: 600,
-    html: `
-        <div style="text-align:left">
+   html: `
+<div style="text-align:left">
 
-            <div style="
-                background:#e9f3ff;
-                padding:12px;
-                border-radius:8px;
-                margin-bottom:15px;
-                font-size:16px;">
-                ⏱️ <b>Sisa Waktu:</b> ${formatWaktu}
+    <div id="swalTimerBox" style="
+        background:#e9f3ff;
+        padding:12px;
+        border-radius:8px;
+        margin-bottom:15px;
+        font-size:16px;
+        text-align:center;">
+        ⏱️ <b>Sisa Waktu:</b> <span id="swalTimer">--:--</span>
+    </div>
+
+    ${(soalKosong.length > 0 || soalBelumLengkap.length > 0) ? `
+        <div style="
+            background:#fff3cd;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:10px;text-align:center">
+            <b>⚠️ Soal belum dijawab / belum lengkap:</b><br><br>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+                
+                ${soalKosong.map(s => `
+                    <button type="button"
+                        onclick="tampilSoal(${s.urut - 1}); Swal.close();"
+                        style="padding:6px 10px;border-radius:6px;border:1px solid #dc3545;background:#f8d7da;">
+                        No ${s.urut}
+                    </button>
+                `).join('')}
+
+                ${soalBelumLengkap.map(s => `
+                    <button type="button"
+                        onclick="tampilSoal(${s.urut - 1}); Swal.close();"
+                        style="padding:6px 10px;border-radius:6px;border:1px solid #6c757d;background:#ced4da;">
+                        No ${s.urut}
+                    </button>
+                `).join('')}
+
             </div>
-
-            ${soalKosong.length > 0 ? `
-                <div style="
-                    background:#fff3cd;
-                    padding:12px;
-                    border-radius:8px;
-                    margin-bottom:10px;">
-                    <b>⚠️ Soal belum dijawab:</b><br><br>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                        ${soalKosong.map(s => `
-                            <button type="button"
-                                onclick="tampilSoal(${s.urut - 1}); Swal.close();"
-                                style="
-                                    padding:6px 10px;
-                                    border-radius:6px;
-                                    border:1px solid #dc3545;
-                                    background:#f8d7da;
-                                    cursor:pointer;">
-                                No ${s.urut}
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : `
-                <div style="
-                    background:#e6ffed;
-                    padding:12px;
-                    border-radius:8px;
-                    margin-bottom:10px;">
-                    ✅ Semua soal sudah terjawab
-                </div>
-            `}
-
-            <div style="margin-top:15px">
-                <input type="checkbox" id="konfirmasiCek">
-                <label for="konfirmasiCek">
-                    Saya yakin ingin mengakhiri ujian ini
-                </label>
-            </div>
-
         </div>
-    `,
+    ` : `
+
+    `}
+
+    <div style="margin-top:15px;text-align:center">
+        <input type="checkbox" id="konfirmasiCek">
+        <label for="konfirmasiCek">
+            Saya yakin ingin mengakhiri ujian ini
+        </label>
+    </div>
+
+</div>
+`,
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Selesai Ujian',
@@ -316,23 +354,64 @@ function updateNavButtons() {
     document.querySelectorAll('.nav-btn').forEach(btn => {
         const nomor = btn.getAttribute('data-nomor');
         const inputs = document.querySelectorAll(`[name^="jawaban[${nomor}]"]`);
-        let answered = false;
+
+        let adaIsi = false;
+        let lengkap = true;
+
+        const groupRadio = {};
 
         inputs.forEach(input => {
-            if ((input.type === 'radio' || input.type === 'checkbox') && input.checked) {
-                answered = true;
-            } else if ((input.type === 'text' || input.tagName === 'TEXTAREA' || input.tagName ===
-                    'SELECT') && input.value.trim() !== '') {
-                answered = true;
+
+            // RADIO / BENAR SALAH (harus semua group terisi)
+            if (input.type === 'radio') {
+                if (!groupRadio[input.name]) groupRadio[input.name] = false;
+                if (input.checked) {
+                    groupRadio[input.name] = true;
+                    adaIsi = true;
+                }
+            }
+
+            // CHECKBOX (minimal 1)
+            else if (input.type === 'checkbox') {
+                if (input.checked) {
+                    adaIsi = true;
+                }
+            }
+
+            // SELECT (menjodohkan wajib semua)
+            else if (input.tagName === 'SELECT') {
+                if (input.value !== '') {
+                    adaIsi = true;
+                } else {
+                    lengkap = false;
+                }
+            }
+
+            // TEXTAREA / URAIAN
+            else if (input.tagName === 'TEXTAREA') {
+                if (input.value.trim() !== '') {
+                    adaIsi = true;
+                } else {
+                    lengkap = false;
+                }
             }
         });
 
-        if (answered) {
-            btn.classList.add('answered');
-            btn.setAttribute('data-answered', 'true');
+        // cek group radio
+        Object.values(groupRadio).forEach(v => {
+            if (!v) lengkap = false;
+        });
+
+        // RESET STATUS
+        btn.removeAttribute('data-answered');
+        btn.removeAttribute('data-incomplete');
+
+        if (!adaIsi) return;
+
+        if (lengkap) {
+            btn.setAttribute('data-answered', 'true');   // hijau
         } else {
-            btn.classList.remove('answered');
-            btn.setAttribute('data-answered', 'false');
+            btn.setAttribute('data-incomplete', 'true'); // merah
         }
     });
 }
@@ -343,8 +422,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Deteksi perubahan jawaban
     document.querySelectorAll('input, textarea, select').forEach(el => {
-        el.addEventListener('change', updateNavButtons);
-    });
+    el.addEventListener('change', updateNavButtons);
+    el.addEventListener('keyup', updateNavButtons);
+});
 });
 
 document.addEventListener("DOMContentLoaded", function() {

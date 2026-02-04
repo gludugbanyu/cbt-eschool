@@ -127,7 +127,67 @@ if (!$result) {
                                                 <?php endif; ?>
                                                 </td>
                                                 <td><?php echo $row['mapel']; ?></td>
-                                                <td><?php echo $row['kelas']; ?></td>
+                                                <td style="min-width:180px">
+<?php
+$kelas_list = array_map('trim', explode(',', $row['kelas']));
+
+$romawi = [
+    'I'=>1,'II'=>2,'III'=>3,'IV'=>4,'V'=>5,'VI'=>6,
+    'VII'=>7,'VIII'=>8,'IX'=>9,'X'=>10,'XI'=>11,'XII'=>12
+];
+
+$getAngkaKelas = function($text) use ($romawi){
+    preg_match('/^([A-ZIVXLC0-9]+)([A-Z]+)/', $text, $m);
+    $kelas = $m[1] ?? '';
+
+    if (is_numeric($kelas)) return (int)$kelas;
+    return $romawi[$kelas] ?? 0;
+};
+
+// URUTKAN
+usort($kelas_list, function($a, $b) use ($getAngkaKelas){
+    $na = $getAngkaKelas($a);
+    $nb = $getAngkaKelas($b);
+
+    if ($na == $nb) return strcmp($a, $b);
+    return $na - $nb;
+});
+
+// WARNA SIKLUS 3
+foreach($kelas_list as $kr){
+    $angka = $getAngkaKelas($kr);
+    $mod = $angka % 3;
+
+    if ($mod == 1) {
+        $warna = 'bg-success';   // Grup A → 1,4,7,10
+    } elseif ($mod == 2) {
+        $warna = 'bg-primary';   // Grup B → 2,5,8,11
+    } else {
+        $warna = 'bg-danger';    // Grup C → 3,6,9,12
+    }
+
+    echo '<span class="badge '.$warna.' me-1 mb-1">'.$kr.'</span>';
+}
+?>
+<?php if($_SESSION['role']=='admin'): ?>
+<br>
+<?php
+$list_kelas = array_filter($kelas_list); // hasil setelah di-trim & diurut
+$total_kelas = count($list_kelas);
+?>
+
+<?php if($_SESSION['role']=='admin'): ?>
+<br>
+<button 
+class="btn btn-sm btn-outline-secondary mt-1 btn-kelas"
+data-id="<?= $row['id_soal']; ?>"
+data-current="<?= htmlspecialchars($row['kelas']); ?>">
+<i class="fa fa-layer-group"></i> 
+Atur Kelas (<?= $total_kelas ?>)
+</button>
+<?php endif; ?>
+<?php endif; ?>
+</td>
                                                 <td><?php echo $row['jumlah_butir']; ?></td>
                                                 <td>
                                                     <?php if ($row['jumlah_opsi'] == 5): ?>
@@ -375,6 +435,87 @@ document.querySelectorAll('.btn-duplicate').forEach(function(button) {
 });
 
     </script>
+<script>
+document.querySelectorAll('.btn-kelas').forEach(btn=>{
+    btn.addEventListener('click', function(){
+        const idSoal = this.dataset.id;
+        const current = this.dataset.current;
+
+        fetch('get_kelas_list.php?current=' + encodeURIComponent(current))
+        .then(res=>res.text())
+        .then(html=>{
+
+            Swal.fire({
+                title: 'Atur Kelas & Rombel',
+                html: html,
+                width: 700,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                didOpen: () => {
+
+                    // SEARCH
+                    document.getElementById('searchKelas')
+                    .addEventListener('keyup', function(){
+                        let val = this.value.toLowerCase();
+                        document.querySelectorAll('.kelas-item').forEach(el=>{
+                            el.style.display =
+                                el.innerText.toLowerCase().includes(val) ? '' : 'none';
+                        });
+                    });
+
+                    // SELECT ALL
+                    document.getElementById('selectAll')
+                    .addEventListener('click', ()=>{
+                        document.querySelectorAll('.chk-kelas')
+                        .forEach(c=> c.checked = true);
+                    });
+
+                    // UNSELECT ALL
+                    document.getElementById('unselectAll')
+                    .addEventListener('click', ()=>{
+                        document.querySelectorAll('.chk-kelas')
+                        .forEach(c=> c.checked = false);
+                    });
+
+                },
+               preConfirm: () => {
+    const popup = Swal.getHtmlContainer();
+    let selected = [];
+
+    popup.querySelectorAll('.chk-kelas:checked')
+        .forEach(c => selected.push(c.value));
+
+    if(selected.length === 0){
+        Swal.showValidationMessage('Pilih minimal 1 kelas / rombel');
+        return false;
+    }
+
+    return selected.join(',');
+}
+            }).then(result=>{
+                if(result.isConfirmed){
+                    const fd = new FormData();
+                    fd.append('id_soal', idSoal);
+                    fd.append('kelas', result.value);
+
+                    fetch('update_kelas_soal.php',{
+                        method:'POST',
+                        body: fd
+                    })
+                    .then(res=>res.json())
+                    .then(r=>{
+                        if(r.status=='ok'){
+                            Swal.fire('Berhasil','Kelas diperbarui','success')
+                            .then(()=>location.reload());
+                        }
+                    });
+                }
+            });
+
+        });
+    });
+});
+</script>
     <?php if (isset($_SESSION['success'])): ?>
     <script>
     Swal.fire({
