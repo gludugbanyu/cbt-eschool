@@ -20,9 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Simpan akun admin
-        $stmt = $conn->prepare("INSERT INTO admins (username, nama_admin, password, created_at) VALUES (?, ?, ?, NOW())");
-        $stmt->execute([$username, $nama, $password]);
+// Simpan akun admin pertama (wajib admin)
+$stmt = $conn->prepare("
+    INSERT INTO admins (username, nama_admin, password, created_at, role) 
+    VALUES (?, ?, ?, NOW(), 'admin')
+");
+$stmt->execute([$username, $nama, $password]);
 
         // Generate file koneksi.php dari config_example.php
         $template = file_get_contents('config_example.php');
