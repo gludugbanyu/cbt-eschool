@@ -138,5 +138,14 @@ Tanda ; menandakan baris tersebut dikomentari. Menghapusnya akan mengaktifkan ek
 ### Tampilan Ujian 2  
 ![Tampilan Ujian 2](https://i.imgur.com/0eI7HNK.png)
 
+### Latest Version
+![Tampilan versi](https://i.imgur.com/8jiRV5I.png)
+
+### Role User
+![Tampilan role soal](https://i.imgur.com/IUxgtGX.png)
+
+### Analisa Soal
+![Tampilan analisa soal](https://i.imgur.com/g6Tfzdb.png)
+
 © 2025 — Dikembangkan oleh **Gludug Codelite**  
 Semua hak cipta dilindungi undang-undang.
