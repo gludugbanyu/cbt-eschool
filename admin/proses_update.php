@@ -22,18 +22,27 @@ if (!$versi_baru || !$url) {
 }
 
 // Fungsi untuk menyalin rekursif
-function copyRecursive($source, $dest) {
+function copyRecursive($source, $dest, $root_path) {
+
     if (is_dir($source)) {
         @mkdir($dest, 0755, true);
         $files = scandir($source);
+
         foreach ($files as $file) {
-            if ($file != "." && $file != "..") {
-                copyRecursive(
-                    $source . DIRECTORY_SEPARATOR . $file,
-                    $dest . DIRECTORY_SEPARATOR . $file
-                );
+            if ($file === '.' || $file === '..') continue;
+
+            $srcPath  = $source . DIRECTORY_SEPARATOR . $file;
+            $destPath = $dest   . DIRECTORY_SEPARATOR . $file;
+
+            // 🔒 SKIP folder koneksi/
+            $relativeDest = str_replace($root_path . DIRECTORY_SEPARATOR, '', $destPath);
+            if (strpos($relativeDest, 'koneksi' . DIRECTORY_SEPARATOR) === 0) {
+                continue;
             }
+
+            copyRecursive($srcPath, $destPath, $root_path);
         }
+
     } elseif (file_exists($source)) {
         copy($source, $dest);
     }
@@ -84,7 +93,7 @@ if ($zip->open($tmp_zip) === TRUE) {
     }
 
     if ($source_folder) {
-        copyRecursive($source_folder, $root_path);
+        copyRecursive($source_folder, $root_path, $root_path);
         hapusFolder($folder_extract);
 
         // 🔐 Escape versi sebelum update database
