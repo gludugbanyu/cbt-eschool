@@ -35,6 +35,40 @@ li.sidebar-item.submenu > a.sidebar-link {
   background: linear-gradient(to left, #222e3c, #3a4d63) !important;
   border-bottom:2px solid #222e3c;
 }
+/* === FIX CARD DASHBOARD MOBILE === */
+@media (max-width: 768px) {
+
+    .card[style*="height: 180px"],
+    .card[style*="height: 150px"] {
+        height: auto !important;
+        min-height: unset !important;
+    }
+
+    .card-body {
+        padding: 14px !important;
+    }
+
+    .card-body ul {
+        padding-left: 18px;
+        font-size: 13px;
+    }
+
+    .card-title {
+        font-size: 15px !important;
+    }
+
+    .card-text {
+        font-size: 13px !important;
+    }
+
+    /* icon besar di belakang jangan ganggu teks */
+    .card i.position-absolute {
+        font-size: 70px !important;
+        bottom: -10px !important;
+        right: -10px !important;
+        opacity: 0.06 !important;
+    }
+}
 </style>
 <!--<style>
 #soal.sidebar-dropdown a {
