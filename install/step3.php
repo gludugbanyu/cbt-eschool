@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 // Cek jika sudah terinstal
 if (file_exists(__DIR__ . '/../koneksi/koneksi.php')) {
     header('Location: error.php');
@@ -36,8 +37,14 @@ $stmt->execute([$username, $nama, $password]);
         );
         file_put_contents(__DIR__ . '/../koneksi/koneksi.php', $finalConfig);
 
-        header('Location: selesai.php');
-        exit;
+        // Hancurkan session lama (WAJIB di installer)
+$_SESSION = [];
+session_unset();
+session_destroy();
+
+header('Location: selesai.php');
+exit;
+
     } catch (PDOException $e) {
         $error = "Gagal menyimpan data admin: " . $e->getMessage();
     }
