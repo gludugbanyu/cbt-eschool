@@ -215,6 +215,20 @@ function only_preview_soal_by_kode($kode_soal){
     }
 }
 
+function base_url($path = '')
+{
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') 
+                ? "https://" 
+                : "http://";
+
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Ambil nama folder project otomatis
+    $folder = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'))[0];
+
+    return $protocol . $host . '/' . $folder . '/' . ltrim($path, '/');
+}
+
 // Ambil teks terenkripsi
 $encryptedText = get_encrypted_credit();
 ?>

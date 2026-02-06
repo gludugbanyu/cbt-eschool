@@ -150,7 +150,7 @@ if ($total_rows > 0):
                     </td>
                 </tr>
             </table>
-            <br>
+            <hr style="border:0; border-top:3px double #000; margin:5px 0;">
             <table style="width: 100%; font-size: 12px; padding:10px;">
                 <tr>
                     <td>Nama</td>
@@ -192,7 +192,23 @@ else:
     echo "<p style='text-align:center;'>Tidak ada data siswa untuk ditampilkan.</p>";
 endif;
 ?>
+<script>
+var kelasParam = "<?php echo isset($_GET['kelas']) ? $_GET['kelas'] : ''; ?>";
+var namaParam  = "<?php echo isset($_GET['nama']) ? $_GET['nama'] : ''; ?>";
 
+var fileLabel;
+
+if (kelasParam && kelasParam !== 'all') {
+    fileLabel = kelasParam;
+} else if (namaParam) {
+    fileLabel = namaParam;
+} else {
+    fileLabel = 'semua';
+}
+
+// bersihkan karakter aneh supaya aman untuk nama file
+fileLabel = fileLabel.replace(/[^a-zA-Z0-9]/g, '');
+</script>
 <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
 <script>
 window.addEventListener("load", function () {
@@ -214,8 +230,8 @@ window.addEventListener("load", function () {
     setTimeout(function () {
     html2pdf().set({
         margin: 0.2,
-        filename: 'KartuUjianCbt.pdf',
-        image: { type: 'jpeg', quality: 1 },
+        filename: 'kartuujian_' + fileLabel + '.pdf',
+        image: { type: 'jpeg', quality: 0.8 },
         html2canvas: { scale: 2, logging: false },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
     }).from(element).save().then(function () {

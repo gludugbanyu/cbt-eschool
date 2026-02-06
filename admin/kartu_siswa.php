@@ -129,7 +129,7 @@ if (!$koneksi) {
                                                 <table style="width: 100%;">
                                                     <tr>
                                                         <td style="width: 20%;">
-                                                        <center><img src="../assets/images/kemdikbud.png" alt="Logo" style="height: 35px;"></center>
+                                                        <center><img src="<?= base_url('assets/images/kemdikbud.png'); ?>" style="height:35px;"></center>
                                                         </td>
                                                         <td style="width: 80%; text-align: right; font-size: 12px;">
                                                             <center><strong>KARTU PESERTA UJIAN CBT</strong><br>
@@ -137,7 +137,7 @@ if (!$koneksi) {
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <br>
+                                                <hr style="border:0; border-top:3px double #000; margin:5px 0;">
                                                 <table style="width: 100%; font-size: 12px;padding:10px;">
 
                                                     <tr>
