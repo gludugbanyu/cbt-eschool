@@ -11,17 +11,27 @@ $orderColumn = isset($_GET['order'][0]['column']) ? $_GET['order'][0]['column'] 
 $orderDirection = isset($_GET['order'][0]['dir']) ? $_GET['order'][0]['dir'] : 'asc';
 $searchValue = isset($_GET['search']['value']) ? $_GET['search']['value'] : '';
 
-$columns = ['s.nama_siswa', 'js.kode_soal', 'js.waktu_sisa', 'js.waktu_dijawab', 'js.status_ujian'];
+$columns = [
+    's.nama_siswa',
+    'CONCAT(s.kelas, s.rombel)',   // ← TAMBAHAN
+    'js.kode_soal',
+    'js.waktu_sisa',
+    'js.waktu_dijawab',
+    'js.status_ujian'
+];
 $orderBy = $columns[$orderColumn];
 
 $where = "";
 if (!empty($searchValue)) {
-    $where = "WHERE s.nama_siswa LIKE '%$searchValue%' OR js.kode_soal LIKE '%$searchValue%'";
-} else {
+$where = "WHERE s.nama_siswa LIKE '%$searchValue%' 
+          OR js.kode_soal LIKE '%$searchValue%'
+          OR CONCAT(s.kelas, s.rombel) LIKE '%$searchValue%'";} else {
     $where = "WHERE js.status_ujian = 'Aktif'";
 }
 
-$query = "SELECT js.*, s.nama_siswa
+$query = "SELECT js.*, 
+                 s.nama_siswa,
+                 CONCAT(s.kelas, s.rombel) AS kelas
           FROM jawaban_siswa js
           JOIN siswa s ON js.id_siswa = s.id_siswa
           $where
@@ -87,6 +97,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     $data[] = [
         'nama_siswa' => $row['nama_siswa'],
+        'kelas' => $row['kelas'],
         'kode_soal' => $kodeSoal,
         'waktu_sisa' => $row['waktu_sisa'],
         'waktu_dijawab' => $row['waktu_dijawab'],

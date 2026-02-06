@@ -42,8 +42,9 @@ check_login('admin');
                                             <thead>
                                                 <tr>
                                                     <th>Nama Siswa</th>
+                                                    <th>Kelas</th>
                                                     <th>Kode Soal</th>
-                                                    <th>Waktu Sisa</th>
+                                                    <th>Waktu Sisa (menit)</th>
                                                     <th>Waktu Mulai</th>
                                                     <th>Status Ujian</th>
                                                     <th>Progres Ujian</th>
@@ -73,9 +74,10 @@ $(document).ready(function () {
         }, 
         columns: [
             { data: 'nama_siswa', title: 'Nama Siswa' },
+            { data: 'kelas', title: 'kelas' },
             { data: 'kode_soal', title: 'Kode Soal' },
             { data: 'progres', title: 'Progres Ujian' },
-            { data: 'waktu_sisa', title: 'Waktu Sisa' },
+            { data: 'waktu_sisa', title: 'Waktu Sisa (menit)' },
             { data: 'waktu_dijawab', title: 'Waktu Dijawab' },
             { data: 'status_badge', title: 'Status Ujian' },
             { data: 'aksi', title: 'Aksi' }
