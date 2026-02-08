@@ -69,6 +69,45 @@ li.sidebar-item.submenu > a.sidebar-link {
         opacity: 0.06 !important;
     }
 }
+/* Modern Toast */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+#toast-container .toast {
+    min-width: 320px;
+    border-radius: 18px;
+    backdrop-filter: blur(12px);
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+#toast-container .toast.showing,
+#toast-container .toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+#toast-container .toast-body {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#toast-container .toast i {
+    font-size: 18px;
+}
+
+#toast-container .btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
 </style>
 <!--<style>
 #soal.sidebar-dropdown a {

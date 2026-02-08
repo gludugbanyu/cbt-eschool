@@ -1,30 +1,49 @@
-                                                <div id="toast-container">
-                                                    <?php 
-                                                        $ujian_terdekat = mysqli_query($koneksi, "SELECT * FROM soal WHERE tanggal > NOW() ORDER BY tanggal ASC");
+                                                <?php
+$ujian_terdekat = mysqli_query($koneksi, "
+    SELECT * FROM soal 
+    WHERE tanggal > NOW() 
+    ORDER BY tanggal ASC 
+    LIMIT 5
+");
 
-                                                        if (mysqli_num_rows($ujian_terdekat) > 0):
-                                                            mysqli_data_seek($ujian_terdekat, 0); 
-                                                            while ($ujian = mysqli_fetch_assoc($ujian_terdekat)): 
-                                                        ?>
-                                                    <div class="toast align-items-center text-white bg-primary border-0 mb-2 opacity-0"
-                                                        role="alert" aria-live="assertive" aria-atomic="true"
-                                                        data-bs-delay="6000">
-                                                        <div class="d-flex">
-                                                            <div class="toast-body">
-                                                                <i class="far fa-calendar-check me-2"></i>
-                                                                Ujian <?php echo $ujian['kode_soal']; ?> dimulai pada
-                                                                <?php echo date('d M Y', strtotime($ujian['tanggal'])); ?>
-                                                            </div>
-                                                            <button type="button"
-                                                                class="btn-close btn-close-white me-2 m-auto"
-                                                                data-bs-dismiss="toast" aria-label="Close"></button>
-                                                        </div>
-                                                    </div>
-                                                    <?php 
-                                                            endwhile;
-                                                        endif;
-                                                        ?>
-                                                </div>
+$signature = '';
+
+if (mysqli_num_rows($ujian_terdekat) > 0) {
+    mysqli_data_seek($ujian_terdekat, 0);
+    while ($row = mysqli_fetch_assoc($ujian_terdekat)) {
+        $signature .= $row['kode_soal'] . $row['tanggal'];
+    }
+    mysqli_data_seek($ujian_terdekat, 0);
+}
+
+$signature = md5($signature);
+?>
+                                                <div id="toast-container" data-signature="<?= $signature ?>">
+<?php 
+if (mysqli_num_rows($ujian_terdekat) > 0):
+    mysqli_data_seek($ujian_terdekat, 0); 
+    while ($ujian = mysqli_fetch_assoc($ujian_terdekat)): 
+?>
+    <div class="toast align-items-center text-white bg-primary border-0 mb-2 opacity-0"
+        role="alert">
+
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="far fa-calendar-check me-2"></i>
+                Ujian <?= $ujian['kode_soal']; ?> dimulai pada
+                <?= date('d M Y', strtotime($ujian['tanggal'])); ?>
+            </div>
+            <button type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+<?php 
+    endwhile;
+endif;
+?>
+</div>
                                                 <footer class="footer mt-auto py-3 bg-dark">
                                                     <div class="container-fluid">
                                                         <div class="row text-grey">
@@ -109,58 +128,58 @@ function checkIfEncDeleted() {
 setInterval(checkIfEncDeleted, 500);
 
 document.addEventListener('DOMContentLoaded', function() {
-    const sound = document.getElementById('notif-sound'); // Elemen suara
-    const toasts = document.querySelectorAll('#toast-container .toast'); // Semua toast
 
-    // Daftar class background yang tersedia di Bootstrap
+    const sound = document.getElementById('notif-sound');
+    const container = document.getElementById('toast-container');
+    const toasts = document.querySelectorAll('#toast-container .toast');
+
+    if (!toasts.length) return;
+
+    const currentSignature = container.dataset.signature;
+    const savedSignature = sessionStorage.getItem('toastSignature');
+
+    // 🔁 Kalau sama, jangan tampil lagi
+    if (savedSignature === currentSignature) return;
+
+    // Simpan signature baru
+    sessionStorage.setItem('toastSignature', currentSignature);
+
+    // 🎨 Random warna bootstrap
     const bgClasses = [
-        'bg-primary', 'bg-secondary', 'bg-success', 'bg-danger',
-        'bg-warning', 'bg-info', 'bg-dark'
+        'bg-primary','bg-success','bg-danger',
+        'bg-warning','bg-info','bg-dark','bg-secondary'
     ];
 
-    // Fungsi untuk memilih class acak dari daftar
-    function getRandomBgClass() {
-        const randomIndex = Math.floor(Math.random() * bgClasses.length);
-        return bgClasses[randomIndex];
+    function getRandomBg() {
+        return bgClasses[Math.floor(Math.random() * bgClasses.length)];
     }
 
-    // Cek apakah toast sudah pernah ditampilkan di session
-    const toastShown = sessionStorage.getItem('toastDisplayed');
+    toasts.forEach((toastEl, index) => {
 
-    if (!toastShown) {
-        // Tambahkan event listener untuk klik pertama di halaman
-        const onClick = () => {
-            toasts.forEach((toastEl, index) => {
-                // Pilih class background acak dan hapus class sebelumnya
-                toastEl.classList.remove(...bgClasses); // Hapus class lama
-                toastEl.classList.add(getRandomBgClass()); // Tambahkan class acak
-                toastEl.style.borderRadius = '20px';
+        // Ganti warna random
+        toastEl.classList.remove(...bgClasses);
+        toastEl.classList.add(getRandomBg());
 
-                // Delay pertama 500ms, selanjutnya kelipatan 3 detik
-                const delayTime = index === 0 ? 500 : (index * 3000);
+        setTimeout(() => {
 
-                setTimeout(() => {
-                    toastEl.classList.remove('opacity-0');
-                    const toast = new bootstrap.Toast(toastEl);
-                    toast.show();
+            toastEl.classList.remove('opacity-0');
 
-                    // Mainkan suara
-                    if (sound) {
-                        sound.currentTime = 0;
-                        sound.play().catch(() => {});
-                    }
-                }, delayTime);
-            });
+            const toast = new bootstrap.Toast(toastEl, {
+    delay: 5000
+});
 
-            // Simpan flag agar tidak ditampilkan lagi selama sesi ini
-            sessionStorage.setItem('toastDisplayed', 'true');
+            toast.show();
 
-            // Hapus event listener agar tidak dipanggil lagi
-            document.body.removeEventListener('click', onClick);
-        };
+        }, index * 1500);
 
-        document.body.addEventListener('click', onClick);
+    });
+
+    // 🔊 Sound
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
     }
+
 });
                                                 </script>
                                                 <script>
