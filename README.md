@@ -1,4 +1,4 @@
-# 🎓 CBT eSchool  
+# CBT eSchool  
 ### Modern Open-Source Computer-Based Test Platform
 
 CBT eSchool adalah sistem ujian berbasis komputer (Computer-Based Test) yang dibangun menggunakan PHP 8 dan JavaScript.
@@ -12,7 +12,7 @@ Dirancang untuk sekolah dan institusi pendidikan yang membutuhkan sistem ujian o
 
 ---
 
-## ✨ Fitur Utama
+## Fitur Utama
 
 - Multi-role (Admin, Guru, Siswa)
 - Manajemen Bank Soal
