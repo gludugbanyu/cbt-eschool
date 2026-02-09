@@ -173,11 +173,39 @@ $qCompact = mysqli_query($koneksi, "
     SELECT 
         so.kode_soal,
         so.id_pembuat,
-        SUM(CASE WHEN n.nilai_uraian <= 0 THEN 1 ELSE 0 END) AS belum,
-        SUM(CASE WHEN n.nilai_uraian > 0 THEN 1 ELSE 0 END) AS sudah
+
+        SUM(
+            CASE 
+                WHEN n.id_nilai IS NULL THEN 0
+                WHEN bu.kode_soal IS NULL THEN 0
+                WHEN n.nilai_uraian IS NULL OR n.nilai_uraian <= 0 THEN 1
+                ELSE 0
+            END
+        ) AS belum,
+
+        SUM(
+            CASE 
+                WHEN n.id_nilai IS NULL THEN 0
+                WHEN bu.kode_soal IS NULL THEN 1
+                WHEN n.nilai_uraian > 0 THEN 1
+                ELSE 0
+            END
+        ) AS sudah
+
     FROM soal so
-    LEFT JOIN nilai n ON n.kode_soal = so.kode_soal
+
+    LEFT JOIN nilai n 
+        ON n.kode_soal = so.kode_soal
+
+    LEFT JOIN (
+        SELECT DISTINCT kode_soal
+        FROM butir_soal
+        WHERE tipe_soal = 'uraian'
+    ) bu 
+        ON bu.kode_soal = so.kode_soal
+
     $filter_owner
+
     GROUP BY so.kode_soal
     ORDER BY so.kode_soal ASC
 ");
@@ -190,7 +218,7 @@ $qCompact = mysqli_query($koneksi, "
             Ringkasan Koreksi per Kode Soal
         </div>
 
-        <div style="max-height:120px; overflow-y:auto;">
+        <div style="max-height:200px; overflow-y:auto;">
             <table class="table table-sm table-bordered mb-0" style="font-size:12px;">
                 <thead class="table-light">
                     <tr>

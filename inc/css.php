@@ -108,6 +108,59 @@ li.sidebar-item.submenu > a.sidebar-link {
     filter: invert(1);
     opacity: 0.8;
 }
+.support-cta {
+    border-left: 4px solid var(--bs-primary) !important;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
+
+.support-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.bg-icon {
+    font-size: 120px;
+    bottom: -25px;
+    right: -25px;
+    opacity: 0.05;
+    color: #6c757d;
+    pointer-events: none;
+}
+.cta-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--bs-primary);
+    color: #fff;
+    font-size: 10px;
+    padding: 6px 12px;
+    border-bottom-left-radius: 8px;
+}
+/* Ribbon Sudut */
+.cta-ribbon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: grey;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-bottom-left-radius: 10px;
+    z-index: 5;
+}
+
+/* Icon Background */
+.bg-icon {
+    font-size: 120px;
+    bottom: -25px;
+    right: -25px;
+    opacity: 0.05;
+    color: #6c757d;
+    pointer-events: none;
+}
 </style>
 <!--<style>
 #soal.sidebar-dropdown a {

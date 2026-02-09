@@ -39,9 +39,16 @@ include '../inc/dataadmin.php';
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between">
-                                    <h5 class="card-title mb-0">Log Aktivitas Siswa</h5>
-                                    <button id="exportExcel" class="btn btn-outline-secondary btn-sm"><i class="fas fa-file-excel"></i> Export Excel</button>
-                                </div>
+    <h5 class="card-title mb-0">Log Aktivitas Siswa</h5>
+    <div>
+        <button id="clearAllLog" class="btn btn-outline-danger btn-sm me-2">
+            <i class="fas fa-trash"></i> Clear All Log
+        </button>
+        <button id="exportExcel" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </button>
+    </div>
+</div>
                                 <div class="card-body">
                                     <div class="table-wrapper">
                                         <table id="logTable" class="table table-striped nowrap" style="width:100%">
@@ -105,7 +112,25 @@ include '../inc/dataadmin.php';
 $('#exportExcel').on('click', function () {
     table.button('.buttons-excel').trigger();
 });
-
+$('#clearAllLog').on('click', function () {
+    Swal.fire({
+        title: 'Clear Log Siswa Offline?',
+        text: 'Hanya siswa yang sudah offline yang akan dibersihkan.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Bersihkan',
+        confirmButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('clear_log_siswa.php', function (res) {
+                Swal.fire('Berhasil!', res, 'success');
+                location.reload();
+            }).fail(function () {
+                Swal.fire('Error', 'Gagal menghapus log.', 'error');
+            });
+        }
+    });
+});
     </script>
 </body>
 

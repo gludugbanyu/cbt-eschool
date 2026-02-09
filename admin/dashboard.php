@@ -1,10 +1,29 @@
 <?php
 session_start();
+ob_start();
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 // Cek jika sudah login
 check_login('admin');
 include '../inc/dataadmin.php';
+
+function decrypt_string($encoded) {
+    global $method, $rahasia;
+
+    if (empty($method) || empty($rahasia)) return false;
+    if (empty($encoded)) return false;
+
+    $decoded = base64_decode($encoded, true);
+    if ($decoded === false) return false;
+
+    $iv_length = openssl_cipher_iv_length($method);
+    if (strlen($decoded) <= $iv_length) return false;
+
+    $iv = substr($decoded, 0, $iv_length);
+    $ciphertext = substr($decoded, $iv_length);
+
+    return openssl_decrypt($ciphertext, $method, $rahasia, 0, $iv);
+}
 
 // Ambil data statistik dari database
 $total_siswa = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM siswa"))['total'];
@@ -59,6 +78,44 @@ while ($row = mysqli_fetch_assoc($top_siswa_query)) {
 }
 $game = $_GET['game'] ?? 'math_puzzle';
 $game2 = $_GET['game'] ?? 'scramble';
+$supportFile = __DIR__ . '/../inc/support.json';
+
+if (!file_exists($supportFile)) {
+    header("Location: ../error_page.php");
+    exit;
+}
+
+$rawContent = file_get_contents($supportFile);
+$json = json_decode($rawContent, true);
+
+if (!is_array($json) || !isset($json['support_link'])) {
+    header("Location: ../error_page.php");
+    exit;
+}
+$expectedHash = hash('sha256', $json['support_link'] . $rahasia);
+
+if (!isset($json['checksum']) || $json['checksum'] !== $expectedHash) {
+    header("Location: ../error_page.php");
+    exit;
+}
+$encrypteds = $json['support_link'];
+$sawer = decrypt_string($encrypteds);
+
+if (!$sawer) {
+    header("Location: ../error_page.php");
+    exit;
+}
+
+// Validasi domain
+$parsed = parse_url($sawer);
+
+if (
+    !isset($parsed['host']) ||
+    !in_array($parsed['host'], ['saweria.co','www.saweria.co'])
+) {
+    header("Location: ../error_page.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,8 +140,46 @@ $game2 = $_GET['game'] ?? 'scramble';
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        
+                                        <div class="col-12">
+                                                <?php
+                                                $partA = substr(hash('sha256',$rahasia),0,32);
+                                                $partB = substr(hash('sha256',$rahasia),32,32);
+                                                ?>
 
+                                                <div class="card support-cta shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                    data-a="<?= $partA ?>"
+                                                    data-b="<?= $partB ?>">                                                
+                                                    <!-- Ribbon badge -->
+                                                <span class="cta-ribbon">
+                                                    Open Source
+                                                </span>
+
+                                                <div class="card-body d-flex flex-column justify-content-center">
+
+                                                    <div class="mb-2">
+                                                        <h5 class="fw-semibold mb-1 d-flex align-items-center">
+                                                            <i class="fas fa-hand-holding-heart me-2 text-primary"></i>
+                                                            Dukung Pengembangan CBT-Eschool
+                                                        </h5>
+                                                        <p class="mb-2 text-muted small">
+                                                            Kontribusi Anda membantu peningkatan fitur, keamanan, dan performa sistem.
+                                                        </p>
+
+                                                        <a href="<?= htmlspecialchars($sawer) ?>"
+                                                        target="_blank"
+                                                        class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-mug-hot me-1"></i>
+                                                            Dukung Sekarang
+                                                        </a>
+                                                    </div>
+                                                    <?php
+                                                    $hidden = hash('sha1',$rahasia . $_SERVER['HTTP_HOST']);
+                                                    echo "<!--".substr($hidden,5,20)."-->";
+                                                    ?>                                                
+                                                </div>
+                                                <i class="fas fa-graduation-cap position-absolute bg-icon"></i>
+                                            </div>
+                                        </div>
                                         <div class="col-md-4">
                                             <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 180px;">
                                                 <div class="card-body">
@@ -147,6 +242,7 @@ $game2 = $_GET['game'] ?? 'scramble';
                                                 </div>
                                             </div>
                                         </div>
+                                        
 
                                         <!-- Statistik Siswa -->
                                          <div class="col-md-4">
@@ -395,6 +491,7 @@ $game2 = $_GET['game'] ?? 'scramble';
             }
         }
     });
+    
     </script>
     <?php if(isset($_GET['akses'])): ?>
 <script src="../assets/swal/sweetalert2.all.min.js"></script>
@@ -411,3 +508,21 @@ Swal.fire({
 </body>
 
 </html>
+<?php
+$html = ob_get_clean();
+
+$checkA = substr(hash('sha256',$rahasia),0,32);
+$checkB = substr(hash('sha256',$rahasia),32,32);
+$checkHidden = substr(hash('sha1',$rahasia . $_SERVER['HTTP_HOST']),5,20);
+
+if (
+    strpos($html, $checkA) === false ||
+    strpos($html, $checkB) === false ||
+    strpos($html, $checkHidden) === false
+) {
+    header("Location: ../error_page.php");
+    exit;
+}
+
+echo $html;
+?>
