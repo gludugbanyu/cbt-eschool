@@ -1208,5 +1208,54 @@ main.content,
 .dark-mode .btn-secondary {
     color: white !important;
 }
+/* =========================================
+   DARK MODE – CARD FOOTER PANDUAN
+========================================= */
+
+.dark-mode .card-footer.bg-white {
+    background-color: #263445 !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    color: #e4e6eb !important;
+}
+
+/* Heading */
+.dark-mode .card-footer h6 {
+    color: #ffffff !important;
+}
+
+/* text-dark override */
+.dark-mode .card-footer .text-dark {
+    color: #ffffff !important;
+}
+
+/* text-muted override */
+.dark-mode .card-footer .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* Badge putih */
+.dark-mode .card-footer .badge.bg-white {
+    background-color: #2b394a !important;
+    color: #e4e6eb !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* Badge text-danger */
+.dark-mode .card-footer .badge.text-danger {
+    color: #ff6b6b !important;
+}
+
+/* CODE block */
+.dark-mode .card-footer code {
+    background-color: #1f2a38 !important;
+    color: #8ecdf5 !important;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+/* border class */
+.dark-mode .card-footer .border {
+    border-color: rgba(255,255,255,0.08) !important;
+}
 </style>
 

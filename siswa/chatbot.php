@@ -208,6 +208,64 @@
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
 }
+/* =========================================
+   DARK MODE – CHATBOT CBT
+========================================= */
+
+.dark-mode #chatbotCBT {
+    background: #263445 !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
+}
+
+.dark-mode #chatbotCBT .body {
+    background: #1f2a38 !important;
+}
+
+.dark-mode #chatbotCBT .footer {
+    background: #222e3c !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode #chatbotCBT input {
+    background: #2b394a !important;
+    color: #ffffff !important;
+}
+
+.dark-mode #chatbotCBT input::placeholder {
+    color: #94a3b8 !important;
+}
+
+.dark-mode #chatbotCBT button.send-btn {
+    color: #6ea8fe !important;
+}
+
+/* Bubble BOT */
+.dark-mode #chatbotCBT .bot {
+    background: #2b394a !important;
+    color: #e4e6eb !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* Bubble USER */
+.dark-mode #chatbotCBT .user {
+    background: #3a4d63 !important;
+    color: #ffffff !important;
+}
+
+/* Typing indicator */
+.dark-mode #typingIndicator {
+    color: #cfd8e3 !important;
+}
+
+/* Floating button */
+.dark-mode #btnOpenChatbot {
+    background: #3a4d63 !important;
+}
+
+.dark-mode #btnOpenChatbot:hover {
+    background: #4a617d !important;
+}
 </style>
 
 <div id="chatbotCBT" class="minimized closed" role="dialog" aria-label="Chatbot Asisten CBT">
