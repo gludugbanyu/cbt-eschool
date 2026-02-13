@@ -1196,8 +1196,17 @@ main.content,
     border-color: rgba(255,255,255,0.1) !important;
 }
 
-.dark-mode .sidebar-nav{
-    border-right:1px solid #3a4b61;
+.dark-mode .simplebar-offset{
+    border-right:1px solid #3a4b61 !important;
+}
+.dark-mode .navbar{
+    border-bottom:1px solid #3a4b61 !important;
+}
+.dark-mode .btn-success,
+.dark-mode .btn-info,
+.dark-mode .btn-warning,
+.dark-mode .btn-secondary {
+    color: white !important;
 }
 </style>
 
