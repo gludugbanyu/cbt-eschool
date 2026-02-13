@@ -6,10 +6,10 @@
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav navbar-align ms-auto">
             <li class="nav-item">
-    <a href="#" class="nav-link px-3" id="darkModeToggle">
-        <i class="fas fa-moon"></i>
-    </a>
-</li>
+                <a href="#" class="nav-link px-3" id="darkModeToggle">
+                    <i class="fas fa-moon"></i>
+                </a>
+            </li>
             <!-- User Info -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">

@@ -1195,5 +1195,9 @@ main.content,
 .dark-mode .input-group > .input-group-text {
     border-color: rgba(255,255,255,0.1) !important;
 }
+
+.dark-mode .sidebar-nav{
+    border-right:1px solid #3a4b61;
+}
 </style>
 
