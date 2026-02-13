@@ -1257,5 +1257,127 @@ main.content,
 .dark-mode .card-footer .border {
     border-color: rgba(255,255,255,0.08) !important;
 }
+/* =====================================================
+   DARK MODE – PREVIEW IMPORT DOCX
+===================================================== */
+
+/* Background halaman */
+.dark-mode body {
+    background-color: #1c2530 !important;
+}
+
+/* Card preview */
+.dark-mode .card-preview {
+    background-color: #263445 !important;
+    border-left-color: #3a4d63 !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .card-danger {
+    background-color: #3a1f24 !important;
+    border-left-color: #ff6b6b !important;
+}
+
+/* Card header */
+.dark-mode .card-header.bg-white {
+    background-color: #263445 !important;
+    color: #ffffff !important;
+}
+
+/* Card body text */
+.dark-mode .pertanyaan-area p,
+.dark-mode .fs-6,
+.dark-mode .text-dark {
+    color: #e4e6eb !important;
+}
+
+/* Badge tipe */
+.dark-mode .badge-tipe {
+    background: #1f3447 !important;
+    color: #8ecdf5 !important;
+    border: 1px solid #2c4e6b !important;
+}
+
+/* Opsi container */
+.dark-mode .opsi-container {
+    background-color: #2b394a !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .opsi-error {
+    background-color: #3a1f24 !important;
+    border: 1px dashed #ff6b6b !important;
+}
+
+.dark-mode .opsi-error-text {
+    color: #ff6b6b !important;
+}
+
+/* Border start light */
+.dark-mode .border-light {
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Area MJD (bg-light override) */
+.dark-mode .bg-light {
+    background-color: #2b394a !important;
+    color: #e4e6eb !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Kunci jawaban box */
+.dark-mode .kunci-box {
+    background-color: #1f3447 !important;
+    border: 1px solid #2c4e6b !important;
+    color: #8ecdf5 !important;
+}
+
+/* Alert custom */
+.dark-mode .alert-custom,
+.dark-mode .alert-danger {
+    background-color: #3a1f24 !important;
+    color: #ff6b6b !important;
+}
+
+/* Border warning */
+.dark-mode .card.border-warning {
+    background-color: #3a321d !important;
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+}
+
+/* Badge system */
+.dark-mode .badge.bg-dark {
+    background-color: #2b394a !important;
+}
+
+.dark-mode .badge.bg-primary {
+    background-color: #3a4d63 !important;
+}
+
+/* Button outline danger */
+.dark-mode .btn-outline-danger {
+    color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+}
+
+.dark-mode .btn-outline-danger:hover {
+    background-color: #ff6b6b !important;
+    color: #222e3c !important;
+}
+
+/* Button secondary */
+.dark-mode .btn-secondary {
+    background-color: #2b394a !important;
+    border-color: #2b394a !important;
+}
+
+/* Shadow fix */
+.dark-mode .shadow-sm,
+.dark-mode .shadow,
+.dark-mode .shadow-lg {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35) !important;
+}
 </style>
 
