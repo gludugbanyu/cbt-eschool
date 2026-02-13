@@ -216,7 +216,7 @@ if (
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
                                                             <h4 class="card-title text-danger fw-bold mb-2">Aturan Penggunaan 
-                                                                <b style="color:black;">
+                                                                <b>
                                                                     <?php
                                                                     $q = mysqli_query($koneksi, "SELECT * FROM pengaturan WHERE id = 1");
                                                                     $data = mysqli_fetch_assoc($q);

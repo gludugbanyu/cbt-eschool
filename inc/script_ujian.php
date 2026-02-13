@@ -496,3 +496,78 @@ function checkIfEncDeleted() {
 }
 setInterval(checkIfEncDeleted, 500);
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggleBtn = document.getElementById("darkModeToggle");
+    const root = document.documentElement;
+
+    // Set icon saat load
+    if (root.classList.contains("dark-mode")) {
+        toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    toggleBtn.addEventListener("click", function () {
+        root.classList.toggle("dark-mode");
+
+        const isDark = root.classList.contains("dark-mode");
+
+        localStorage.setItem("admin-dark-mode", isDark ? "enabled" : "disabled");
+
+        toggleBtn.innerHTML = isDark
+            ? '<i class="fas fa-sun"></i>'
+            : '<i class="fas fa-moon"></i>';
+
+        applyChartTheme(isDark);
+    });
+
+});
+</script>
+<script>
+function applyChartTheme(isDark) {
+
+    const textColor = isDark ? '#e4e6eb' : '#666';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+
+    [chartRekapUjian, chartKodeSoal, chartTopSiswa].forEach(chart => {
+        if (!chart) return;
+
+        if (chart.options.scales) {
+            Object.values(chart.options.scales).forEach(scale => {
+                if (scale.ticks) scale.ticks.color = textColor;
+                if (scale.grid) scale.grid.color = gridColor;
+            });
+        }
+
+        if (chart.options.plugins?.legend) {
+            chart.options.plugins.legend.labels = {
+                color: textColor
+            };
+        }
+
+        if (chart.options.plugins?.title) {
+            chart.options.plugins.title.color = textColor;
+        }
+
+        chart.update();
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const isDark = document.documentElement.classList.contains("dark-mode");
+    applyChartTheme(isDark);
+
+    document.getElementById("darkModeToggle")
+        .addEventListener("click", function() {
+            setTimeout(() => {
+                const darkActive = document.body.classList.contains("dark-mode");
+                applyChartTheme(darkActive);
+            }, 100);
+        });
+
+});
+</script>

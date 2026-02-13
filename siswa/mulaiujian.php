@@ -285,7 +285,11 @@ foreach ($matches as $match) {
                 </a>
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav navbar-align ms-auto">
-
+                        <li class="nav-item">
+                            <a href="#" class="nav-link px-3" id="darkModeToggle">
+                                <i class="fas fa-moon"></i>
+                            </a>
+                        </li>
                         <li class="nav-item me-3">
                             <div class="dropdown-toggle" href="#" style="font-weight: bold; font-size: 1.2rem;"
                                 id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">

@@ -1,9 +1,19 @@
 <link rel="icon" type="image/png" href="../assets/images/icon.png" />
+<script>
+if (localStorage.getItem("admin-dark-mode") === "enabled") {
+    document.documentElement.classList.add("dark-mode");
+}
+</script>
 <link href="../assets/bootstrap-5.3.6/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/fontawesome/css/all.min.css" rel="stylesheet">
 <link href="../assets/adminkit/static/css/app.css" rel="stylesheet">
 <link href="../assets/datatables/datatables.css" rel="stylesheet">
 <style>
+    html.dark-mode,
+html.dark-mode body {
+    background-color: #1c2530 !important;
+    color: #e4e6eb !important;
+}
   #toast-container {
     position: fixed !important;
     bottom: 1rem;
@@ -161,11 +171,1029 @@ li.sidebar-item.submenu > a.sidebar-link {
     color: #6c757d;
     pointer-events: none;
 }
-</style>
-<!--<style>
-#soal.sidebar-dropdown a {
-    background-color: rgba(0, 0, 0, 0.15); /* Warna gelap dengan transparansi */
-    padding: 10px 25px;
-    margin-top: -1px; /* Untuk menghilangkan gap */
+/* =======================================================
+   DARK MODE – DATATABLES FIX
+======================================================= */
+
+.dark-mode .dataTables_wrapper {
+    color: #e4e6eb !important;
 }
-</style>-->
+
+.dark-mode .dataTables_wrapper .dataTables_info,
+.dark-mode .dataTables_wrapper .dataTables_length,
+.dark-mode .dataTables_wrapper .dataTables_filter,
+.dark-mode .dataTables_wrapper label {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .dataTables_wrapper input,
+.dark-mode .dataTables_wrapper select {
+    background-color: #2b394a !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .dataTables_wrapper .paginate_button {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .dataTables_wrapper .paginate_button.current {
+    background-color: #3a4d63 !important;
+    color: #fff !important;
+}
+/* =======================================================
+   FULL DARK MODE – ADMIN CBT (STABLE VERSION)
+   Base: #222e3c
+======================================================= */
+
+.dark-mode {
+    background-color: #1c2530 !important;
+    color: #e4e6eb !important;
+}
+
+/* =======================================================
+   MAIN CONTENT
+======================================================= */
+
+.dark-mode main.content {
+    background-color: #222e3c !important;
+    color: #e4e6eb !important;
+}
+
+/* =======================================================
+   NAVBAR
+======================================================= */
+
+.dark-mode .navbar,
+.dark-mode .navbar-bg {
+    background-color: #222e3c !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .nav-link,
+.dark-mode .navbar .dropdown-toggle {
+    color: #e4e6eb !important;
+}
+
+/* =======================================================
+   CARD
+======================================================= */
+
+.dark-mode .card {
+    background-color: #263445 !important;
+    color: #e4e6eb !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.dark-mode .card-header {
+    background-color: #2b394a !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+}
+
+/* =======================================================
+   TABLE (FIX TOTAL)
+======================================================= */
+
+.dark-mode .table {
+    background-color: transparent !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .table th,
+.dark-mode .table td {
+    color: #e4e6eb !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode .table thead,
+.dark-mode .table thead th {
+    background-color: #2f3f52 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .table-secondary,
+.dark-mode .table-secondary th {
+    background-color: #2f3f52 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255,255,255,0.03) !important;
+}
+
+.dark-mode .table-hover tbody tr:hover {
+    background-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Override semua text bootstrap */
+.dark-mode .text-dark,
+.dark-mode .text-body,
+.dark-mode .text-muted {
+    color: #cfd8e3 !important;
+}
+
+/* =======================================================
+   DATATABLES FIX TOTAL
+======================================================= */
+
+.dark-mode .dataTables_wrapper {
+    color: #e4e6eb !important;
+}
+
+.dark-mode .dataTables_wrapper .dataTables_info,
+.dark-mode .dataTables_wrapper .dataTables_length,
+.dark-mode .dataTables_wrapper .dataTables_filter,
+.dark-mode .dataTables_wrapper label {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .dataTables_wrapper input,
+.dark-mode .dataTables_wrapper select {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .dataTables_wrapper .paginate_button {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .dataTables_wrapper .paginate_button.current {
+    background-color: #3a4d63 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* =======================================================
+   FORM
+======================================================= */
+
+.dark-mode .form-control,
+.dark-mode .form-select {
+    background-color: #2b394a !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .form-control::placeholder {
+    color: #aab4c3 !important;
+}
+
+.dark-mode .form-control:focus {
+    background-color: #2b394a !important;
+    border-color: #3d5168 !important;
+    box-shadow: none !important;
+}
+
+/* =======================================================
+   DROPDOWN
+======================================================= */
+
+.dark-mode .dropdown-menu {
+    background-color: #2b394a !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode .dropdown-item {
+    color: #e4e6eb !important;
+}
+
+.dark-mode .dropdown-item:hover {
+    background-color: rgba(255,255,255,0.05) !important;
+}
+
+/* =======================================================
+   MODAL
+======================================================= */
+
+.dark-mode .modal-content {
+    background-color: #263445 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* =======================================================
+   BUTTON
+======================================================= */
+
+.dark-mode .btn-outline-secondary {
+    color: #cfd8e3 !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+    background-color: #2b394a !important;
+}
+
+.dark-mode .btn-light {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* =======================================================
+   TOAST
+======================================================= */
+
+.dark-mode #toast-container .toast {
+    background: rgba(34,46,60,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+}
+
+/* =======================================================
+   FOOTER
+======================================================= */
+
+.dark-mode footer {
+    background-color: #1b2530 !important;
+    color: #cfd8e3 !important;
+}
+
+/* =======================================================
+   TRANSITION SMOOTH
+======================================================= */
+
+body,
+main.content,
+.card,
+.navbar,
+.table,
+.form-control,
+.dropdown-menu {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+.dark-mode .text-primary {
+    color: #6ea8fe !important;
+}
+
+.dark-mode .btn-primary {
+    background-color: #3a4d63 !important;
+    border-color: #3a4d63 !important;
+}
+
+.dark-mode .bg-primary {
+    background-color: #3a4d63 !important;
+}
+/* =======================================================
+   DARK MODE – FIX HEADING COLOR
+======================================================= */
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+    color: #ffffff !important;
+}
+
+.dark-mode .card h1,
+.dark-mode .card h2,
+.dark-mode .card h3,
+.dark-mode .card h4,
+.dark-mode .card h5,
+.dark-mode .card h6 {
+    color: #ffffff !important;
+}
+/* =======================================================
+   DARK MODE – FIX btn-outline-dark
+======================================================= */
+
+.dark-mode .btn-outline-dark {
+    color: #e4e6eb !important;
+    border-color: #e4e6eb !important;
+}
+
+.dark-mode .btn-outline-dark:hover {
+    background-color: #e4e6eb !important;
+    color: #222e3c !important;
+}
+.dark-mode .text-secondary {
+    color: #94a3b8 !important;
+}
+/* =======================================================
+   DARK MODE – CTA RIBBON FIX
+======================================================= */
+
+.dark-mode .cta-ribbon {
+    background: #3a4d63 !important;
+    color: #e4e6eb !important;
+}
+/* =======================================================
+   DARK MODE – SWEETALERT SAFE FIX
+   (TIDAK MERUSAK ICON ANIMASI)
+======================================================= */
+
+.dark-mode .swal2-popup {
+    background: #263445 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .swal2-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .swal2-html-container {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .swal2-container {
+    background: rgba(0,0,0,0.65) !important;
+}
+
+.dark-mode .swal2-input,
+.dark-mode .swal2-textarea,
+.dark-mode .swal2-select {
+    background: #2b394a !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .swal2-confirm {
+    background-color: #3a4d63 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.dark-mode .swal2-cancel {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+/* =======================================================
+   DARK MODE – SWEETALERT FINAL STABLE
+   (TIDAK MENYENTUH ICON)
+======================================================= */
+
+.dark-mode .swal2-popup {
+    background-color: #263445 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .swal2-title {
+    color: #ffffff !important;
+}
+
+.dark-mode .swal2-html-container {
+    color: #cfd8e3 !important;
+}
+
+.dark-mode .swal2-container {
+    background: rgba(0,0,0,0.6) !important;
+}
+
+.dark-mode .swal2-input,
+.dark-mode .swal2-textarea,
+.dark-mode .swal2-select {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .swal2-confirm {
+    background-color: #3a4d63 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.dark-mode .swal2-cancel {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+/* =======================================================
+   FIX SWEETALERT ICON WARNA TERWARISI
+======================================================= */
+
+.dark-mode .swal2-icon {
+    color: initial !important;
+}
+
+.dark-mode .swal2-icon * {
+    color: initial !important;
+}
+
+.dark-mode .swal2-success-circular-line-left,
+.dark-mode .swal2-success-circular-line-right,
+.dark-mode .swal2-success-fix {
+    background-color: transparent !important;
+}
+/* =======================================================
+   DARK MODE – DATATABLES 2 PAGINATION FIX
+======================================================= */
+
+/* Default button */
+.dark-mode .dataTables_wrapper .dt-paging-button .page-link {
+    background-color: #2b394a !important;
+    color: #e4e6eb !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* Hover */
+.dark-mode .dataTables_wrapper .dt-paging-button .page-link:hover {
+    background-color: #3a4d63 !important;
+    color: #ffffff !important;
+}
+
+/* Active */
+.dark-mode .dataTables_wrapper .dt-paging-button.active .page-link {
+    background-color: #3a4d63 !important;
+    border-color: #3a4d63 !important;
+    color: #ffffff !important;
+}
+
+/* Disabled */
+.dark-mode .dataTables_wrapper .dt-paging-button.disabled .page-link {
+    background-color: #1f2a38 !important;
+    color: #6c757d !important;
+    border-color: rgba(255,255,255,0.05) !important;
+}
+/* =======================================================
+   DARK MODE – DATATABLES PAGINATION (VARIABLE FIX)
+======================================================= */
+
+.dark-mode .pagination {
+    --bs-pagination-bg: #2b394a;
+    --bs-pagination-color: #e4e6eb;
+    --bs-pagination-border-color: rgba(255,255,255,0.1);
+
+    --bs-pagination-hover-bg: #3a4d63;
+    --bs-pagination-hover-color: #ffffff;
+    --bs-pagination-hover-border-color: #3a4d63;
+
+    --bs-pagination-active-bg: #3a4d63;
+    --bs-pagination-active-color: #ffffff;
+    --bs-pagination-active-border-color: #3a4d63;
+
+    --bs-pagination-disabled-bg: #1f2a38;
+    --bs-pagination-disabled-color: #6c757d;
+    --bs-pagination-disabled-border-color: rgba(255,255,255,0.05);
+}
+/* =======================================================
+   DARK MODE – FILE INPUT FIX
+======================================================= */
+
+.dark-mode input[type="file"].form-control {
+    background-color: #2b394a !important;
+    color: #e4e6eb !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* Tombol "Browse" */
+.dark-mode input[type="file"].form-control::file-selector-button {
+    background-color: #3a4d63 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Hover tombol */
+.dark-mode input[type="file"].form-control::file-selector-button:hover {
+    background-color: #4a617d !important;
+}
+/* =======================================================
+   DARK MODE – BOOTSTRAP ALERT FIX
+======================================================= */
+
+.dark-mode .alert {
+    --bs-alert-bg: #2b394a;
+    --bs-alert-color: #e4e6eb;
+    --bs-alert-border-color: rgba(255,255,255,0.08);
+}
+
+/* Info */
+.dark-mode .alert-info {
+    --bs-alert-bg: #1f3447;
+    --bs-alert-color: #8ecdf5;
+    --bs-alert-border-color: #2c4e6b;
+}
+
+/* Success */
+.dark-mode .alert-success {
+    --bs-alert-bg: #1e3a32;
+    --bs-alert-color: #4dd4ac;
+    --bs-alert-border-color: #275a4e;
+}
+
+/* Warning */
+.dark-mode .alert-warning {
+    --bs-alert-bg: #3a321d;
+    --bs-alert-color: #ffc107;
+    --bs-alert-border-color: #5a4a27;
+}
+
+/* Danger */
+.dark-mode .alert-danger {
+    --bs-alert-bg: #3a1f24;
+    --bs-alert-color: #ff6b6b;
+    --bs-alert-border-color: #5a2b32;
+}
+/* =======================================================
+   DARK MODE – CHAT FIX
+======================================================= */
+
+/* Chat container */
+.dark-mode #chat-box {
+    background: #1f2a38 !important;
+}
+
+/* Default bubble */
+.dark-mode .chat-message {
+    background-color: #2b394a !important;
+    color: #e4e6eb !important;
+    box-shadow: none !important;
+}
+
+/* Right bubble */
+.dark-mode .chat-line.right .chat-message {
+    background-color: #3a4d63 !important;
+}
+
+/* Sender name */
+.dark-mode .chat-sender {
+    color: #94a3b8 !important;
+}
+
+/* Timestamp */
+.dark-mode .chat-timestamp {
+    color: rgba(255,255,255,0.5) !important;
+}
+
+/* Admin message */
+.dark-mode .chat-line.admin .chat-message {
+    background-color: #3a1f24 !important;
+    color: #ff6b6b !important;
+    border: 1px solid #5a2b32 !important;
+}
+
+/* Siswa message */
+.dark-mode .chat-line.siswa .chat-message {
+    background-color: #1f3447 !important;
+    color: #8ecdf5 !important;
+    border: 1px solid #2c4e6b !important;
+}
+
+/* Form input */
+.dark-mode #pesan {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+/* Emoji button */
+.dark-mode .emoji-button {
+    background: #2b394a !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .emoji-button:hover {
+    background: #3a4d63 !important;
+}
+
+/* Emoji dropdown */
+.dark-mode .emoji-dropdown {
+    background: #263445 !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode .emoji-item:hover {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Card body gradient override */
+.dark-mode .card-body {
+    background: #222e3c !important;
+}
+/* =======================================================
+   DARK MODE – BG-LIGHT FIX
+======================================================= */
+
+.dark-mode .bg-light {
+    background-color: #2b394a !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode .border {
+    border-color: rgba(255,255,255,0.08) !important;
+}
+/* =======================================================
+   DARK MODE – STRIPED TABLE FIX (NO FLICKER)
+======================================================= */
+
+.dark-mode .table {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(255,255,255,0.03);
+    --bs-table-hover-bg: rgba(255,255,255,0.06);
+    --bs-table-border-color: rgba(255,255,255,0.08);
+    --bs-table-color: #e4e6eb;
+}
+/* Dark mode toggle style */
+#darkModeToggle {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .nav-link {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+#darkModeToggle:hover {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+}
+.navbar .nav-item {
+    display: flex;
+    align-items: center;
+}
+/* =======================================================
+   DARK MODE – BOXCHAT FINAL FIX
+======================================================= */
+.dark-mode .boxchatnya {
+    background: #1f2a38 !important;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #e4e6eb !important;
+}
+/* ==========================================
+   DARK MODE – UJIAN CARD FIX
+========================================== */
+
+.dark-mode .ujian-card-hover {
+    background: linear-gradient(to bottom right, #1f2a38, #222e3c) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .ujian-card-hover:hover {
+    background: linear-gradient(to bottom right, #263445, #2b394a) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark-mode .icon-wrapper {
+    background-color: #2b394a !important;
+}
+
+.dark-mode #last-updated {
+    color: #e4e6eb !important;
+}
+.dark-mode .row-alarm {
+    border-left: 8px solid #dc3545 !important;
+    background-color: #151c24 !important;
+}
+/* ==========================================
+   DARK MODE – DASHBOARD ICON
+========================================== */
+
+.dark-mode .dashboard-icon {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================
+   DARK MODE – CARD MINIMAL
+========================================== */
+
+.dark-mode .card-minimal {
+    background: #222e3c !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35) !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .card-minimal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.45) !important;
+}
+
+/* ==========================================
+   DARK MODE – CARD TITLE
+========================================== */
+
+.dark-mode .card-title {
+    color: #ffffff !important;
+}
+
+/* ==========================================
+   DARK MODE – TABLE WRAPPER
+========================================== */
+
+.dark-mode .table-wrapper {
+    background: transparent !important;
+}
+
+/* ==========================================
+   DARK MODE – GAME CARD
+========================================== */
+
+.dark-mode .game-card {
+    background: #222e3c !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode .game-card:hover {
+    background: linear-gradient(to bottom right, #263445, #2b394a) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.45) !important;
+}
+
+/* ==========================================
+   DARK MODE – ICON WRAPPER
+========================================== */
+
+.dark-mode .icon-wrapper {
+    background-color: #2b394a !important;
+}
+/* ==========================================
+   DARK MODE – HEADER INFO
+========================================== */
+
+.dark-mode .header-info {
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.dark-mode .header-left,
+.dark-mode .header-right {
+    color: #e4e6eb !important;
+}
+
+.dark-mode .header-right {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    background-color: #2b394a !important;
+}
+/* ==========================================
+   DARK MODE – RAW TABLE FIX
+========================================== */
+
+.dark-mode table {
+    background-color: transparent !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode table th,
+.dark-mode table td {
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    color: #e4e6eb !important;
+}
+/* ==========================================
+   DARK MODE – PEMBAHASAN
+========================================== */
+
+.dark-mode .pembahasan {
+    background-color: #1f2a38 !important;
+    background-image: none !important;
+    color: #cfd8e3 !important;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+/* ==========================================
+   DARK MODE – SKOR SOAL
+========================================== */
+
+.dark-mode .skor-soal {
+    background-color: #263445 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.dark-mode ul {
+    color: #e4e6eb;
+}
+/* ==========================================
+   DARK MODE – INLINE WHITE FIX
+========================================== */
+
+.dark-mode div[style*="background-color: white"] {
+    background-color: #222e3c !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode div[style*="color: black"] {
+    color: #e4e6eb !important;
+}
+/* ==========================================
+   DARK MODE – INLINE RESULT BOX FIX
+========================================== */
+
+/* Wrapper luar */
+.dark-mode .row[style*="#444"] {
+    background-color: #222e3c !important;
+    color: #e4e6eb !important;
+}
+
+/* Box nilai putih */
+.dark-mode div[style*="background-color: white"] {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+}
+
+/* Inline color black */
+.dark-mode div[style*="color: black"] {
+    color: #e4e6eb !important;
+}
+/* ==========================================
+   DARK MODE – CARD UTAMA
+========================================== */
+
+.dark-mode .card-utama {
+    background-color: #222e3c !important;
+    color: #e4e6eb !important;
+}
+.dark-mode .mb-4.p-3.border.rounded.bg-white {
+    background-color: #2b394a !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+/* ==========================================
+   DARK MODE – CUSTOM CARD
+========================================== */
+
+.dark-mode .custom-card {
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    background-color: #222e3c !important;
+}
+
+.dark-mode .custom-card-header {
+    background-color: #2b394a !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+}
+
+/* =====================================================
+   DARK MODE – ANALISA TABLE + PROGRESS FIX
+===================================================== */
+
+.dark-mode #tabelAnalisa {
+    color: #e4e6eb !important;
+}
+
+.dark-mode #tabelAnalisa th,
+.dark-mode #tabelAnalisa td {
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    background-color: #222e3c !important;
+    color: #ffffff !important;
+}
+
+/* Progress background */
+.dark-mode .progress {
+    background: #2b394a !important;
+}
+
+/* Progress bar */
+.dark-mode .progress-bar {
+    color: #ffffff !important;
+}
+
+/* Table responsive background */
+.dark-mode .table-responsive {
+    background-color: transparent !important;
+}
+/* =====================================================
+   PRINT MODE – FORCE LIGHT VERSION
+===================================================== */
+
+@media print {
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    #tabelAnalisa th,
+    #tabelAnalisa td {
+        border: 1px solid #333 !important;
+        color: #000 !important;
+        background: #ffffff !important;
+    }
+
+    .progress {
+        background: #eee !important;
+    }
+
+    .progress-bar {
+        color: #fff !important;
+    }
+}
+/* =====================================================
+   DARK MODE – TABLE HEADER GENERIC FIX
+===================================================== */
+
+.dark-mode table th {
+    background-color: #2f3f52 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+}
+/* ==========================================
+   DARK MODE – FORCE ALL TEXT COLOR
+========================================== */
+
+/* Semua text umum */
+.dark-mode,
+.dark-mode p,
+.dark-mode span,
+.dark-mode div,
+.dark-mode label,
+.dark-mode small,
+.dark-mode strong,
+.dark-mode b,
+.dark-mode li {
+    color: #e4e6eb !important;
+}
+
+/* Heading */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+    color: #ffffff !important;
+}
+
+/* Bootstrap text utilities */
+.dark-mode .text-dark,
+.dark-mode .text-black,
+.dark-mode .text-body {
+    color: #e4e6eb !important;
+}
+
+.dark-mode .text-muted {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .text-secondary {
+    color: #94a3b8 !important;
+}
+
+/* Link */
+.dark-mode a {
+    color: #6ea8fe !important;
+}
+
+.dark-mode a:hover {
+    color: #9ec5fe !important;
+}
+
+/* Form label */
+.dark-mode .form-check-label {
+    color: #e4e6eb !important;
+}
+/* =========================================
+   DARK MODE – FORCE LOADING OVERLAY FIX
+========================================= */
+
+.dark-mode #loadingOverlay {
+    background-color: rgba(34, 46, 60, 0.95) !important;
+    color: #e4e6eb !important;
+}
+
+.dark-mode #loadingOverlay p {
+    color: #e4e6eb !important;
+}
+
+/* Loader border fix */
+.dark-mode #loadingOverlay .loader {
+    border: 5px solid rgba(255,255,255,0.15) !important;
+    border-top: 5px solid #6ea8fe !important;
+}
+/* =========================================
+   DARK MODE – INPUT GROUP FIX TOTAL
+========================================= */
+
+.dark-mode .input-group-text {
+    background-color: #2b394a !important;
+    color: #cfd8e3 !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .form-control {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.dark-mode .form-control::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Focus state */
+.dark-mode .form-control:focus {
+    background-color: #2b394a !important;
+    color: #ffffff !important;
+    border-color: #3a4d63 !important;
+    box-shadow: none !important;
+}
+
+/* Input group wrapper biar nyatu */
+.dark-mode .input-group > .form-control,
+.dark-mode .input-group > .input-group-text {
+    border-color: rgba(255,255,255,0.1) !important;
+}
+</style>
+
