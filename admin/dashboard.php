@@ -189,11 +189,20 @@ if (
                                                             </h5>
                                                             <p class="card-text mb-1">CBT-Eschool - Sistem Ujian Online
                                                             </p>
-                                                            <div class="mb-2">
-                                                                <img src="https://img.shields.io/github/stars/gludugbanyu/cbt-eschool?style=social"
-                                                                    alt="GitHub Stars">
-                                                                <img src="https://img.shields.io/github/forks/gludugbanyu/cbt-eschool?style=social"
-                                                                    alt="GitHub Forks">
+                                                            <div class="mb-2 d-flex gap-2">
+
+                                                                <div class="badge github-badge px-3 py-2 d-flex align-items-center">
+                                                                    <i class="fas fa-star me-2"></i>
+                                                                    <span id="ghStars">0</span>
+                                                                    <span class="ms-1">Stars</span>
+                                                                </div>
+
+                                                                <div class="badge github-badge px-3 py-2 d-flex align-items-center">
+                                                                    <i class="fas fa-code-branch me-2"></i>
+                                                                    <span id="ghForks">0</span>
+                                                                    <span class="ms-1">Forks</span>
+                                                                </div>
+
                                                             </div>
                                                             <br>
                                                             <a href="https://github.com/gludugbanyu/cbt-eschool"
@@ -493,6 +502,18 @@ if (
     });
     
     </script>
+    <script>
+fetch("github_stats.php")
+  .then(res => res.json())
+  .then(data => {
+      document.getElementById("ghStars").innerText = data.stars;
+      document.getElementById("ghForks").innerText = data.forks;
+  })
+  .catch(() => {
+      document.getElementById("ghStars").innerText = "-";
+      document.getElementById("ghForks").innerText = "-";
+  });
+</script>
     <?php if(isset($_GET['akses'])): ?>
 <script src="../assets/swal/sweetalert2.all.min.js"></script>
 <script>

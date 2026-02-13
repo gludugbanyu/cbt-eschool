@@ -1379,5 +1379,61 @@ main.content,
 .dark-mode .shadow-lg {
     box-shadow: 0 6px 16px rgba(0,0,0,0.35) !important;
 }
+/* ============================= */
+/* GITHUB CARD DARK MODE FIX */
+/* ============================= */
+
+/* Badge default (light mode tetap normal) */
+.badge.github-badge {
+    background: #f8f9fa;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+/* Dark mode override */
+.dark-mode .badge.github-badge {
+    background: #2a3441 !important;
+    color: #e4e6eb !important;
+    border: 1px solid #3a4b61 !important;
+}
+
+/* Icon warna */
+.github-badge i {
+    font-size: 14px;
+}
+.github-badge i.fa-star {
+    color: #ffc107 !important;
+}
+/* Dark mode icon tweak */
+.dark-mode .github-badge i.fa-star {
+    color: #ffc107 !important;
+}
+
+.dark-mode .github-badge i.fa-code-branch {
+    color: #9aa4b2 !important;
+}
+
+/* Button GitHub dark mode */
+.dark-mode .btn-outline-dark {
+    color: #e4e6eb !important;
+    border-color: #3a4b61 !important;
+}
+
+.dark-mode .btn-outline-dark:hover {
+    background: #3a4b61 !important;
+    color: #fff !important;
+}
+
+/* Icon background besar GitHub */
+.dark-mode .fa-github.position-absolute {
+    opacity: 0.05 !important;
+    color: #8b949e !important;
+}
+.dark-mode .support-cta {
+    border-left: 4px solid var(--bs-danger) !important;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
 </style>
 
