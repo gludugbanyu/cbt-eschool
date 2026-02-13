@@ -2,7 +2,7 @@
 include '../koneksi/koneksi.php'; // Pastikan koneksi sudah ada
 include_once '../inc/encrypt.php'; // berisi $method dan $rahasia
 
-$pengaturan = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT nama_aplikasi FROM pengaturan WHERE id = 1"));
+$pengaturan = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT nama_aplikasi, logo_sekolah FROM pengaturan WHERE id = 1"));
 
 // Fungsi untuk pengecekan login user
 function check_login($role) {

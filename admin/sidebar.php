@@ -3,9 +3,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $role = $_SESSION['role'] ?? 'editor';
 ?>
 <nav id="sidebar" class="sidebar js-sidebar">
-<div class="sidebar-content js-simplebar">
-<a class="sidebar-brand" href="#">
-<span class="align-middle"><?= htmlspecialchars($pengaturan['nama_aplikasi'] ?? 'CBT E-School') ?></span>
+<div class="sidebar-content js-simplebar"> 
+<a class="sidebar-brand d-flex align-items-center" href="./">
+    <img src="../assets/images/icon.png" 
+         alt="Logo" 
+         style="height:40px; width:auto; margin-right:10px;">
+    
+    <span class="align-middle">
+        <?= htmlspecialchars($pengaturan['nama_aplikasi'] ?? 'CBT E-School') ?>
+    </span>
 </a>
 
 <ul class="sidebar-nav">
