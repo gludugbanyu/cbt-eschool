@@ -10,8 +10,10 @@ if (!isset($_GET['kode_soal'])) {
     exit();
 }
 
-$kode_soal = $_GET['kode_soal'];
-only_pemilik_soal_by_kode($kode_soal);
+$kode_soal_raw = $_GET['kode_soal'];
+$kode_soal = mysqli_real_escape_string($koneksi, $kode_soal_raw);
+
+only_pemilik_soal_by_kode($kode_soal_raw);
 // Ambil data soal
 $query_soal = mysqli_query($koneksi, "SELECT * FROM soal WHERE kode_soal='$kode_soal'");
 $data_soal = mysqli_fetch_assoc($query_soal);
@@ -126,7 +128,6 @@ if ($data_soal['status'] == 'Aktif') {
                                 ?>
                                     <div class="table-wrapper">
                                         <?php
-                                $kode_soal = mysqli_real_escape_string($koneksi, $_GET['kode_soal']);
 
                                 // Cari nomor yang hilang dulu
                                 $query_gap = mysqli_query($koneksi, "
@@ -177,9 +178,17 @@ if ($data_soal['status'] == 'Aktif') {
                                                 <li>
                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                         data-bs-target="#modalImportExcel">
-                                                        <i class="fas fa-upload"></i> Import Soal Excel
+                                                        <i class="fas fa-file-excel text-success"></i> Import Soal Excel
                                                     </a>
                                                 </li>
+                                                <li>
+                                                <a class="dropdown-item" href="#" 
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalImportDocx">
+                                                    <i class="fas fa-file-word text-primary"></i>
+                                                    Import Soal DOCX
+                                                </a>
+                                            </li>
                                             </ul>
                                         </div>
 
@@ -231,40 +240,179 @@ if ($data_soal['status'] == 'Aktif') {
                             </div>
                         </div>
                     </div>
-                    <!-- Modal Import Excel -->
-                    <div class="modal fade" id="modalImportExcel" tabindex="-1" aria-labelledby="modalImportExcelLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <form action="import_soal.php" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="kode_soal" value="<?= $kode_soal; ?>">
-                                <input type="hidden" name="opsi" value="<?= $data_soal['jumlah_opsi'] ?>">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalImportExcelLabel">Import Soal dari Excel</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Tutup"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label for="file_excel" class="form-label">Pilih File Excel</label>
-                                            <input type="file" class="form-control" name="file_excel" id="file_excel"
-                                                accept=".xlsx" required>
-                                        </div>
-                                        <div class="alert alert-info">
-                                            <strong>Perhatian!</strong> Gunakan format template yang benar. <br>
-                                            <a href="../assets/template_import_soal.xlsx"
-                                                class="btn btn-sm btn-link">Download Template</a>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Import</button>
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Tutup</button>
-                                    </div>
+<div class="modal fade" id="modalImportExcel" tabindex="-1" aria-labelledby="modalImportExcelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> 
+        <form action="import_soal.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="kode_soal" value="<?= $kode_soal; ?>">
+            <input type="hidden" name="opsi" value="<?= $data_soal['jumlah_opsi'] ?>">
+            
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="modalImportExcelLabel" style="color:white;">
+                        <i class="fas fa-file-excel me-2"></i> Import Soal dari Excel
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="card mb-3 border-success">
+                        <div class="card-header bg-success-subtle py-2">
+                            <strong><i class="fas fa-info-circle"></i> Panduan Format Excel:</strong>
+                        </div>
+                        <div class="card-body py-2 px-3 small">
+                            <ul class="mb-2">
+                                <li><strong>Kode Soal:</strong> Kolom B <b>WAJIB</b> berisi: <span class="badge bg-dark"><?= $kode_soal ?></span></li>
+                                <li><strong>Tipe Soal:</strong> Isi dengan <code>Pilihan Ganda</code>, <code>Pilihan Ganda Kompleks</code>, <code>Menjodohkan</code>, atau <code>Benar/Salah</code>.</li>
+                            </ul>
+
+                            <hr class="my-2">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Format Benar/Salah:</strong></p>
+                                    <ul class="mb-2">
+                                        <li>Isi pernyataan di Kolom Pilihan 1, 2, dst.</li>
+                                        <li>Jawaban Benar isi dengan: <code>Benar|Salah|Benar</code> (pisahkan dengan <code>|</code>).</li>
+                                    </ul>
                                 </div>
-                            </form>
+                                <div class="col-md-6 border-start">
+                                    <p class="mb-1"><strong>Format Menjodohkan:</strong></p>
+                                    <ul class="mb-2">
+                                        <li>Isi item kiri di Kolom Pilihan 1, 2, dst.</li>
+                                        <li>Jawaban Benar isi dengan format <code>Kiri:Kanan</code> dipisah <code>|</code>.</li>
+                                        <li>Contoh: <code>Emas:Logam|Bayam:Sayur</code></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <hr class="my-2">
+                            
+                            <ul class="mb-0">
+                                <li><strong>Pilihan Ganda:</strong> Jawaban benar isi dengan <code>pilihan_1</code> atau <code>pilihan_1,pilihan_2</code> (untuk Kompleks).</li>
+                                <li><strong>Gambar:</strong> <b>Tidak didukung di Excel</b>. Gunakan fitur <b>Import DOCX</b> jika ada gambar.</li>
+                            </ul>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="file_excel" class="form-label fw-bold">Pilih File Excel (.xlsx)</label>
+                        <input type="file" class="form-control" name="file_excel" id="file_excel" accept=".xlsx" required>
+                    </div>
+
+                    <div class="alert alert-secondary d-flex align-items-center justify-content-between py-2">
+                        <div class="small">
+                            <i class="fas fa-download me-2"></i> Belum punya template?
+                        </div>
+                        <a href="../assets/template_import_soal.xlsx" class="btn btn-sm btn-success">
+                            Download Template Excel
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload me-1"></i> Mulai Import
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade" id="modalImportDocx" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form action="import_docx_preview.php" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" name="kode_soal" value="<?= $kode_soal; ?>">
+            <input type="hidden" name="opsi" value="<?= $data_soal['jumlah_opsi']; ?>">
+
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" style="color:white;">
+                        <i class="fas fa-file-word me-2"></i> Import Soal DOCX (Word)
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="card mb-3 border-primary">
+                        <div class="card-header bg-primary-subtle py-2 fw-bold small">
+                            <i class="fas fa-microchip me-1"></i> LOGIKA PENULISAN (PARSING ENGINE):
+                        </div>
+                        <div class="card-body py-2 px-3 small">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1 fw-bold text-primary">1. Format Dasar</p>
+                                    <ul class="ps-3 mb-2">
+                                        <li>Nomor: <code>1. </code> (Angka, Titik, Spasi)</li>
+                                        <li>Opsi: <code>A. </code> sampai <code>E. </code></li>
+                                        <li>Tipe: <code>Tipe: PG</code>, <code>PGX</code>, <code>BS</code>, atau <code>MJD</code></li>
+                                        <li>Pemisah: Garis <code>-----</code> di akhir tiap soal.</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6 border-start">
+                                    <p class="mb-1 fw-bold text-danger">2. Format Kunci & Jawaban</p>
+                                    <ul class="ps-3 mb-0">
+                                        <li><strong>PG/PGX:</strong> <code>Kunci: A</code> atau <code>Kunci: A,C</code></li>
+                                        <li><strong>BS (Benar/Salah):</strong> Tulis pernyataan di opsi A, B, dst. Kunci: <code>Kunci: Benar|Salah|Benar</code></li>
+                                        <li><strong>MJD (Menjodohkan):</strong> Kunci: <code>Kunci: Kiri:Kanan|Kiri:Kanan</code></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white py-4 px-4 border-top">
+
+                                        <h6 class="fw-bold text-dark mb-2">Panduan & Catatan Teknis:</h6>
+                                        <ul class="mb-0 text-muted small" style="line-height: 1.6;">
+                                            <li>
+                                                <strong class="text-dark">Tipe BS (Benar/Salah):</strong> 
+                                                Maksimal pernyataan adalah <span class="badge bg-white text-dark border">5 baris</span>. 
+                                                Pastikan jumlah baris di pertanyaan sama dengan jumlah status pada <code>Kunci:</code>.
+                                            </li>
+                                            <li class="mt-2">
+                                                <strong class="text-dark">Konfigurasi Server:</strong> 
+                                                Pastikan <code>post_max_size</code> di <span class="badge bg-white text-danger border">php.ini</span> sudah dinaikkan (misal: 64M). 
+                                                Jika terlalu kecil, data JSON akan terpotong dan proses simpan akan <strong>gagal (null)</strong>.
+                                            </li>
+                                            <li class="mt-2">
+                                                <strong class="text-dark">Input Gambar:</strong> 
+                                                Insert → Picture → This Device... pada Microsoft Word.(jangan copy paste gambar)<br>
+                                                Gambar akan otomatis di-upload dan diubah menjadi link HTML saat Anda menekan <b>"Proses Import"</b> di halaman preview nanti.
+                                            </li>
+                                        </ul>
+
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pilih File (.docx)</label>
+                        <input type="file" name="file_docx" class="form-control" 
+                               accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+                               required>
+                        <div class="form-text text-muted">Pastikan file tidak dalam keadaan terproteksi (Read-Only).</div>
+                    </div>
+
+                    <div class="alert alert-secondary d-flex align-items-center justify-content-between py-2 mb-0">
+                        <div class="small">
+                            <i class="fas fa-file-download me-1"></i> Rekomendasi: Gunakan template standar.
+                        </div>
+                        <a href="../assets/template_import_soal.docx" class="btn btn-sm btn-primary">
+                            <i class="fas fa-download me-1"></i> Download Template Docx
+                        </a>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> Preview & Validasi Data
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
             </main>
         </div>
@@ -289,7 +437,24 @@ if ($data_soal['status'] == 'Aktif') {
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const formDocx = document.querySelector('#modalImportDocx form');
 
+    if (formDocx) {
+        formDocx.addEventListener('submit', function() {
+            Swal.fire({
+                title: 'Memproses DOCX...',
+                html: 'Sedang membaca file...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+    }
+});
+</script>
     <script>
     function lihatSoal(kode, nomor){
         const modalEl = document.getElementById('modalSoal');
@@ -417,6 +582,29 @@ if (isset($_SESSION['import_error'])) {
     <?php
 }
 ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Alert untuk Error (Kode Tidak Sesuai)
+    <?php if (isset($_SESSION['alert_error'])): ?>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal Import',
+        text: '<?= addslashes($_SESSION['alert_error']) ?>',
+        confirmButtonColor: '#d33'
+    });
+    <?php unset($_SESSION['alert_error']); endif; ?>
+
+    // Alert untuk Sukses (Berhasil Simpan)
+    <?php if (isset($_SESSION['alert_success'])): ?>
+    Swal.fire({
+        icon: 'success',
+        title: 'Sukses',
+        text: '<?= addslashes($_SESSION['alert_success']) ?>',
+        confirmButtonColor: '#3085d6'
+    });
+    <?php unset($_SESSION['alert_success']); endif; ?>
+});
+</script>
 </body>
 
 </html>
