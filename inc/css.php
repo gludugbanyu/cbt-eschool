@@ -1435,5 +1435,81 @@ main.content,
     overflow: hidden;
     transition: 0.2s ease;
 }
+
+.status-online{color:#28a745;font-weight:600;}
+.status-offline{color:#dc3545;font-weight:600;}
+
+.server-box{
+    background:#fff;
+    border-radius:10px;
+    padding:15px;
+    border:solid 1px rgba(121, 121, 121, 0.78);
+    transition:.2s;
+    height:100%;
+}
+.server-box:hover{
+    transform:translateY(-3px);
+}
+.server-title{
+    font-size:13px;
+    color:#666;
+}
+.server-value{
+    font-weight:600;
+    font-size:16px;
+}
+.progress-bar{
+    height:8px;
+    background:#28a745;
+    border-radius:10px;
+}
+.progress-wrap{
+    background:#e9ecef;
+    border-radius:10px;
+    overflow:hidden;
+}
+/* =========================
+   DARK MODE – SERVER BOX
+========================= */
+
+.dark-mode .server-box{
+    background:#263445 !important;
+    box-shadow:0 6px 18px rgba(0,0,0,0.35) !important;
+}
+
+.dark-mode .server-box:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.45) !important;
+}
+
+.dark-mode .server-title{
+    color:#aab4c3 !important;
+}
+
+.dark-mode .server-value{
+    color:#ffffff !important;
+}
+
+/* Progress background */
+.dark-mode .progress-wrap{
+    background:#1f2a38 !important;
+}
+
+/* Progress bar online */
+.dark-mode .progress-bar{
+    background:#22c55e !important; /* hijau modern */
+}
+
+/* Status text */
+.dark-mode .status-online{
+    color:#4ade80 !important;
+}
+
+.dark-mode .status-offline{
+    color:#f87171 !important;
+}
+.dark-mode .progress-bar{
+    box-shadow:0 0 8px rgba(34,197,94,0.6);
+}
 </style>
 
