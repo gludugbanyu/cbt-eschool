@@ -53,7 +53,7 @@ function prosesTeksDanGambar($koneksi, $teks, $kode_soal, $target_dir) {
                 // Gunakan path relatif ../ agar gambar muncul di halaman admin/user
                 $url_database = "../gambar/" . $nama_file; 
                 
-                $html_img = "<br><img src=\"$url_database\" style=\"max-width:100%; height:auto; display:block; margin-top:8px; border:1px solid #eee; padding:3px; border-radius:5px;\">";
+                $html_img = "<br><img src=\"$url_database\">";
                 $teks = str_replace($full_marker, $html_img, $teks);
             }
         }
