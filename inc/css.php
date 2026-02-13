@@ -1511,5 +1511,14 @@ main.content,
 .dark-mode .progress-bar{
     box-shadow:0 0 8px rgba(34,197,94,0.6);
 }
+/* =========================
+   DARK MODE – SUBMENU ACTIVE
+========================= */
+
+.dark-mode li.sidebar-item.submenu > a.sidebar-link {
+    background: linear-gradient(to left, #222e3c, #1b222d) !important; 
+    color: #e4e6eb !important;
+    border-bottom: 2px solid #222e3c;
+}
 </style>
 
