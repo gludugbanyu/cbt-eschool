@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         $q = mysqli_query($koneksi, "SELECT * FROM pengaturan WHERE id = 1");
                                         $data = mysqli_fetch_assoc($q);
                                         ?>
-                                <img src="../assets/images/<?php echo $data['logo_sekolah']; ?>" width="300"
+                                <img src="../assets/images/<?php echo $data['logo_sekolah']; ?>" width="250"
                                     height="auto">
                             </div>
                             <?php if (!empty($error)): ?>
