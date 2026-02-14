@@ -68,12 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Siswa Login</title>
-  <?php include '../inc/css.php'; ?>
-<style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Siswa Login</title>
+    <?php include '../inc/css.php'; ?>
+    <style>
     body {
         background: url('../assets/images/bglogin.webp') no-repeat center center fixed;
         background-size: cover;
@@ -88,7 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(245, 245, 245, 0.47); /* lebih terang, jelas */
+        background-color: rgba(245, 245, 245, 0.47);
+        /* lebih terang, jelas */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -162,61 +164,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 14px;
         }
     }
-    .card-bottom-row{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-    font-size: 13px;
-}
 
-#enc{
-    opacity: .8;
-}
-.card-meta-footer{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 18px;
-    padding-top: 10px;
-    border-top: 1px solid #f1f1f1;
-    font-size: 12px;
-    color: #9aa0a6;
-}
+    .card-bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        font-size: 13px;
+    }
 
-#enc{
-    opacity: .7;
-}
+    #enc {
+        opacity: .8;
+    }
 
-.admin-meta{
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #9aa0a6;
-    text-decoration: none;
-    font-weight: 500;
-    letter-spacing: .3px;
-    transition: .2s ease;
-}
+    .card-meta-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 18px;
+        padding-top: 10px;
+        font-size: 12px;
+        color: #686868;
+    }
 
-.admin-meta i{
-    font-size: 13px;
-}
+    #enc {
+        opacity: .7;
+    }
 
-.admin-meta:hover{
-    color: #0d6efd;
-}
+    .admin-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #686868;
+        text-decoration: none;
+        font-weight: 500;
+        letter-spacing: .3px;
+        transition: .2s ease;
+    }
 
-</style>
+    .admin-meta i {
+        font-size: 13px;
+    }
+
+    .admin-meta:hover {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+    </style>
 
 </head>
+
 <body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
     <div class="overlay d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4"> 
-                <div class="position-relative">
-                    <div style="
+                <div class="col-md-6 col-lg-4">
+                    <div class="position-relative">
+                        <div style="
                         position: absolute;
                         top: -12px;
                         left: -12px;
@@ -229,34 +233,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         z-index: 10;
                         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
                     ">
-                        Login Siswa
-                    </div>
-                    <div class="card shadow p-4 glass-card">
-                        <div class="head" style="min-height:150px;display: flex;justify-content: center;align-items: center;">
-                        <?php
+                            Login Siswa
+                        </div>
+                        <div class="card shadow p-4 glass-card">
+                            <div class="head"
+                                style="min-height:150px;display: flex;justify-content: center;align-items: center;">
+                                <?php
                                         $q = mysqli_query($koneksi, "SELECT * FROM pengaturan WHERE id = 1");
                                         $data = mysqli_fetch_assoc($q);
                                         ?>
-                        <img src="../assets/images/<?php echo $data['logo_sekolah']; ?>" width="300" height="auto">
-                        </div>
-                        <?php if (!empty($error)): ?>
-                            <div id="customAlert" class="text-danger text-center my-3" role="alert" style="font-weight: bold;">
+                                <img src="../assets/images/<?php echo $data['logo_sekolah']; ?>" width="300"
+                                    height="auto">
+                            </div>
+                            <?php if (!empty($error)): ?>
+                            <div id="customAlert" class="text-danger text-center my-3" role="alert"
+                                style="font-weight: bold;">
                                 <?php echo htmlspecialchars($error); ?>
                             </div>
-                        <?php endif; ?>
-                        <form action="" method="POST" class="mt-3" id="loginForm">
-                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                            <input type="hidden" name="page_sign" id="page_sign">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Username" required autocomplete="off"> 
-                            </div>
-                            <div class="mb-3 position-relative">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required autocomplete="off">
-                                <span class="position-absolute top-50 end-0 translate-middle-y me-2" style="cursor:pointer;" onclick="togglePassword()">
-                                    <i style="color:grey;" class="fa fa-eye" id="togglePasswordIcon"></i>
-                                </span>
-                            </div>
-                            <div class="mb-3">
+                            <?php endif; ?>
+                            <form action="" method="POST" class="mt-3" id="loginForm">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="page_sign" id="page_sign">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="username" name="username"
+                                        placeholder="Username" required autocomplete="off">
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <input type="password" class="form-control" id="password" name="password"
+                                        placeholder="Password" required autocomplete="off">
+                                    <span class="position-absolute top-50 end-0 translate-middle-y me-2"
+                                        style="cursor:pointer;" onclick="togglePassword()">
+                                        <i style="color:grey;" class="fa fa-eye" id="togglePasswordIcon"></i>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
                                     <div class="d-flex align-items-center gap-2">
                                         <img src="../inc/captcha.php?rand=<?= rand() ?>" alt="CAPTCHA Image"
                                             style="border-radius:20px; height: 40px;">
@@ -264,60 +274,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             placeholder="Ketik kode Captcha" required autocomplete="off">
                                     </div>
                                 </div>
-                            <button type="submit" class="btn btn-primary w-100" id="loginButton">Login <i class="fa fa-sign-in"></i></button>
-                        </form><br>
-                        <div class="card-meta-footer">
-                        <div id="enc" data-sign="<?= $page_signature ?>"></div>
-                            <a href="../admin" class="admin-meta">
-                                <i class="fa fa-user-shield"></i>
-                                <span>Admin Panel</span>
-                            </a>
+                                <button type="submit" class="btn btn-primary w-100" id="loginButton">Login <i
+                                        class="fa fa-sign-in"></i></button>
+                            </form>
+                            <br>
+                            <div class="card-meta-footer">
+                                <div id="enc" data-sign="<?= $page_signature ?>"></div>
+                                <a href="../admin" class="admin-meta">
+                                    <i class="fa fa-user-shield"></i>
+                                    <span>Admin Panel</span>
+                                </a>
+                            </div>
+                            <div class="app-version">
+                                <span class="version-line"></span>
+                                <span class="version-text">
+                                    v<?= htmlspecialchars($data['versi_aplikasi'] ?? '1.0.0'); ?>
+                                </span>
+                                <span class="version-line"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </body>
 <script src="../assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js"></script>
 <script>
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const icon = document.getElementById('togglePasswordIcon');
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            passwordInput.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('togglePasswordIcon');
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
     }
+}
 
-    setTimeout(() => {
-        const alert = document.getElementById('customAlert');
-        if (alert) {
-            alert.style.transition = "opacity 0.5s ease-out";
-            alert.style.opacity = 0;
-            setTimeout(() => alert.remove(), 500);
-        }
-    }, 4000);
+setTimeout(() => {
+    const alert = document.getElementById('customAlert');
+    if (alert) {
+        alert.style.transition = "opacity 0.5s ease-out";
+        alert.style.opacity = 0;
+        setTimeout(() => alert.remove(), 500);
+    }
+}, 4000);
 
-    document.addEventListener("DOMContentLoaded", function() {
-        var base64Text = "<?php echo $encryptedText; ?>"; 
-        if(base64Text) {
-            var decodedText = atob(base64Text); 
-            document.getElementById("enc").innerHTML = decodedText; 
-        }
-    });
+document.addEventListener("DOMContentLoaded", function() {
+    var base64Text = "<?php echo $encryptedText; ?>";
+    if (base64Text) {
+        var decodedText = atob(base64Text);
+        document.getElementById("enc").innerHTML = decodedText;
+    }
+});
 
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     var enc = document.getElementById("enc");
     if (enc) {
         document.getElementById("page_sign").value = enc.dataset.sign;
     }
 });
-
 </script>
+
 </html>

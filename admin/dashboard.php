@@ -141,15 +141,14 @@ if (
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-12">
-                                                <?php
+                                            <?php
                                                 $partA = substr(hash('sha256',$rahasia),0,32);
                                                 $partB = substr(hash('sha256',$rahasia),32,32);
                                                 ?>
 
-                                                <div class="card support-cta shadow border-secondary border mb-3 position-relative overflow-hidden"
-                                                    data-a="<?= $partA ?>"
-                                                    data-b="<?= $partB ?>">                                                
-                                                    <!-- Ribbon badge -->
+                                            <div class="card support-cta shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                data-a="<?= $partA ?>" data-b="<?= $partB ?>">
+                                                <!-- Ribbon badge -->
                                                 <span class="cta-ribbon">
                                                     Open Source
                                                 </span>
@@ -162,12 +161,12 @@ if (
                                                             Dukung Pengembangan CBT-Eschool
                                                         </h5>
                                                         <p class="mb-2 text-muted small">
-                                                            Kontribusi Anda membantu peningkatan fitur, keamanan, dan performa sistem.
+                                                            Kontribusi Anda membantu peningkatan fitur, keamanan, dan
+                                                            performa sistem.
                                                         </p>
 
-                                                        <a href="<?= htmlspecialchars($sawer) ?>"
-                                                        target="_blank"
-                                                        class="btn btn-primary btn-sm">
+                                                        <a href="<?= htmlspecialchars($sawer) ?>" target="_blank"
+                                                            class="btn btn-primary btn-sm">
                                                             <i class="fas fa-mug-hot me-1"></i>
                                                             Dukung Sekarang
                                                         </a>
@@ -175,13 +174,14 @@ if (
                                                     <?php
                                                     $hidden = hash('sha1',$rahasia . $_SERVER['HTTP_HOST']);
                                                     echo "<!--".substr($hidden,5,20)."-->";
-                                                    ?>                                                
+                                                    ?>
                                                 </div>
                                                 <i class="fas fa-graduation-cap position-absolute bg-icon"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 180px;">
+                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                style="height: 180px;">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
@@ -191,13 +191,15 @@ if (
                                                             </p>
                                                             <div class="mb-2 d-flex gap-2">
 
-                                                                <div class="badge github-badge px-3 py-2 d-flex align-items-center">
+                                                                <div
+                                                                    class="badge github-badge px-3 py-2 d-flex align-items-center">
                                                                     <i class="fas fa-star me-2"></i>
                                                                     <span id="ghStars">0</span>
                                                                     <span class="ms-1">Stars</span>
                                                                 </div>
 
-                                                                <div class="badge github-badge px-3 py-2 d-flex align-items-center">
+                                                                <div
+                                                                    class="badge github-badge px-3 py-2 d-flex align-items-center">
                                                                     <i class="fas fa-code-branch me-2"></i>
                                                                     <span id="ghForks">0</span>
                                                                     <span class="ms-1">Forks</span>
@@ -211,8 +213,8 @@ if (
                                                             </a>
                                                         </div>
                                                         <div class="ms-3">
-                                                            <i class="fab fa-github position-absolute text-secondary" 
-                                                            style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
+                                                            <i class="fab fa-github position-absolute text-secondary"
+                                                                style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -220,11 +222,13 @@ if (
                                         </div>
 
                                         <div class="col-md-8">
-                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 180px;">
+                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                style="height: 180px;">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
-                                                            <h4 class="card-title text-danger fw-bold mb-2">Aturan Penggunaan 
+                                                            <h4 class="card-title text-danger fw-bold mb-2">Aturan
+                                                                Penggunaan
                                                                 <b>
                                                                     <?php
                                                                     $q = mysqli_query($koneksi, "SELECT * FROM pengaturan WHERE id = 1");
@@ -234,63 +238,75 @@ if (
                                                                 </b>
                                                             </h4>
                                                             <ul class="mb-2" style="font-size:12px;">
-                                                                <li>Aplikasi ini <strong>gratis 100%</strong> untuk digunakan dikalangan Pendidikan.</li>
-                                                                <li><strong>Dilarang memperjualbelikan</strong> aplikasi ini dalam bentuk apa pun.</li>
-                                                                <li><strong>Dilarang menghapus atau mengubah footer</strong> hak cipta pengembang.</li>
-                                                                <li><strong>Dilarang menghapus</strong> Aturan Penggunaan.</li>
+                                                                <li>Aplikasi ini <strong>gratis 100%</strong> untuk
+                                                                    digunakan dikalangan Pendidikan.</li>
+                                                                <li><strong>Dilarang memperjualbelikan</strong> aplikasi
+                                                                    ini dalam bentuk apa pun.</li>
+                                                                <li><strong>Dilarang menghapus atau mengubah
+                                                                        footer</strong> hak cipta pengembang.</li>
+                                                                <li><strong>Dilarang menghapus</strong> Aturan
+                                                                    Penggunaan.</li>
                                                             </ul>
                                                             <p class="small text-muted mb-0">
-                                                                Melanggar aturan ini termasuk pelanggaran lisensi sumber terbuka dan dapat dikenakan tindakan hukum.
+                                                                Melanggar aturan ini termasuk pelanggaran lisensi sumber
+                                                                terbuka dan dapat dikenakan tindakan hukum.
                                                             </p>
                                                         </div>
                                                         <div class="ms-3">
-                                                            <i class="fas fa-circle-exclamation position-absolute text-danger" 
-                                                            style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
+                                                            <i class="fas fa-circle-exclamation position-absolute text-danger"
+                                                                style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
 
                                         <!-- Statistik Siswa -->
-                                         <div class="col-md-4">
-                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 150px;">
+                                        <div class="col-md-4">
+                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                style="height: 150px;">
                                                 <div class="card-body position-relative z-1">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
-                                                            <h5 class="card-title text-dark fw-bold mb-2">Jumlah Siswa</h5>
-                                                            <p class="card-text mb-1"><?php echo $total_siswa; ?> siswa terdaftar</p>
-                                                            <a href="tambah_siswa.php" class="btn btn-sm btn-outline-secondary">
+                                                            <h5 class="card-title text-dark fw-bold mb-2">Jumlah Siswa
+                                                            </h5>
+                                                            <p class="card-text mb-1"><?php echo $total_siswa; ?> siswa
+                                                                terdaftar</p>
+                                                            <a href="tambah_siswa.php"
+                                                                class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fas fa-plus"></i> Tambah Siswa
                                                             </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <!-- Icon besar di belakang, terpotong oleh card -->
-                                                <i class="fa fa-user-circle position-absolute text-secondary" 
-                                                style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
+                                                <i class="fa fa-user-circle position-absolute text-secondary"
+                                                    style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
                                             </div>
                                         </div>
 
 
                                         <!-- Statistik Soal -->
-                                         <div class="col-md-4">
-                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 150px;">
+                                        <div class="col-md-4">
+                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                style="height: 150px;">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
                                                             <h5 class="card-title text-dark fw-bold mb-2">Jumlah Soal
                                                             </h5>
-                                                            <p class="card-text mb-1"><?php echo $total_soal; ?> soal tersedia
+                                                            <p class="card-text mb-1"><?php echo $total_soal; ?> soal
+                                                                tersedia
                                                             </p>
-                                                            <a href="tambah_soal.php" class="btn btn-sm btn-outline-secondary">
+                                                            <a href="tambah_soal.php"
+                                                                class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fas fa-plus"></i> Tambah Soal
                                                             </a>
                                                         </div>
                                                         <div class="ms-3">
-                                                            <i class="fa fa-pen-to-square position-absolute text-secondary" 
-                                                            style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
+                                                            <i class="fa fa-pen-to-square position-absolute text-secondary"
+                                                                style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -298,28 +314,31 @@ if (
                                         </div>
 
                                         <!-- Statistik Ujian -->
-                                         <div class="col-md-4">
-                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden" style="height: 150px;">
+                                        <div class="col-md-4">
+                                            <div class="card shadow border-secondary border mb-3 position-relative overflow-hidden"
+                                                style="height: 150px;">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div>
                                                             <h5 class="card-title text-dark fw-bold mb-2">Ujian
                                                             </h5>
-                                                            <p class="card-text mb-1"><?php echo $total_ujian; ?> Siswa Selesai
+                                                            <p class="card-text mb-1"><?php echo $total_ujian; ?> Siswa
+                                                                Selesai
                                                             </p>
-                                                            <a href="hasil.php" class="btn btn-sm btn-outline-secondary">
+                                                            <a href="hasil.php"
+                                                                class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fa fa-square-check"></i> Lihat Nilai
                                                             </a>
                                                         </div>
                                                         <div class="ms-3">
-                                                            <i class="fa fa-address-card position-absolute text-secondary" 
-                                                            style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
+                                                            <i class="fa fa-address-card position-absolute text-secondary"
+                                                                style="font-size: 120px; bottom: -30px; right: -30px; opacity: 0.1; z-index: 0;"></i>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Chart Statistik -->
                                         <div class="col-lg-4 md-4">
                                             <div class="card mb-3">
@@ -500,31 +519,30 @@ if (
             }
         }
     });
-    
     </script>
     <script>
-fetch("github_stats.php")
-  .then(res => res.json())
-  .then(data => {
-      document.getElementById("ghStars").innerText = data.stars;
-      document.getElementById("ghForks").innerText = data.forks;
-  })
-  .catch(() => {
-      document.getElementById("ghStars").innerText = "-";
-      document.getElementById("ghForks").innerText = "-";
-  });
-</script>
+    fetch("github_stats.php")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("ghStars").innerText = data.stars;
+            document.getElementById("ghForks").innerText = data.forks;
+        })
+        .catch(() => {
+            document.getElementById("ghStars").innerText = "-";
+            document.getElementById("ghForks").innerText = "-";
+        });
+    </script>
     <?php if(isset($_GET['akses'])): ?>
-<script src="../assets/swal/sweetalert2.all.min.js"></script>
-<script>
-Swal.fire({
-    icon: 'error',
-    title: 'Akses Ditolak!',
-    text: 'Halaman tersebut hanya bisa diakses oleh Admin.',
-    confirmButtonColor: '#d33'
-});
-</script>
-<?php endif; ?>
+    <script src="../assets/swal/sweetalert2.all.min.js"></script>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Akses Ditolak!',
+        text: 'Halaman tersebut hanya bisa diakses oleh Admin.',
+        confirmButtonColor: '#d33'
+    });
+    </script>
+    <?php endif; ?>
 
 </body>
 

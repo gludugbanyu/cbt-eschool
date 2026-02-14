@@ -67,26 +67,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.81);
+        background-color: rgba(245, 245, 245, 0.47);
         /* lebih terang, jelas */
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
+    .glass-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        max-width: 100%;
+        margin: auto;
+        color: #333;
+        transition: 0.3s ease;
+    }
+
     .glass-card:hover {
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.49);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     }
 
     label {
         color: #444;
         font-weight: 600;
         font-size: 14px;
-    }
-
-    .glass-card {
-        border-radius: 20px;
-
     }
 
     .glass-card input {
@@ -135,6 +141,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .glass-card input {
             font-size: 14px;
         }
+    }
+
+    .card-bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        font-size: 13px;
+    }
+
+    #enc {
+        opacity: .8;
+    }
+
+    .card-meta-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 18px;
+        padding-top: 10px;
+        font-size: 12px;
+        color: #686868;
+    }
+
+    #enc {
+        opacity: .7;
+    }
+
+    .admin-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #686868;
+        text-decoration: none;
+        font-weight: 500;
+        letter-spacing: .3px;
+        transition: .2s ease;
+    }
+
+    .admin-meta i {
+        font-size: 13px;
+    }
+
+    .admin-meta:hover {
+        color: #0d6efd;
+        text-decoration: none;
     }
     </style>
 </head>
@@ -203,8 +255,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 <button type="submit" class="btn btn-primary w-100" id="loginButton">Login <i
                                         class="fa fa-sign-in"></i></button>
-                            </form><br>
-                            <div id="enc" data-sign="<?= $page_signature ?>" style="font-size:13px;"></div>
+                            </form>
+                            <br>
+                            <div class="card-meta-footer" style="justify-content: center;">
+                                <div id="enc" data-sign="<?= $page_signature ?>"></div>
+                            </div>
+                            <div class="app-version">
+                                <span class="version-line"></span>
+                                <span class="version-text">
+                                    v<?= htmlspecialchars($data['versi_aplikasi'] ?? '1.0.0'); ?>
+                                </span>
+                                <span class="version-line"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,18 +299,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }, 4000);
 
         document.addEventListener("DOMContentLoaded", function() {
-    var base64Text = "<?php echo $encryptedText; ?>";
-    if (base64Text) {
-        var decodedText = atob(base64Text);
-        document.getElementById("enc").innerHTML = decodedText;
-    }
+            var base64Text = "<?php echo $encryptedText; ?>";
+            if (base64Text) {
+                var decodedText = atob(base64Text);
+                document.getElementById("enc").innerHTML = decodedText;
+            }
 
-    var enc = document.getElementById("enc");
-    if (enc) {
-        document.getElementById("page_sign").value = enc.dataset.sign;
-    }
-});
-
+            var enc = document.getElementById("enc");
+            if (enc) {
+                document.getElementById("page_sign").value = enc.dataset.sign;
+            }
+        });
         </script>
 </body>
 

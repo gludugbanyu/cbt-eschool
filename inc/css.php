@@ -9,42 +9,66 @@ if (localStorage.getItem("admin-dark-mode") === "enabled") {
 <link href="../assets/adminkit/static/css/app.css" rel="stylesheet">
 <link href="../assets/datatables/datatables.css" rel="stylesheet">
 <style>
-    html.dark-mode,
+html.dark-mode,
 html.dark-mode body {
     background-color: #1c2530 !important;
     color: #e4e6eb !important;
 }
-  #toast-container {
+
+#toast-container {
     position: fixed !important;
     bottom: 1rem;
     right: 1rem;
     left: auto !important;
     z-index: 9999;
-  }
-  .fa-beat, .fa-bounce, .fa-fade, .fa-beat-fade, .fa-flip, .fa-pulse, .fa-shake, .fa-spin, .fa-spin-pulse
-{
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
 }
+
+.fa-beat,
+.fa-bounce,
+.fa-fade,
+.fa-beat-fade,
+.fa-flip,
+.fa-pulse,
+.fa-shake,
+.fa-spin,
+.fa-spin-pulse {
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
 .table-wrapper {
-            overflow-x: auto; /* Enable horizontal scrolling */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
-        }
-        table th, table td {
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling for mobile */
+}
+
+table th,
+table td {
     text-align: left !important;
 }
+
 .blinking {
-  animation: blink 1s infinite;
+    animation: blink 1s infinite;
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
-li.sidebar-item.submenu > a.sidebar-link {
-  background: linear-gradient(to left, #222e3c, #3a4d63) !important;
-  border-bottom:2px solid #222e3c;
+
+li.sidebar-item.submenu>a.sidebar-link {
+    background: linear-gradient(to left, #222e3c, #3a4d63) !important;
+    border-bottom: 2px solid #222e3c;
 }
+
 /* === FIX CARD DASHBOARD MOBILE === */
 @media (max-width: 768px) {
 
@@ -79,6 +103,7 @@ li.sidebar-item.submenu > a.sidebar-link {
         opacity: 0.06 !important;
     }
 }
+
 /* Modern Toast */
 #toast-container {
     position: fixed;
@@ -92,8 +117,8 @@ li.sidebar-item.submenu > a.sidebar-link {
     border-radius: 18px;
     backdrop-filter: blur(12px);
     background: rgba(30, 41, 59, 0.85);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
     transform: translateX(100%);
     opacity: 0;
     transition: all 0.4s ease;
@@ -118,6 +143,7 @@ li.sidebar-item.submenu > a.sidebar-link {
     filter: invert(1);
     opacity: 0.8;
 }
+
 .support-cta {
     border-left: 4px solid var(--bs-primary) !important;
     position: relative;
@@ -127,7 +153,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 
 .support-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
 
 .bg-icon {
@@ -138,6 +164,7 @@ li.sidebar-item.submenu > a.sidebar-link {
     color: #6c757d;
     pointer-events: none;
 }
+
 .cta-badge {
     position: absolute;
     top: 0;
@@ -148,6 +175,7 @@ li.sidebar-item.submenu > a.sidebar-link {
     padding: 6px 12px;
     border-bottom-left-radius: 8px;
 }
+
 /* Ribbon Sudut */
 .cta-ribbon {
     position: absolute;
@@ -171,6 +199,7 @@ li.sidebar-item.submenu > a.sidebar-link {
     color: #6c757d;
     pointer-events: none;
 }
+
 /* =======================================================
    DARK MODE – DATATABLES FIX
 ======================================================= */
@@ -190,7 +219,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .dataTables_wrapper select {
     background-color: #2b394a !important;
     color: #fff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .dataTables_wrapper .paginate_button {
@@ -201,6 +230,7 @@ li.sidebar-item.submenu > a.sidebar-link {
     background-color: #3a4d63 !important;
     color: #fff !important;
 }
+
 /* =======================================================
    FULL DARK MODE – ADMIN CBT (STABLE VERSION)
    Base: #222e3c
@@ -242,13 +272,13 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .card {
     background-color: #263445 !important;
     color: #e4e6eb !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
 .dark-mode .card-header {
     background-color: #2b394a !important;
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #ffffff !important;
 }
 
@@ -264,7 +294,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .table th,
 .dark-mode .table td {
     color: #e4e6eb !important;
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark-mode .table thead,
@@ -279,12 +309,12 @@ li.sidebar-item.submenu > a.sidebar-link {
     color: #ffffff !important;
 }
 
-.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: rgba(255,255,255,0.03) !important;
+.dark-mode .table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
 .dark-mode .table-hover tbody tr:hover {
-    background-color: rgba(255,255,255,0.06) !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
 }
 
 /* Override semua text bootstrap */
@@ -313,7 +343,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .dataTables_wrapper select {
     background-color: #2b394a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .dataTables_wrapper .paginate_button {
@@ -333,7 +363,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .form-control,
 .dark-mode .form-select {
     background-color: #2b394a !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
 
@@ -353,7 +383,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 
 .dark-mode .dropdown-menu {
     background-color: #2b394a !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark-mode .dropdown-item {
@@ -361,7 +391,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 }
 
 .dark-mode .dropdown-item:hover {
-    background-color: rgba(255,255,255,0.05) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 /* =======================================================
@@ -375,7 +405,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 
 .dark-mode .modal-header,
 .dark-mode .modal-footer {
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* =======================================================
@@ -384,7 +414,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 
 .dark-mode .btn-outline-secondary {
     color: #cfd8e3 !important;
-    border-color: rgba(255,255,255,0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .dark-mode .btn-outline-secondary:hover {
@@ -394,7 +424,7 @@ li.sidebar-item.submenu > a.sidebar-link {
 .dark-mode .btn-light {
     background-color: #2b394a !important;
     color: #ffffff !important;
-    border-color: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* =======================================================
@@ -402,8 +432,8 @@ li.sidebar-item.submenu > a.sidebar-link {
 ======================================================= */
 
 .dark-mode #toast-container .toast {
-    background: rgba(34,46,60,0.95) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: rgba(34, 46, 60, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #ffffff !important;
 }
 
@@ -429,6 +459,7 @@ main.content,
 .dropdown-menu {
     transition: background-color 0.25s ease, color 0.25s ease;
 }
+
 .dark-mode .text-primary {
     color: #6ea8fe !important;
 }
@@ -441,6 +472,7 @@ main.content,
 .dark-mode .bg-primary {
     background-color: #3a4d63 !important;
 }
+
 /* =======================================================
    DARK MODE – FIX HEADING COLOR
 ======================================================= */
@@ -462,6 +494,7 @@ main.content,
 .dark-mode .card h6 {
     color: #ffffff !important;
 }
+
 /* =======================================================
    DARK MODE – FIX btn-outline-dark
 ======================================================= */
@@ -475,9 +508,11 @@ main.content,
     background-color: #e4e6eb !important;
     color: #222e3c !important;
 }
+
 .dark-mode .text-secondary {
     color: #94a3b8 !important;
 }
+
 /* =======================================================
    DARK MODE – CTA RIBBON FIX
 ======================================================= */
@@ -486,6 +521,7 @@ main.content,
     background: #3a4d63 !important;
     color: #e4e6eb !important;
 }
+
 /* =======================================================
    DARK MODE – SWEETALERT SAFE FIX
    (TIDAK MERUSAK ICON ANIMASI)
@@ -505,7 +541,7 @@ main.content,
 }
 
 .dark-mode .swal2-container {
-    background: rgba(0,0,0,0.65) !important;
+    background: rgba(0, 0, 0, 0.65) !important;
 }
 
 .dark-mode .swal2-input,
@@ -513,7 +549,7 @@ main.content,
 .dark-mode .swal2-select {
     background: #2b394a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .swal2-confirm {
@@ -527,6 +563,7 @@ main.content,
     color: #ffffff !important;
     border: none !important;
 }
+
 /* =======================================================
    DARK MODE – SWEETALERT FINAL STABLE
    (TIDAK MENYENTUH ICON)
@@ -546,7 +583,7 @@ main.content,
 }
 
 .dark-mode .swal2-container {
-    background: rgba(0,0,0,0.6) !important;
+    background: rgba(0, 0, 0, 0.6) !important;
 }
 
 .dark-mode .swal2-input,
@@ -554,7 +591,7 @@ main.content,
 .dark-mode .swal2-select {
     background-color: #2b394a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .swal2-confirm {
@@ -568,6 +605,7 @@ main.content,
     color: #ffffff !important;
     border: none !important;
 }
+
 /* =======================================================
    FIX SWEETALERT ICON WARNA TERWARISI
 ======================================================= */
@@ -585,6 +623,7 @@ main.content,
 .dark-mode .swal2-success-fix {
     background-color: transparent !important;
 }
+
 /* =======================================================
    DARK MODE – DATATABLES 2 PAGINATION FIX
 ======================================================= */
@@ -593,7 +632,7 @@ main.content,
 .dark-mode .dataTables_wrapper .dt-paging-button .page-link {
     background-color: #2b394a !important;
     color: #e4e6eb !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Hover */
@@ -613,8 +652,9 @@ main.content,
 .dark-mode .dataTables_wrapper .dt-paging-button.disabled .page-link {
     background-color: #1f2a38 !important;
     color: #6c757d !important;
-    border-color: rgba(255,255,255,0.05) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
 }
+
 /* =======================================================
    DARK MODE – DATATABLES PAGINATION (VARIABLE FIX)
 ======================================================= */
@@ -622,7 +662,7 @@ main.content,
 .dark-mode .pagination {
     --bs-pagination-bg: #2b394a;
     --bs-pagination-color: #e4e6eb;
-    --bs-pagination-border-color: rgba(255,255,255,0.1);
+    --bs-pagination-border-color: rgba(255, 255, 255, 0.1);
 
     --bs-pagination-hover-bg: #3a4d63;
     --bs-pagination-hover-color: #ffffff;
@@ -634,8 +674,9 @@ main.content,
 
     --bs-pagination-disabled-bg: #1f2a38;
     --bs-pagination-disabled-color: #6c757d;
-    --bs-pagination-disabled-border-color: rgba(255,255,255,0.05);
+    --bs-pagination-disabled-border-color: rgba(255, 255, 255, 0.05);
 }
+
 /* =======================================================
    DARK MODE – FILE INPUT FIX
 ======================================================= */
@@ -643,7 +684,7 @@ main.content,
 .dark-mode input[type="file"].form-control {
     background-color: #2b394a !important;
     color: #e4e6eb !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Tombol "Browse" */
@@ -657,6 +698,7 @@ main.content,
 .dark-mode input[type="file"].form-control::file-selector-button:hover {
     background-color: #4a617d !important;
 }
+
 /* =======================================================
    DARK MODE – BOOTSTRAP ALERT FIX
 ======================================================= */
@@ -664,7 +706,7 @@ main.content,
 .dark-mode .alert {
     --bs-alert-bg: #2b394a;
     --bs-alert-color: #e4e6eb;
-    --bs-alert-border-color: rgba(255,255,255,0.08);
+    --bs-alert-border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Info */
@@ -694,6 +736,7 @@ main.content,
     --bs-alert-color: #ff6b6b;
     --bs-alert-border-color: #5a2b32;
 }
+
 /* =======================================================
    DARK MODE – CHAT FIX
 ======================================================= */
@@ -722,7 +765,7 @@ main.content,
 
 /* Timestamp */
 .dark-mode .chat-timestamp {
-    color: rgba(255,255,255,0.5) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Admin message */
@@ -743,13 +786,13 @@ main.content,
 .dark-mode #pesan {
     background-color: #2b394a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Emoji button */
 .dark-mode .emoji-button {
     background: #2b394a !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
 
@@ -760,40 +803,43 @@ main.content,
 /* Emoji dropdown */
 .dark-mode .emoji-dropdown {
     background: #263445 !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark-mode .emoji-item:hover {
-    background: rgba(255,255,255,0.08) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Card body gradient override */
 .dark-mode .card-body {
     background: #222e3c !important;
 }
+
 /* =======================================================
    DARK MODE – BG-LIGHT FIX
 ======================================================= */
 
 .dark-mode .bg-light {
     background-color: #2b394a !important;
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark-mode .border {
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
+
 /* =======================================================
    DARK MODE – STRIPED TABLE FIX (NO FLICKER)
 ======================================================= */
 
 .dark-mode .table {
     --bs-table-bg: transparent;
-    --bs-table-striped-bg: rgba(255,255,255,0.03);
-    --bs-table-hover-bg: rgba(255,255,255,0.06);
-    --bs-table-border-color: rgba(255,255,255,0.08);
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.06);
+    --bs-table-border-color: rgba(255, 255, 255, 0.08);
     --bs-table-color: #e4e6eb;
 }
+
 /* Dark mode toggle style */
 #darkModeToggle {
     font-size: 18px;
@@ -807,14 +853,17 @@ main.content,
     display: flex;
     align-items: center;
 }
+
 #darkModeToggle:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
 }
+
 .navbar .nav-item {
     display: flex;
     align-items: center;
 }
+
 /* =======================================================
    DARK MODE – BOXCHAT FINAL FIX
 ======================================================= */
@@ -822,16 +871,17 @@ main.content,
     background: #1f2a38 !important;
     border-radius: 10px;
     padding: 12px;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     color: #e4e6eb !important;
 }
+
 /* ==========================================
    DARK MODE – UJIAN CARD FIX
 ========================================== */
 
 .dark-mode .ujian-card-hover {
     background: linear-gradient(to bottom right, #1f2a38, #222e3c) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
     color: #e4e6eb !important;
 }
 
@@ -847,10 +897,12 @@ main.content,
 .dark-mode #last-updated {
     color: #e4e6eb !important;
 }
+
 .dark-mode .row-alarm {
     border-left: 8px solid #dc3545 !important;
     background-color: #151c24 !important;
 }
+
 /* ==========================================
    DARK MODE – DASHBOARD ICON
 ========================================== */
@@ -865,14 +917,14 @@ main.content,
 
 .dark-mode .card-minimal {
     background: #222e3c !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.35) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
     color: #e4e6eb !important;
 }
 
 .dark-mode .card-minimal:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.45) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* ==========================================
@@ -897,13 +949,13 @@ main.content,
 
 .dark-mode .game-card {
     background: #222e3c !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
     color: #e4e6eb !important;
 }
 
 .dark-mode .game-card:hover {
     background: linear-gradient(to bottom right, #263445, #2b394a) !important;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.45) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* ==========================================
@@ -913,12 +965,13 @@ main.content,
 .dark-mode .icon-wrapper {
     background-color: #2b394a !important;
 }
+
 /* ==========================================
    DARK MODE – HEADER INFO
 ========================================== */
 
 .dark-mode .header-info {
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark-mode .header-left,
@@ -927,9 +980,10 @@ main.content,
 }
 
 .dark-mode .header-right {
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     background-color: #2b394a !important;
 }
+
 /* ==========================================
    DARK MODE – RAW TABLE FIX
 ========================================== */
@@ -941,9 +995,10 @@ main.content,
 
 .dark-mode table th,
 .dark-mode table td {
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #e4e6eb !important;
 }
+
 /* ==========================================
    DARK MODE – PEMBAHASAN
 ========================================== */
@@ -952,8 +1007,9 @@ main.content,
     background-color: #1f2a38 !important;
     background-image: none !important;
     color: #cfd8e3 !important;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 /* ==========================================
    DARK MODE – SKOR SOAL
 ========================================== */
@@ -961,11 +1017,13 @@ main.content,
 .dark-mode .skor-soal {
     background-color: #263445 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .dark-mode ul {
     color: #e4e6eb;
 }
+
 /* ==========================================
    DARK MODE – INLINE WHITE FIX
 ========================================== */
@@ -978,6 +1036,7 @@ main.content,
 .dark-mode div[style*="color: black"] {
     color: #e4e6eb !important;
 }
+
 /* ==========================================
    DARK MODE – INLINE RESULT BOX FIX
 ========================================== */
@@ -998,6 +1057,7 @@ main.content,
 .dark-mode div[style*="color: black"] {
     color: #e4e6eb !important;
 }
+
 /* ==========================================
    DARK MODE – CARD UTAMA
 ========================================== */
@@ -1006,22 +1066,24 @@ main.content,
     background-color: #222e3c !important;
     color: #e4e6eb !important;
 }
+
 .dark-mode .mb-4.p-3.border.rounded.bg-white {
     background-color: #2b394a !important;
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
+
 /* ==========================================
    DARK MODE – CUSTOM CARD
 ========================================== */
 
 .dark-mode .custom-card {
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     background-color: #222e3c !important;
 }
 
 .dark-mode .custom-card-header {
     background-color: #2b394a !important;
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #ffffff !important;
 }
 
@@ -1035,7 +1097,7 @@ main.content,
 
 .dark-mode #tabelAnalisa th,
 .dark-mode #tabelAnalisa td {
-    border: 1px solid rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     background-color: #222e3c !important;
     color: #ffffff !important;
 }
@@ -1054,6 +1116,7 @@ main.content,
 .dark-mode .table-responsive {
     background-color: transparent !important;
 }
+
 /* =====================================================
    PRINT MODE – FORCE LIGHT VERSION
 ===================================================== */
@@ -1080,6 +1143,7 @@ main.content,
         color: #fff !important;
     }
 }
+
 /* =====================================================
    DARK MODE – TABLE HEADER GENERIC FIX
 ===================================================== */
@@ -1087,8 +1151,9 @@ main.content,
 .dark-mode table th {
     background-color: #2f3f52 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
+
 /* ==========================================
    DARK MODE – FORCE ALL TEXT COLOR
 ========================================== */
@@ -1144,6 +1209,7 @@ main.content,
 .dark-mode .form-check-label {
     color: #e4e6eb !important;
 }
+
 /* =========================================
    DARK MODE – FORCE LOADING OVERLAY FIX
 ========================================= */
@@ -1159,9 +1225,10 @@ main.content,
 
 /* Loader border fix */
 .dark-mode #loadingOverlay .loader {
-    border: 5px solid rgba(255,255,255,0.15) !important;
+    border: 5px solid rgba(255, 255, 255, 0.15) !important;
     border-top: 5px solid #6ea8fe !important;
 }
+
 /* =========================================
    DARK MODE – INPUT GROUP FIX TOTAL
 ========================================= */
@@ -1169,13 +1236,13 @@ main.content,
 .dark-mode .input-group-text {
     background-color: #2b394a !important;
     color: #cfd8e3 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .form-control {
     background-color: #2b394a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-mode .form-control::placeholder {
@@ -1191,30 +1258,33 @@ main.content,
 }
 
 /* Input group wrapper biar nyatu */
-.dark-mode .input-group > .form-control,
-.dark-mode .input-group > .input-group-text {
-    border-color: rgba(255,255,255,0.1) !important;
+.dark-mode .input-group>.form-control,
+.dark-mode .input-group>.input-group-text {
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.dark-mode .simplebar-offset{
-    border-right:1px solid #3a4b61 !important;
+.dark-mode .simplebar-offset {
+    border-right: 1px solid #3a4b61 !important;
 }
-.dark-mode .navbar{
-    border-bottom:1px solid #3a4b61 !important;
+
+.dark-mode .navbar {
+    border-bottom: 1px solid #3a4b61 !important;
 }
+
 .dark-mode .btn-success,
 .dark-mode .btn-info,
 .dark-mode .btn-warning,
 .dark-mode .btn-secondary {
     color: white !important;
 }
+
 /* =========================================
    DARK MODE – CARD FOOTER PANDUAN
 ========================================= */
 
 .dark-mode .card-footer.bg-white {
     background-color: #263445 !important;
-    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #e4e6eb !important;
 }
 
@@ -1237,7 +1307,7 @@ main.content,
 .dark-mode .card-footer .badge.bg-white {
     background-color: #2b394a !important;
     color: #e4e6eb !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Badge text-danger */
@@ -1255,8 +1325,9 @@ main.content,
 
 /* border class */
 .dark-mode .card-footer .border {
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
+
 /* =====================================================
    DARK MODE – PREVIEW IMPORT DOCX
 ===================================================== */
@@ -1301,7 +1372,7 @@ main.content,
 /* Opsi container */
 .dark-mode .opsi-container {
     background-color: #2b394a !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     color: #e4e6eb !important;
 }
 
@@ -1316,14 +1387,14 @@ main.content,
 
 /* Border start light */
 .dark-mode .border-light {
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Area MJD (bg-light override) */
 .dark-mode .bg-light {
     background-color: #2b394a !important;
     color: #e4e6eb !important;
-    border-color: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Kunci jawaban box */
@@ -1377,8 +1448,9 @@ main.content,
 .dark-mode .shadow-sm,
 .dark-mode .shadow,
 .dark-mode .shadow-lg {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.35) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35) !important;
 }
+
 /* ============================= */
 /* GITHUB CARD DARK MODE FIX */
 /* ============================= */
@@ -1401,9 +1473,11 @@ main.content,
 .github-badge i {
     font-size: 14px;
 }
+
 .github-badge i.fa-star {
     color: #ffc107 !important;
 }
+
 /* Dark mode icon tweak */
 .dark-mode .github-badge i.fa-star {
     color: #ffc107 !important;
@@ -1429,6 +1503,7 @@ main.content,
     opacity: 0.05 !important;
     color: #8b949e !important;
 }
+
 .dark-mode .support-cta {
     border-left: 4px solid var(--bs-danger) !important;
     position: relative;
@@ -1436,89 +1511,178 @@ main.content,
     transition: 0.2s ease;
 }
 
-.status-online{color:#28a745;font-weight:600;}
-.status-offline{color:#dc3545;font-weight:600;}
+.status-online {
+    color: #28a745;
+    font-weight: 600;
+}
 
-.server-box{
-    background:#fff;
-    border-radius:10px;
-    padding:15px;
-    border:solid 1px rgba(121, 121, 121, 0.78);
-    transition:.2s;
-    height:100%;
+.status-offline {
+    color: #dc3545;
+    font-weight: 600;
 }
-.server-box:hover{
-    transform:translateY(-3px);
+
+.server-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    border: solid 1px rgba(121, 121, 121, 0.78);
+    transition: .2s;
+    height: 100%;
 }
-.server-title{
-    font-size:13px;
-    color:#666;
+
+.server-box:hover {
+    transform: translateY(-3px);
 }
-.server-value{
-    font-weight:600;
-    font-size:16px;
+
+.server-title {
+    font-size: 13px;
+    color: #666;
 }
-.progress-bar{
-    height:8px;
-    background:#28a745;
-    border-radius:10px;
+
+.server-value {
+    font-weight: 600;
+    font-size: 16px;
 }
-.progress-wrap{
-    background:#e9ecef;
-    border-radius:10px;
-    overflow:hidden;
+
+.progress-bar {
+    height: 8px;
+    background: #28a745;
+    border-radius: 10px;
 }
+
+.progress-wrap {
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
 /* =========================
    DARK MODE – SERVER BOX
 ========================= */
 
-.dark-mode .server-box{
-    background:#263445 !important;
-    box-shadow:0 6px 18px rgba(0,0,0,0.35) !important;
+.dark-mode .server-box {
+    background: #263445 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
 }
 
-.dark-mode .server-box:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.45) !important;
+.dark-mode .server-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45) !important;
 }
 
-.dark-mode .server-title{
-    color:#aab4c3 !important;
+.dark-mode .server-title {
+    color: #aab4c3 !important;
 }
 
-.dark-mode .server-value{
-    color:#ffffff !important;
+.dark-mode .server-value {
+    color: #ffffff !important;
 }
 
 /* Progress background */
-.dark-mode .progress-wrap{
-    background:#1f2a38 !important;
+.dark-mode .progress-wrap {
+    background: #1f2a38 !important;
 }
 
 /* Progress bar online */
-.dark-mode .progress-bar{
-    background:#22c55e !important; /* hijau modern */
+.dark-mode .progress-bar {
+    background: #22c55e !important;
+    /* hijau modern */
 }
 
 /* Status text */
-.dark-mode .status-online{
-    color:#4ade80 !important;
+.dark-mode .status-online {
+    color: #4ade80 !important;
 }
 
-.dark-mode .status-offline{
-    color:#f87171 !important;
+.dark-mode .status-offline {
+    color: #f87171 !important;
 }
-.dark-mode .progress-bar{
-    box-shadow:0 0 8px rgba(34,197,94,0.6);
+
+.dark-mode .progress-bar {
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
 }
+
 /* =========================
    DARK MODE – SUBMENU ACTIVE
 ========================= */
 
-.dark-mode li.sidebar-item.submenu > a.sidebar-link {
-    background: linear-gradient(to left, #222e3c, #1b222d) !important; 
+.dark-mode li.sidebar-item.submenu>a.sidebar-link {
+    background: linear-gradient(to left, #222e3c, #1b222d) !important;
     color: #e4e6eb !important;
     border-bottom: 2px solid #222e3c;
 }
-</style>
 
+.dark-mode .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(13, 13, 13, 0.9);
+    /* lebih terang, jelas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dark-mode .card-meta-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 10px;
+    font-size: 12px;
+    color: #878a8d;
+}
+
+.dark-mode .admin-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #878a8d;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: .3px;
+    transition: .2s ease;
+}
+
+.app-version {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: .6;
+    transition: .3s ease;
+}
+
+.app-version:hover {
+    opacity: 1;
+}
+
+.version-line {
+    flex: 1;
+    height: 1px;
+    background: #606060;
+}
+
+.version-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: #888;
+}
+
+.dark-mode .version-line {
+    flex: 1;
+    height: 1px;
+    background: #dcdcdc;
+}
+
+.dark-mode .version-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: #888;
+}
+</style>
