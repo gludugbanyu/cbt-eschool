@@ -196,172 +196,179 @@ foreach($stat as $no=>$s){
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analisa Perbutir</title>
-<?php include '../inc/css.php'; ?>
-<style>
-@media print {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisa Perbutir</title>
+    <?php include '../inc/css.php'; ?>
+    <style>
+    @media print {
 
-    body {
-        margin: 0;
+        body {
+            margin: 0;
+        }
+
+        .wrapper,
+        .main,
+        .content,
+        .container-fluid,
+        .card,
+        .card-body {
+            overflow: visible !important;
+            height: auto !important;
+        }
+
+        #area-cetak {
+            position: static !important;
+            width: 100% !important;
+        }
+
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        table {
+            page-break-inside: auto;
+            font-size: 12px;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        .progress {
+            height: 14px;
+        }
+
+        button {
+            display: none !important;
+        }
     }
 
-    .wrapper,
-    .main,
-    .content,
-    .container-fluid,
-    .card,
-    .card-body {
-        overflow: visible !important;
-        height: auto !important;
+    #tabelAnalisa {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
     }
 
-    #area-cetak {
-        position: static !important;
-        width: 100% !important;
-    }
-
-    .table-responsive {
-        overflow: visible !important;
-    }
-
-    table {
-        page-break-inside: auto;
-        font-size: 12px;
-    }
-
-    tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
+    #tabelAnalisa th,
+    #tabelAnalisa td {
+        border: 1px solid #333;
+        padding: 6px;
     }
 
     .progress {
-        height: 14px;
+        background: #eee;
     }
 
-    button {
-        display: none !important;
+    .progress-bar {
+        color: #fff;
+        text-align: center;
+        font-size: 11px;
     }
-}
 
-#tabelAnalisa {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-}
-#tabelAnalisa th,
-#tabelAnalisa td {
-    border: 1px solid #333;
-    padding: 6px;
-}
-.progress {
-    background: #eee;
-}
-.progress-bar {
-    color: #fff;
-    text-align: center;
-    font-size: 11px;
-}
-.table-responsive {
-    overflow-x: auto;
-}
-
-@media print {
     .table-responsive {
-        overflow: visible !important;
+        overflow-x: auto;
     }
-}
-</style>
+
+    @media print {
+        .table-responsive {
+            overflow: visible !important;
+        }
+    }
+    </style>
 </head>
+
 <body>
-<div class="wrapper">
-<?php include 'sidebar.php'; ?>
-<div class="main">
-<?php include 'navbar.php'; ?>
+    <div class="wrapper">
+        <?php include 'sidebar.php'; ?>
+        <div class="main">
+            <?php include 'navbar.php'; ?>
 
-<main class="content">
-<div class="container-fluid p-0">
-<div class="card shadow">
-<div class="card-body" id="area-cetak">
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="card shadow">
+                        <div class="card-body" id="area-cetak">
 
-<!-- HEADER PROFESIONAL -->
-<div class="card mb-4 shadow-sm">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-            
-            <div>
-                <h4 class="mb-3">Analisa Perbutir Soal</h4>
-                <table class="table table-sm table-borderless mb-0">
-                    <tr>
-                        <td width="220">Kode Soal</td>
-                        <td>: <strong><?= $kode_soal ?></strong></td>
-                    </tr>
-                    <tr>
-                        <td>Kelas Peserta</td>
-                        <td>: <strong><?= htmlspecialchars($kelas_text) ?></strong></td>
-                    </tr>
-                    <tr>
-                        <td>Total Siswa Kelas</td>
-                        <td>: <strong><?= $total_siswa_kelas ?></strong> siswa</td>
-                    </tr>
-                    <tr>
-                        <td>Peserta Mengerjakan</td>
-                        <td>: <strong><?= $jumlah_siswa ?></strong> siswa</td>
-                    </tr>
-                    <tr>
-                        <td>Tingkat Partisipasi</td>
-                        <td>: <strong><?= number_format($partisipasi,1) ?>%</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Rata-rata Ketepatan</td>
-                        <td>: <strong><?= number_format($rata_keberhasilan,1) ?>%</strong></td>
-                    </tr>
-                </table>
-            </div>
+                            <!-- HEADER PROFESIONAL -->
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
 
-            <div class="text-end">
-    <button onclick="exportPDF()" class="btn btn-danger mb-2">
-        <i class="fa-solid fa-file-pdf"></i> Export PDF
-    </button>
-    <button onclick="printAnalisa()" class="btn btn-secondary mb-2">
-        <i class="fa fa-print"></i> Print
-    </button>
-    <br>
-    <small class="text-muted">
-        Statistik dihitung dari skor asli sistem penilaian.
-    </small>
-</div>
+                                        <div>
+                                            <h4 class="mb-3">Analisa Perbutir Soal</h4>
+                                            <table class="table table-sm table-borderless mb-0">
+                                                <tr>
+                                                    <td width="220">Kode Soal</td>
+                                                    <td>: <strong><?= $kode_soal ?></strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Kelas Peserta</td>
+                                                    <td>: <strong><?= htmlspecialchars($kelas_text) ?></strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Siswa Kelas</td>
+                                                    <td>: <strong><?= $total_siswa_kelas ?></strong> siswa</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Peserta Mengerjakan</td>
+                                                    <td>: <strong><?= $jumlah_siswa ?></strong> siswa</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tingkat Partisipasi</td>
+                                                    <td>: <strong><?= number_format($partisipasi,1) ?>%</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Rata-rata Ketepatan</td>
+                                                    <td>: <strong><?= number_format($rata_keberhasilan,1) ?>%</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
 
-
-        </div>
-    </div>
-</div>
+                                        <div class="text-end">
+                                            <button onclick="exportPDF()" class="btn btn-danger mb-2">
+                                                <i class="fa-solid fa-file-pdf"></i> Export PDF
+                                            </button>
+                                            <button onclick="printAnalisa()" class="btn btn-secondary mb-2">
+                                                <i class="fa fa-print"></i> Print
+                                            </button>
+                                            <br>
+                                            <small class="text-muted">
+                                                Statistik dihitung dari skor asli sistem penilaian.
+                                            </small>
+                                        </div>
 
 
-<?php if(count($bad)>0): ?>
-<div class="alert alert-danger">
-<strong>Perhatian!</strong> Soal nomor <?= implode(', ',$bad) ?> perlu evaluasi.
-</div>
-<?php endif; ?>
-<div class="table-responsive">
-<table id="tabelAnalisa" class="table table-bordered table-striped">
-<thead class="table-dark">
-<tr>
-    <th>No</th>
-    <th>Bobot</th>
-    <th>Tipe Soal</th>
-    <th>Skor Terkumpul</th>
-    <th>% Benar</th>
-    <th>Kualitas</th>
-    <th>Rekomendasi</th>
-    <th>Lihat</th>
-</tr>
-</thead>
-<tbody>
+                                    </div>
+                                </div>
+                            </div>
 
-<?php foreach($stat as $no=>$s):
+
+                            <?php if(count($bad)>0): ?>
+                            <div class="alert alert-danger">
+                                <strong>Perhatian!</strong> Soal nomor <?= implode(', ',$bad) ?> perlu evaluasi.
+                            </div>
+                            <?php endif; ?>
+                            <div class="table-responsive">
+                                <table id="tabelAnalisa" class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Bobot</th>
+                                            <th>Tipe Soal</th>
+                                            <th>Skor Terkumpul</th>
+                                            <th>% Benar</th>
+                                            <th>Kualitas</th>
+                                            <th>Rekomendasi</th>
+                                            <th>Lihat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <?php foreach($stat as $no=>$s):
     $p = ($s['skor']/($s['total']*$nilai_per_soal))*100;
 
     if($p>=85){ $badge="success"; $ket="Sangat Mudah"; $saran="Tingkatkan kesulitan atau perbaiki distraktor"; }
@@ -379,53 +386,76 @@ switch($tipeAsli){
     default: $tipeLabel='-';
 }
 ?>
-<tr>
-    <td><?= $no ?></td>
-    <td class="text-primary fw-bold"><?= number_format($bobot_per_soal[$no],2) ?></td>
-    <td class="fw-bold text-center"><?= $tipeLabel ?></td>
+                                        <tr>
+                                            <td><?= $no ?></td>
+                                            <td class="text-primary fw-bold">
+                                                <?= number_format($bobot_per_soal[$no],2) ?></td>
+                                            <td class="fw-bold text-center"><?= $tipeLabel ?></td>
 
-    <td class="text-success fw-bold"><?= number_format($s['skor'],2) ?></td>
-    <td>
-        <div class="progress" style="height:18px;">
-            <div class="progress-bar bg-<?= $badge ?>" style="width:<?= $p ?>%">
-                <?= number_format($p,1) ?>%
-            </div>
+                                            <td class="text-success fw-bold"><?= number_format($s['skor'],2) ?></td>
+                                            <td>
+                                                <div class="progress" style="height:18px;">
+                                                    <div class="progress-bar bg-<?= $badge ?>" style="width:<?= $p ?>%">
+                                                        <?= number_format($p,1) ?>%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-<?= $badge ?>"><?= $ket ?></span></td>
+                                            <td><?= $saran ?></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-dark"
+                                                    onclick="lihatSoal('<?= $kode_soal ?>', <?= $no ?>)">
+                                                    Lihat
+                                                </button>
+                                            </td>
+
+
+
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
+                                        <script>
+                                        function exportPDF() {
+                                            const element = document.getElementById('area-cetak');
+
+                                            html2pdf().set({
+                                                margin: 0.2,
+                                                filename: 'Analisa_<?= $kode_soal ?>.pdf',
+                                                image: {
+                                                    type: 'jpeg',
+                                                    quality: 1
+                                                },
+                                                html2canvas: {
+                                                    scale: 3,
+                                                    useCORS: true
+                                                },
+                                                jsPDF: {
+                                                    unit: 'in',
+                                                    format: 'a4',
+                                                    orientation: 'portrait'
+                                                },
+                                                pagebreak: {
+                                                    mode: ['avoid-all', 'css', 'legacy']
+                                                }
+                                            }).from(element).save();
+                                        }
+                                        </script>
+                                        <script>
+                                        function printAnalisa() {
+                                            window.print();
+                                        }
+                                        </script>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
         </div>
-    </td>
-    <td><span class="badge bg-<?= $badge ?>"><?= $ket ?></span></td>
-    <td><?= $saran ?></td>
-<td>
-<button 
-    class="btn btn-sm btn-outline-dark"
-    onclick="lihatSoal('<?= $kode_soal ?>', <?= $no ?>)">
-    Lihat
-</button>
-</td>
-
-
-
-</tr>
-<?php endforeach; ?>
-<script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
-<script>
-function exportPDF() {
-    const element = document.getElementById('area-cetak');
-
-    html2pdf().set({
-        margin: 0.2,
-        filename: 'Analisa_<?= $kode_soal ?>.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all','css','legacy'] }
-    }).from(element).save();
-}
-</script>
-<script>
-function printAnalisa(){
-    window.print();
-}
-</script>
+    </div>
  <!-- MODAL PREVIEW SOAL -->
  <div class="modal fade" id="modalSoal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -448,33 +478,25 @@ function printAnalisa(){
 
     <script>
     function lihatSoal(kode, nomor){
-        const modalEl = document.getElementById('modalSoal');
-        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-        // tampilkan loading dulu
-        document.getElementById('isiModalSoal').innerHTML = 'Loading...';
+    const modalEl = document.getElementById('modalSoal');
 
-        // ambil isi soal via AJAX
-        fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('isiModalSoal').innerHTML = html;
-            });
+    document.getElementById('isiModalSoal').innerHTML = 'Loading...';
 
-        modal.show();
-    }
+    fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
+        .then(res => res.text())
+        .then(html => {
+
+            document.getElementById('isiModalSoal').innerHTML = html;
+
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+
+        });
+
+}
     </script>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</main>
-
-</div>
-</div>
-
-<?php include '../inc/js.php'; ?>
+    <?php include '../inc/js.php'; ?>
 </body>
+
 </html>

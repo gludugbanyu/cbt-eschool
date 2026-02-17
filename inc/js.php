@@ -1,4 +1,4 @@
-                                                <?php
+<?php
 $ujian_terdekat = mysqli_query($koneksi, "
     SELECT * FROM soal 
     WHERE tanggal > NOW() 
@@ -18,14 +18,13 @@ if (mysqli_num_rows($ujian_terdekat) > 0) {
 
 $signature = md5($signature);
 ?>
-                                                <div id="toast-container" data-signature="<?= $signature ?>">
-<?php 
+<div id="toast-container" data-signature="<?= $signature ?>">
+    <?php 
 if (mysqli_num_rows($ujian_terdekat) > 0):
     mysqli_data_seek($ujian_terdekat, 0); 
     while ($ujian = mysqli_fetch_assoc($ujian_terdekat)): 
 ?>
-    <div class="toast align-items-center text-white bg-primary border-0 mb-2 opacity-0"
-        role="alert">
+    <div class="toast align-items-center text-white bg-primary border-0 mb-2 opacity-0" role="alert">
 
         <div class="d-flex">
             <div class="toast-body">
@@ -33,39 +32,36 @@ if (mysqli_num_rows($ujian_terdekat) > 0):
                 Ujian <?= $ujian['kode_soal']; ?> dimulai pada
                 <?= date('d M Y', strtotime($ujian['tanggal'])); ?>
             </div>
-            <button type="button"
-                class="btn-close btn-close-white me-2 m-auto"
-                data-bs-dismiss="toast"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
 
     </div>
-<?php 
+    <?php 
     endwhile;
 endif;
 ?>
 </div>
-                                                <footer class="footer mt-auto py-3 bg-dark">
-                                                    <div class="container-fluid">
-                                                        <div class="row text-grey">
-                                                            <div class="col-6 text-start">
-                                                                <p class="mb-0">
-                                                                    <a href="#" id="enc" style="color:grey;text-decoration:none;"></a>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </footer>
-                                                <?php
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container-fluid">
+        <div class="row text-grey">
+            <div class="col-6 text-start">
+                <p class="mb-0">
+                    <a href="#" id="enc" style="color:grey;text-decoration:none;"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+<?php
                                                 $q = mysqli_query($koneksi, "SELECT * FROM pengaturan WHERE id = 1");
                                                 $data = mysqli_fetch_assoc($q);
                                                 ?>
-                                                <script src="../assets/adminkit/static/js/app.js"></script>
-                                                <script src="../assets/js/jquery-3.6.0.min.js"></script>
-                                                <script src="../assets/js/sweetalert.js"></script>
-                                                <script src="../assets/datatables/datatables.js"></script>
-                                                <audio id="notif-sound" src="../assets/notif.mp3"
-                                                    preload="auto"></audio>
-                                                <script>
+<script src="../assets/adminkit/static/js/app.js"></script>
+<script src="../assets/js/jquery-3.6.0.min.js"></script>
+<script src="../assets/js/sweetalert.js"></script>
+<script src="../assets/datatables/datatables.js"></script>
+<audio id="notif-sound" src="../assets/notif.mp3" preload="auto"></audio>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Ambil semua elemen dengan data-bs-toggle="collapse"
     document.querySelectorAll('[data-bs-toggle="collapse"]')
@@ -146,8 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 🎨 Random warna bootstrap
     const bgClasses = [
-        'bg-primary','bg-success','bg-danger',
-        'bg-warning','bg-info','bg-dark','bg-secondary'
+        'bg-primary', 'bg-success', 'bg-danger',
+        'bg-warning', 'bg-info', 'bg-dark', 'bg-secondary'
     ];
 
     function getRandomBg() {
@@ -165,8 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toastEl.classList.remove('opacity-0');
 
             const toast = new bootstrap.Toast(toastEl, {
-    delay: 5000
-});
+                delay: 5000
+            });
 
             toast.show();
 
@@ -181,8 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
-                                                </script>
-                                                <script>
+</script>
+<script>
 document.querySelectorAll('.btnLogout').forEach(function(el) {
     el.addEventListener('click', function(e) {
         e.preventDefault();
@@ -202,4 +198,4 @@ document.querySelectorAll('.btnLogout').forEach(function(el) {
         });
     });
 });
-                                                </script>
+</script>
