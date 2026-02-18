@@ -85,7 +85,8 @@ while($t=mysqli_fetch_assoc($qTop)){
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ranking Siswa</title>
 <?php include '../inc/css.php'; ?>
 
