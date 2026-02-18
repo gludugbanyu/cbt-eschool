@@ -313,6 +313,7 @@ elseif($rank == 3) $medal = "🥉";
             left: 50%;
             transform: translate(-50%, -50%);
             width: 80%;
+            max-height: 80%;
             padding:50px;
             opacity: 0.04;
             z-index: 1;
