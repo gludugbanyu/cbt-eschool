@@ -131,7 +131,7 @@ if (isset($_POST['submit'])) {
                                         <div class="row">
                                             <div class="mb-3 col-sm-6">
                                                 <label class="form-label">Kelas</label>
-                                                <input type="number" name="kelas" class="form-control" value="<?= $siswa['kelas'] ?>" required>
+                                                <input type="text" name="kelas" class="form-control" value="<?= $siswa['kelas'] ?>" required>
                                             </div>
                                             <div class="mb-3 col-sm-6">
                                                 <label class="form-label">Rombel</label>

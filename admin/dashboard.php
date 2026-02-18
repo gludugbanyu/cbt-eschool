@@ -341,36 +341,38 @@ if (
 
                                         <!-- Chart Statistik -->
                                         <div class="col-lg-4 md-4">
-                                            <div class="card mb-3">
+                                            <div class="card mb-3 chart-card">
                                                 <div class="card-header">
+                                                    <div class="d-flex justify-content-between align-items-center">
                                                     <h5 class="card-title mb-0">10 Siswa Nilai Tertinggi</h5>
+                                                    <a href="ranking_siswa.php" class="btn btn-sm btn-primary">
+                                                        Semua Hasil
+                                                    </a>
+                                                </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartTopSiswa"
-                                                        style="height: 400px; width: 100%;"></canvas>
+                                                    <canvas id="chartTopSiswa"></canvas>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 md-4">
-                                            <div class="card mb-3">
+                                            <div class="card mb-3 chart-card">
                                                 <div class="card-header">
                                                     <h5 class="card-title mb-0">Rekap Peserta Ujian</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartRekapUjian"
-                                                        style="height: 400px; width: 100%;"></canvas>
+                                                    <canvas id="chartRekapUjian"></canvas>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-4 md-4">
-                                            <div class="card mb-3">
+                                            <div class="card mb-3 chart-card">
                                                 <div class="card-header">
                                                     <h5 class="card-title mb-0">Statistik Nilai</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartKodeSoal"
-                                                        style="height: 400px; width: 100%;"></canvas>
+                                                    <canvas id="chartKodeSoal"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -405,6 +407,7 @@ if (
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             animation: {
                 duration: 2000,
                 easing: 'easeInOutQuart' // efek animasi gelombang halus
@@ -440,6 +443,7 @@ if (
         options: {
             indexAxis: 'y', // horizontal
             responsive: true,
+            maintainAspectRatio: false,
             animation: {
                 duration: 1200,
                 easing: 'easeOutCubic' // animasi smooth modern

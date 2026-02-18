@@ -1688,7 +1688,30 @@ main.content,
 .dark-mode a.btn-primary {
     color:#c4c4c4 !important;
 }
+.dark-mode a.btn-danger {
+    color:#c4c4c4 !important;
+}
 .dark-mode .btn-outline-primary {
     color:#c4c4c4 !important;
+}
+.dark-mode .preview-header{
+    background-color:#1c1c1c;
+}
+.chart-card {
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card .card-body {
+    flex: 1;
+}
+.chart-card .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dark-mode .buttons-excel span{
+    color:black !important;
 }
 </style>

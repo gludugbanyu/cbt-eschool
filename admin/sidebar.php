@@ -22,11 +22,11 @@ $role = $_SESSION['role'] ?? 'editor';
             </li>
 
             <li class="sidebar-item <?= ($currentPage == 'soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_soal.php') ? 'active' : '' ?>  
-<?= ($currentPage == 'tambah_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
-<?= ($currentPage == 'tambah_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'preview_soal.php') ? 'active' : '' ?> 
-<?= ($currentPage == 'daftar_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'upload-gambar.php') ? 'active' : '' ?> 
-<?= ($currentPage == 'kartu_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'daftar_hadir.php') ? 'active' : '' ?>
-<?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?>">
+        <?= ($currentPage == 'tambah_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
+        <?= ($currentPage == 'tambah_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'preview_soal.php') ? 'active' : '' ?> 
+        <?= ($currentPage == 'daftar_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'upload-gambar.php') ? 'active' : '' ?> 
+        <?= ($currentPage == 'kartu_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'daftar_hadir.php') ? 'active' : '' ?>
+        <?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?>">
                 <a data-bs-toggle="collapse" href="#soal" class="sidebar-link collapsed">
                     <i class="align-middle fa fa-file"></i> <span class="align-middle">Manajemen Ujian </span><i
                         class="fa fa-chevron-down ms-auto float-end"></i>
@@ -74,10 +74,18 @@ $role = $_SESSION['role'] ?? 'editor';
                 </a>
             </li>
 
-            <li class="sidebar-item <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>">
-                <a class="sidebar-link" href="hasil.php">
-                    <i class="align-middle fas fa-chart-line"></i> <span class="align-middle">Hasil Ujian</span>
+            <li class="sidebar-item  <?= ($currentPage == 'ranking_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
+        <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>">
+                <a data-bs-toggle="collapse" href="#hasil" class="sidebar-link collapsed">
+                    <i class="align-middle fas fa-chart-pie"></i> <span class="align-middle">Hasil Ujian </span><i
+                        class="fa fa-chevron-down ms-auto float-end"></i>
                 </a>
+                <ul id="hasil" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item submenu"><a class="sidebar-link" href="hasil.php"><i
+                                class="align-middle fas fa-chart-line"></i> Hasil Ujian</a></li>
+                    <li class="sidebar-item submenu"><a class="sidebar-link" href="ranking_siswa.php"><i
+                                class="align-middle fas fa-trophy"></i>Ranking Siswa</a></li>
+                </ul>
             </li>
 
             <li class="sidebar-item <?= ($currentPage == 'online.php') ? 'active' : '' ?>">

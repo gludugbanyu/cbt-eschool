@@ -228,7 +228,26 @@ function base_url($path = '')
 
     return $protocol . $host . '/' . $folder . '/' . ltrim($path, '/');
 }
+function project_url($path = '')
+{
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                ? "https://"
+                : "http://";
 
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Ambil folder project otomatis (1 level dari root project)
+    $script = $_SERVER['SCRIPT_NAME'];
+    $segments = explode('/', trim($script, '/'));
+
+    // Folder project = segment pertama
+    $projectFolder = $segments[0] ?? '';
+
+    // Jika project di root (tanpa folder)
+    $base = $projectFolder ? '/' . $projectFolder : '';
+
+    return rtrim($protocol . $host . $base, '/') . '/' . ltrim($path, '/');
+}
 // Ambil teks terenkripsi
 $encryptedText = get_encrypted_credit();
 ?>
