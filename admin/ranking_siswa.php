@@ -232,11 +232,11 @@ while($row = mysqli_fetch_assoc($query)):
         $valid_rank++;
 
         if($valid_rank == 1){
-            $badge = '<span class="rank-badge badge-gold">🥇 TOP 1</span>';
+            $badge = '<span class="rank-badge badge-gold">🥇 TOP1</span>';
         }elseif($valid_rank == 2){
-            $badge = '<span class="rank-badge badge-silver">🥈 TOP 2</span>';
+            $badge = '<span class="rank-badge badge-silver">🥈 TOP2</span>';
         }elseif($valid_rank == 3){
-            $badge = '<span class="rank-badge badge-bronze">🥉 TOP 3</span>';
+            $badge = '<span class="rank-badge badge-bronze">🥉 TOP3</span>';
         }
     }
 ?>
