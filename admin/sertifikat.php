@@ -80,9 +80,8 @@ $signature = hash_hmac('sha256',$payload,$secret);
 $token     = base64_encode($payload."|".$signature);
 
 /* URL publik */
-$verifyURL = project_url("verifikasi.php?token=".$token);
-
-$qrFile = $tempDir."sertifikat_".$data['id_siswa'].".png";
+$verifyURL = project_url("verifikasi?token=".$token);
+$qrFile = $tempDir."sertifikat_".$data['id_siswa']."_".time().".png";
 QRcode::png($verifyURL,$qrFile,QR_ECLEVEL_H,5);
 
 /* =============================
@@ -205,6 +204,23 @@ body{margin:0;background:#eaeaea}
     text-align:center;
 }
 .qr img{width:115px}
+/* URL verifikasi kecil */
+.verify-url{
+    position:absolute;
+    bottom:55px;
+    left:0;
+    width:100%;
+    text-align:center;
+    font-size:11px;
+    color:#444;
+    font-family:Arial, sans-serif;
+}
+
+.url-text{
+    font-weight:600;
+    color:#000;
+    letter-spacing:0.3px;
+}
 </style>
 </head>
 <body>
@@ -247,7 +263,10 @@ body{margin:0;background:#eaeaea}
     <img src="<?= $qrFile ?>">
     <div style="font-size:11px;">Scan untuk verifikasi online</div>
 </div>
-
+<div class="verify-url">
+    Verifikasi online:
+    <span class="url-text"><?= project_url('verifikasi') ?></span>
+</div>
 </div>
 
 <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>

@@ -303,18 +303,33 @@ class="btn btn-sm btn-danger">
 <script src="../assets/datatables/jszip.min.js"></script>
 <script src="../assets/datatables/buttons.html5.min.js"></script>
 <script src="../assets/js/chart.js"></script>
-
+<script>
+const angkatanFilter = "<?= $angkatan_filter ?>";
+</script>
 <script>
 $(document).ready(function(){
 
 $('#rankingTable').DataTable({
-dom:'Bfrtip',
-buttons:[{
-extend:'excelHtml5',
-title:'Ranking Siswa',
-exportOptions:{columns:[0,1,2,3,4]}
-}],
-pageLength:10
+    dom:'Bfrtip',
+    buttons:[{
+        extend:'excelHtml5',
+        title: function(){
+            if(angkatanFilter){
+                return 'Ranking Siswa Kelas ' + angkatanFilter;
+            }else{
+                return 'Ranking Siswa Semua Angkatan';
+            }
+        },
+        exportOptions:{
+            columns: ':not(:last-child)',
+            format:{
+                body:function(data){
+                    return data.replace(/<.*?>/g,'');
+                }
+            }
+        }
+    }],
+    pageLength:10
 });
 
 /* Smooth row animation */

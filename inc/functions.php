@@ -236,17 +236,24 @@ function project_url($path = '')
 
     $host = $_SERVER['HTTP_HOST'];
 
-    // Ambil folder project otomatis (1 level dari root project)
-    $script = $_SERVER['SCRIPT_NAME'];
-    $segments = explode('/', trim($script, '/'));
+    // Contoh:
+    // /cbt/admin/sertifikat.php
+    // /admin/sertifikat.php
+    $script = str_replace('\\','/', $_SERVER['SCRIPT_NAME']);
 
-    // Folder project = segment pertama
-    $projectFolder = $segments[0] ?? '';
+    // Ambil path tanpa nama file
+    $dir = dirname($script);
 
-    // Jika project di root (tanpa folder)
-    $base = $projectFolder ? '/' . $projectFolder : '';
+    // Jika ada /admin, naik satu level
+    if (substr($dir, -6) === '/admin') {
+        $dir = dirname($dir);
+    }
 
-    return rtrim($protocol . $host . $base, '/') . '/' . ltrim($path, '/');
+    if ($dir === '/' || $dir === '\\') {
+        $dir = '';
+    }
+
+    return rtrim($protocol . $host . $dir, '/') . '/' . ltrim($path, '/');
 }
 // Ambil teks terenkripsi
 $encryptedText = get_encrypted_credit();
