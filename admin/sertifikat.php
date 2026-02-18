@@ -95,9 +95,9 @@ QRcode::png($verifyURL,$qrFile,QR_ECLEVEL_H,5);
    MEDAL ICON
 ============================= */
 $medal = "";
-if($rank == 1) $medal = "🥇";
-elseif($rank == 2) $medal = "🥈";
-elseif($rank == 3) $medal = "🥉";
+if($rank == 1) $medal = "ðŸ¥‡";
+elseif($rank == 2) $medal = "ðŸ¥ˆ";
+elseif($rank == 3) $medal = "ðŸ¥‰";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -391,10 +391,10 @@ window.onload = function() {
         jsPDF:        { unit: 'px', format: [1123, 794], orientation: 'landscape' }
     };
     
-    html2pdf().set(opt).from(element).save()
-    .then(() => {
-        setTimeout(() => window.close(), 1000);
-    });
+html2pdf().set(opt).from(element).save()
+.then(() => {
+    console.log("PDF berhasil dibuat");
+});
 }
 </script>
 
