@@ -55,10 +55,17 @@ $nomor = str_pad($rank,3,'0',STR_PAD_LEFT)."/CBT/".date('Y');
 /* =============================
    LOGO WATERMARK
 ============================= */
-$qLogo = mysqli_query($koneksi,"SELECT logo_sekolah FROM pengaturan WHERE id=1");
-$logoData = mysqli_fetch_assoc($qLogo);
-$logoFile = "../assets/images/".$logoData['logo_sekolah'];
+$qPengaturan = mysqli_query($koneksi,"
+    SELECT logo_sekolah, versi_aplikasi, nama_aplikasi 
+    FROM pengaturan 
+    WHERE id=1
+");
 
+$pengaturanData = mysqli_fetch_assoc($qPengaturan);
+
+$logoFile = "../assets/images/" . $pengaturanData['logo_sekolah'];
+$versiAplikasi = $pengaturanData['versi_aplikasi'] ?? '1.0.0';
+$namaAplikasi = $pengaturanData['nama_aplikasi'] ?? 'CBT E-School';
 $logoBase64 = '';
 if(file_exists($logoFile)){
     $type = pathinfo($logoFile, PATHINFO_EXTENSION);
@@ -93,192 +100,299 @@ elseif($rank == 2) $medal = "🥈";
 elseif($rank == 3) $medal = "🥉";
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<title>Sertifikat</title>
+    <meta charset="utf-8">
+    <title>Sertifikat - <?= htmlspecialchars($data['nama_siswa']) ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A192F;
+            --secondary: #C5A059;
+            --text: #333;
+        }
 
-<style>
-body{margin:0;background:#eaeaea}
+        body { 
+            margin: 0; 
+            padding: 0;
+            background: #f0f0f0; 
+        }
 
-#area_pdf{
-    width:1123px;
-    height:794px;
-    background:#fff;
-    position:relative;
-    font-family:'Times New Roman',serif;
-}
+        #area_pdf {
+            width: 1123px;
+            height: 794px;
+            background: #ffffff;
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
 
-/* Border klasik */
-.frame-outer{
-    position:absolute;
-    inset:30px;
-    border:6px solid #d4af37;
-}
-.frame-inner{
-    position:absolute;
-    inset:45px;
-    border:2px solid #c9a227;
-}
+        /* Dekorasi Background Geometris */
+        .decor-top {
+            position: absolute;
+            top: 0; left: 0;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, var(--primary) 0%, transparent 70%);
+            opacity: 0.07;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
 
-/* Watermark */
-.watermark{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:420px;
-    opacity:0.05;
-}
+        .decor-bottom {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 450px; height: 450px;
+            background: linear-gradient(-45deg, var(--secondary) 0%, transparent 70%);
+            opacity: 0.1;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
 
-/* Badge pojok */
-.badge-gold{
-    position:absolute;
-    top:60px;
-    left:90px;
-    background:linear-gradient(45deg,#b8860b,#ffd700);
-    color:#fff;
-    padding:8px 22px;
-    font-size:14px;
-    border-radius:25px;
-    font-weight:bold;
-}
+        /* Bingkai Minimalis */
+        .border-main {
+            position: absolute;
+            inset: 35px;
+            border: 1px solid #ddd;
+            z-index: 5;
+        }
 
-/* Header */
-.header{
-    position:absolute;
-    top:120px;
-    width:100%;
-    text-align:center;
-}
-.header h1{
-    font-size:48px;
-    letter-spacing:5px;
-    margin:0;
-}
+        .border-accent {
+            position: absolute;
+            inset: 45px;
+            border: 3px solid var(--secondary);
+            clip-path: polygon(0 0, 15% 0, 15% 2%, 2% 2%, 2% 15%, 0 15%, 0 0, 
+                               85% 0, 100% 0, 100% 15%, 98% 15%, 98% 2%, 85% 2%, 85% 0,
+                               100% 85%, 100% 100%, 85% 100%, 85% 98%, 98% 98%, 98% 85%, 100% 85%,
+                               0 85%, 0 100%, 15% 100%, 15% 98%, 2% 98%, 2% 85%, 0 85%);
+            z-index: 6;
+        }
 
-/* Peringkat */
-.peringkat{
-    position:absolute;
-    top:240px;
-    width:100%;
-    text-align:center;
-    font-size:32px;
-    font-weight:bold;
-    color:#b8860b;
-}
+        /* Konten Utama */
+        .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 80px 100px;
+        }
 
-/* Nama */
-.nama{
-    position:absolute;
-    top:310px;
-    width:100%;
-    text-align:center;
-    font-size:42px;
-    font-weight:bold;
-}
+        .logo-top {
+            width: 70px;
+            margin-bottom: 20px;
+        }
 
-/* Detail */
-.detail{
-    position:absolute;
-    top:380px;
-    width:100%;
-    text-align:center;
-    font-size:19px;
-    line-height:1.9;
-}
+        .cert-label {
+            font-size: 14px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-/* Nomor */
-.nomor{
-    position:absolute;
-    top:60px;
-    right:90px;
-    font-size:14px;
-}
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px;
+            color: var(--primary);
+            margin: 0;
+            font-weight: 700;
+            line-height: 1;
+        }
 
-/* QR */
-.qr{
-    position:absolute;
-    bottom:80px;
-    right:100px;
-    text-align:center;
-}
-.qr img{width:115px}
-/* URL verifikasi kecil */
-.verify-url{
-    position:absolute;
-    bottom:55px;
-    left:0;
-    width:100%;
-    text-align:center;
-    font-size:11px;
-    color:#444;
-    font-family:Arial, sans-serif;
-}
+        .subtitle {
+            font-family: 'Raleway', sans-serif;
+            font-size: 18px;
+            color: #666;
+            margin-top: 15px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
 
-.url-text{
-    font-weight:600;
-    color:#000;
-    letter-spacing:0.3px;
-}
-</style>
+        .present-to {
+            margin-top: 40px;
+            font-size: 16px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .student-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 54px;
+            color: #111;
+            margin: 20px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary);
+            display: inline-block;
+            min-width: 60%;
+        }
+
+        .rank-badge {
+            margin-top: 10px;
+            background: var(--primary);
+            color: #fff;
+            display: inline-block;
+            padding: 10px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(10, 25, 47, 0.2);
+        }
+
+        .description {
+            margin-top: 15px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .description b { color: #000; }
+
+        /* Footer Sertifikat */
+        .footer-wrap {
+            position: absolute;
+            bottom: 70px;
+            left: 100px;
+            right: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 10;
+        }
+
+        .signature {
+            text-align: center;
+            width: 220px;
+        }
+
+        .signature .line {
+            border-top: 1px solid #aaa;
+            margin-top: 80px;
+            margin-bottom: 5px;
+        }
+
+        .signature p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .qr-box {
+            text-align: center;
+        }
+
+        .qr-box img {
+            width: 115px;
+            padding: 5px;
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
+        .qr-box span {
+            display: block;
+            font-size: 9px;
+            color: #999;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .cert-number {
+            position: absolute;
+            top: 60px;
+            right: 80px;
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .watermark-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            opacity: 0.04;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
 
 <div id="area_pdf">
+    <div class="decor-top"></div>
+    <div class="decor-bottom"></div>
+    <div class="border-main"></div>
+    <div class="border-accent"></div>
 
-<div class="frame-outer"></div>
-<div class="frame-inner"></div>
+    <?php if($logoBase64): ?>
+    <img src="<?= $logoBase64 ?>" class="watermark-bg">
+    <?php endif; ?>
 
-<?php if($logoBase64): ?>
-<img src="<?= $logoBase64 ?>" class="watermark">
-<?php endif; ?>
+    <div class="cert-number">NO. REF: <?= $nomor ?></div>
 
-<div class="badge-gold">
-    PRESTASI SEKOLAH
-</div>
+    <div class="content">
+        <div class="cert-label">Certificate of Excellence</div>
+        <h1 class="title">SERTIFIKAT PRESTASI</h1>
+        <div class="subtitle">Atas pencapaian akademik yang luar biasa pada ujian <b><?= htmlspecialchars($namaAplikasi); ?></b></div>
 
-<div class="nomor">No: <?= $nomor ?></div>
+        <div class="present-to">Diberikan kepada:</div>
+        
+        <div class="student-name">
+            <?= strtoupper(htmlspecialchars($data['nama_siswa'])) ?>
+        </div>
 
-<div class="header">
-    <h1>SERTIFIKAT PRESTASI</h1>
-</div>
+        <br>
+        <div class="rank-badge">
+            <?= $medal ?> PERINGKAT <?= $rank ?> TERBAIK
+        </div>
 
-<div class="peringkat">
-    <?= $medal ?> PERINGKAT <?= $rank ?>
-</div>
+        <div class="description">
+            Siswa kelas <b><?= $data['kelas'].$data['rombel'] ?></b> yang telah menunjukkan performa unggul<br>
+            dengan nilai rata-rata <b><?= $data['rata'] ?></b> melalui <b><?= $data['jumlah_ujian'] ?></b> mata uji<br>
+            di antara total <b><?= $totalPeserta ?></b> peserta didik.
+        </div>
+    </div>
 
-<div class="nama">
-    <?= strtoupper(htmlspecialchars($data['nama_siswa'])) ?>
-</div>
+    <div class="footer-wrap">
+        <div class="signature">
+            <div class="line"></div>
+            <p>KEPALA SEKOLAH</p>
+        </div>
 
-<div class="detail">
-    Kelas <?= $data['kelas'].$data['rombel'] ?><br>
-    Rata-rata nilai <b><?= $data['rata'] ?></b><br>
-    Dari <b><?= $data['jumlah_ujian'] ?></b> ujian<br>
-    Total peserta <b><?= $totalPeserta ?></b> siswa
-</div>
+        <div class="qr-box">
+            <img src="<?= $qrFile ?>">
+            <span>VERIFIKASI SISTEM DIGITAL</span>
+        </div>
 
-<div class="qr">
-    <img src="<?= $qrFile ?>">
-    <div style="font-size:11px;">Scan untuk verifikasi online</div>
-</div>
-<div class="verify-url">
-    Verifikasi online:
-    <span class="url-text"><?= project_url('verifikasi') ?></span>
-</div>
+        <div class="signature">
+            <div class="line"></div>
+            <p>WALI KELAS</p>
+        </div>
+    </div>
+
+    <div style="position: absolute; margin-top:5px;bottom: 15px; width: 100%; text-align: center; font-size: 10px; color: #bbb; z-index: 10;">
+        Diterbitkan secara otomatis oleh <b>CBT E-School v<?= htmlspecialchars($versiAplikasi); ?></b>
+    </div>
 </div>
 
 <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
 <script>
-window.onload=function(){
-    const element=document.getElementById("area_pdf");
-    html2pdf().set({
-        margin:0,
-        html2canvas:{scale:2,useCORS:true},
-        jsPDF:{unit:'px',format:[1123,794],orientation:'landscape'}
-    }).from(element).save("Sertifikat_<?= $data['nama_siswa'] ?>.pdf")
-    .then(()=>setTimeout(()=>window.close(),800));
+window.onload = function() {
+    const element = document.getElementById("area_pdf");
+    const opt = {
+        margin:       0,
+        filename:     'Sertifikat_<?= str_replace(" ", "_", $data['nama_siswa']) ?>.pdf',
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 3, useCORS: true, letterRendering: true, dpi: 300 },
+        jsPDF:        { unit: 'px', format: [1123, 794], orientation: 'landscape' }
+    };
+    
+    html2pdf().set(opt).from(element).save()
+    .then(() => {
+        setTimeout(() => window.close(), 1000);
+    });
 }
 </script>
 
