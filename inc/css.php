@@ -1685,4 +1685,10 @@ main.content,
     font-weight: 600;
     color: #888;
 }
+.dark-mode a.btn-primary {
+    color:#c4c4c4 !important;
+}
+.dark-mode .btn-outline-primary {
+    color:#c4c4c4 !important;
+}
 </style>
