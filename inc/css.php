@@ -1712,6 +1712,6 @@ main.content,
     justify-content: center;
 }
 .dark-mode .buttons-excel span{
-    color:black !important;
+    color:white !important;
 }
 </style>
