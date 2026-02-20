@@ -76,57 +76,64 @@ include '../inc/dataadmin.php';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit User</title>
-<?php include '../inc/css.php'; ?>
+    <title>Edit User</title>
+    <?php include '../inc/css.php'; ?>
 </head>
+
 <body>
-<div class="wrapper">
-<?php include 'sidebar.php'; ?>
-<div class="main">
-<?php include 'navbar.php'; ?>
+    <div class="wrapper">
+        <?php include 'sidebar.php'; ?>
+        <div class="main">
+            <?php include 'navbar.php'; ?>
 
-<main class="content">
-<div class="container-fluid p-0">
-<div class="card">
-<div class="card-header"><h5>Edit User</h5></div>
-<div class="card-body">
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Edit User</h5>
+                        </div>
+                        <div class="card-body">
 
-<form method="POST">
-<div class="mb-3">
-<label>Nama</label>
-<input name="nama" value="<?=$d['nama_admin']?>" class="form-control" required>
-</div>
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label>Nama</label>
+                                    <input name="nama" value="<?=$d['nama_admin']?>" class="form-control" required>
+                                </div>
 
-<div class="mb-3">
-<label>Username</label>
-<input name="username" value="<?=$d['username']?>" class="form-control" required>
-</div>
+                                <div class="mb-3">
+                                    <label>Username</label>
+                                    <input name="username" value="<?=$d['username']?>" class="form-control" required>
+                                </div>
 
-<div class="mb-3">
-<label>Password Baru (opsional)</label>
-<input type="password" name="password" class="form-control">
-</div>
+                                <div class="mb-3">
+                                    <label>Password Baru (opsional)</label>
+                                    <input type="password" name="password" class="form-control">
+                                </div>
 
-<div class="mb-3">
-<label>Role</label>
-<select name="role" class="form-control">
-<option value="admin" <?=$d['role']=='admin'?'selected':''?>>Admin</option>
-<option value="editor" <?=$d['role']=='editor'?'selected':''?>>Editor</option>
-</select>
-</div>
+                                <div class="mb-3">
+                                    <label>Role</label>
+                                    <select name="role" class="form-control">
+                                        <option value="admin" <?=$d['role']=='admin'?'selected':''?>>Admin</option>
+                                        <option value="editor" <?=$d['role']=='editor'?'selected':''?>>Editor</option>
+                                    </select>
+                                </div>
 
-<button name="update" class="btn btn-primary">Update</button>
-<a href="manajemen_user.php" class="btn btn-secondary">Kembali</a>
-</form>
+                                <button name="update" class="btn btn-primary">Update</button>
+                                <a href="manajemen_user.php" class="btn btn-secondary">Kembali</a>
+                            </form>
 
-</div>
-</div>
-</div>
-</main>
-</div>
-</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <?php include '../inc/js.php'; ?>
+
 </body>
+
 </html>

@@ -37,57 +37,64 @@ include '../inc/dataadmin.php';
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tambah User</title>
-<?php include '../inc/css.php'; ?>
+    <title>Tambah User</title>
+    <?php include '../inc/css.php'; ?>
 </head>
+
 <body>
-<div class="wrapper">
-<?php include 'sidebar.php'; ?>
-<div class="main">
-<?php include 'navbar.php'; ?>
+    <div class="wrapper">
+        <?php include 'sidebar.php'; ?>
+        <div class="main">
+            <?php include 'navbar.php'; ?>
 
-<main class="content">
-<div class="container-fluid p-0">
-<div class="card">
-<div class="card-header"><h5>Tambah User</h5></div>
-<div class="card-body">
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Tambah User</h5>
+                        </div>
+                        <div class="card-body">
 
-<form method="POST">
-<div class="mb-3">
-<label>Nama</label>
-<input name="nama" class="form-control" required>
-</div>
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label>Nama</label>
+                                    <input name="nama" class="form-control" required>
+                                </div>
 
-<div class="mb-3">
-<label>Username</label>
-<input name="username" class="form-control" required>
-</div>
+                                <div class="mb-3">
+                                    <label>Username</label>
+                                    <input name="username" class="form-control" required>
+                                </div>
 
-<div class="mb-3">
-<label>Password</label>
-<input type="password" name="password" class="form-control" required>
-</div>
+                                <div class="mb-3">
+                                    <label>Password</label>
+                                    <input type="password" name="password" class="form-control" required>
+                                </div>
 
-<div class="mb-3">
-<label>Role</label>
-<select name="role" class="form-control">
-<option value="admin">Admin</option>
-<option value="editor">Editor</option>
-</select>
-</div>
+                                <div class="mb-3">
+                                    <label>Role</label>
+                                    <select name="role" class="form-control">
+                                        <option value="admin">Admin</option>
+                                        <option value="editor">Editor</option>
+                                    </select>
+                                </div>
 
-<button name="simpan" class="btn btn-primary">Simpan</button>
-<a href="manajemen_user.php" class="btn btn-secondary">Kembali</a>
-</form>
+                                <button name="simpan" class="btn btn-primary">Simpan</button>
+                                <a href="manajemen_user.php" class="btn btn-secondary">Kembali</a>
+                            </form>
 
-</div>
-</div>
-</div>
-</main>
-</div>
-</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <?php include '../inc/js.php'; ?>
+
 </body>
+
 </html>
