@@ -160,6 +160,34 @@ while($t=mysqli_fetch_assoc($qTop)){
 .dark-mode .badge-gold{ color:#000 !important; }
 .dark-mode .badge-silver{ color:#000 !important; }
 .dark-mode .badge-bronze{ color:#000 !important; }
+.rank-badge{
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+}
+
+/* LIGHT MODE */
+.badge-gold{
+    background:#FFD700;
+    color:#000;
+}
+.badge-silver{
+    background:#C0C0C0;
+    color:#000;
+}
+.badge-bronze{
+    background:#CD7F32;
+    color:#fff;
+}
+
+/* DARK MODE */
+.dark-mode .badge-gold{ color:#000 !important; }
+.dark-mode .badge-silver{ color:#000 !important; }
+.dark-mode .badge-bronze{ color:#000 !important; }
 </style>
 </head>
 
@@ -231,42 +259,20 @@ if($row['jumlah_ujian'] > 0 && $row['rata_rata'] > 0){
     $valid_rank++;
 
     if($valid_rank == 1){
-        $badge = '<span style="
-            display:inline-block;
-            padding:3px 8px;
-            border-radius:6px;
-            font-size:12px;
-            font-weight:600;
-            background:#FFD70022 !important;
-            color:#FFD700 !important;
-        ">
-        <i class="fa fa-trophy" style="margin-right:4px;color:#FFD700 !important;"></i>TOP 1
-        </span>';
-    }elseif($valid_rank == 2){
-        $badge = '<span style="
-            display:inline-block;
-            padding:3px 8px;
-            border-radius:6px;
-            font-size:12px;
-            font-weight:600;
-            background:#C0C0C022 !important;
-            color:#C0C0C0 !important;
-        ">
-        <i class="fa fa-trophy" style="margin-right:4px;color:#C0C0C0 !important;"></i>TOP 2
-        </span>';
-    }elseif($valid_rank == 3){
-        $badge = '<span style="
-            display:inline-block;
-            padding:3px 8px;
-            border-radius:6px;
-            font-size:12px;
-            font-weight:600;
-            background:#CD7F3222 !important;
-            color:#CD7F32 !important;
-        ">
-        <i class="fa fa-trophy" style="margin-right:4px;color:#CD7F32 !important;"></i>TOP 3
-        </span>';
-    }
+    $badge = '<span class="rank-badge badge-gold">
+        <i class="fa fa-trophy me-1"></i> TOP 1
+    </span>';
+}
+elseif($valid_rank == 2){
+    $badge = '<span class="rank-badge badge-silver">
+        <i class="fa fa-trophy me-1"></i> TOP 2
+    </span>';
+}
+elseif($valid_rank == 3){
+    $badge = '<span class="rank-badge badge-bronze">
+        <i class="fa fa-trophy me-1"></i> TOP 3
+    </span>';
+}
 }
 ?>
 <tr>
@@ -353,10 +359,10 @@ $('#rankingTable').DataTable({
         exportOptions:{
             columns: ':not(:last-child)',
             format:{
-                body:function(data){
-                    return data.replace(/<.*?>/g,'');
-                }
-            }
+    body:function(data, row, column, node){
+        return $(node).text();
+    }
+}
         }
     }],
     pageLength:10
