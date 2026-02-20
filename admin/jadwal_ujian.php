@@ -134,11 +134,59 @@ box-shadow:0 4px 8px rgba(0,0,0,0.08);
 
 /* PRINT */
 @media print{
-.sidebar,.navbar,.footer,.btn-print,.form-filter{display:none !important;}
-.content{margin:0 !important;padding:0 !important;}
-.card{border:none !important;box-shadow:none !important;}
-.calendar th,.calendar td{background:#fff !important;color:#000 !important;border:1px solid #000 !important;}
-.event{background:#fff !important;color:#000 !important;border-left:4px solid #000 !important;box-shadow:none !important;}
+
+@page{
+    size:landscape;
+    margin:10mm;
+}
+
+.sidebar,.navbar,.footer,.btn-print,.form-filter{
+display:none !important;
+}
+
+.content{
+margin:0 !important;
+padding:0 !important;
+}
+
+.card{
+border:none !important;
+box-shadow:none !important;
+}
+
+/* HAPUS SCROLL WRAPPER */
+.calendar-wrapper{
+overflow:visible !important;
+}
+
+/* HAPUS MIN WIDTH DESKTOP */
+.calendar{
+min-width:100% !important;
+width:100% !important;
+table-layout:fixed !important;
+}
+
+/* KECILIN CELL */
+.calendar th,
+.calendar td{
+height:90px !important;
+font-size:11px !important;
+padding:3px !important;
+background:#fff !important;
+color:#000 !important;
+border:1px solid #000 !important;
+}
+
+/* EVENT */
+.event{
+font-size:10px !important;
+padding:2px !important;
+background:#fff !important;
+color:#000 !important;
+border-left:3px solid #000 !important;
+box-shadow:none !important;
+}
+
 }
 .dark-mode .calendar td{
 border:1px solid #334155;
