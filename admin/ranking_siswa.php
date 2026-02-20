@@ -225,20 +225,49 @@ $valid_rank = 0;   // ranking hanya untuk yang sudah ujian
 while($row = mysqli_fetch_assoc($query)):
 
     $row_number++; // selalu naik
+$badge = '-';
 
-    $badge = '-';
+if($row['jumlah_ujian'] > 0 && $row['rata_rata'] > 0){
+    $valid_rank++;
 
-    if($row['jumlah_ujian'] > 0 && $row['rata_rata'] > 0){
-        $valid_rank++;
-
-        if($valid_rank == 1){
-            $badge = '<span class="rank-badge badge-gold">🥇#1</span>';
-        }elseif($valid_rank == 2){
-            $badge = '<span class="rank-badge badge-silver">🥈#2</span>';
-        }elseif($valid_rank == 3){
-            $badge = '<span class="rank-badge badge-bronze">🥉#3</span>';
-        }
+    if($valid_rank == 1){
+        $badge = '<span style="
+            display:inline-block;
+            padding:3px 8px;
+            border-radius:6px;
+            font-size:12px;
+            font-weight:600;
+            background:#FFD70022 !important;
+            color:#FFD700 !important;
+        ">
+        <i class="fa fa-trophy" style="margin-right:4px;color:#FFD700 !important;"></i>TOP 1
+        </span>';
+    }elseif($valid_rank == 2){
+        $badge = '<span style="
+            display:inline-block;
+            padding:3px 8px;
+            border-radius:6px;
+            font-size:12px;
+            font-weight:600;
+            background:#C0C0C022 !important;
+            color:#C0C0C0 !important;
+        ">
+        <i class="fa fa-trophy" style="margin-right:4px;color:#C0C0C0 !important;"></i>TOP 2
+        </span>';
+    }elseif($valid_rank == 3){
+        $badge = '<span style="
+            display:inline-block;
+            padding:3px 8px;
+            border-radius:6px;
+            font-size:12px;
+            font-weight:600;
+            background:#CD7F3222 !important;
+            color:#CD7F32 !important;
+        ">
+        <i class="fa fa-trophy" style="margin-right:4px;color:#CD7F32 !important;"></i>TOP 3
+        </span>';
     }
+}
 ?>
 <tr>
 <td><strong><?= $row_number ?></strong></td>
