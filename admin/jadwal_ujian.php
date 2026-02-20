@@ -315,7 +315,7 @@ if (!function_exists('getEventColor')) {
             background: transparent !important;
             color: black !important;
             width: auto !important;
-            height: auto !important;
+            height: 20px !important;
             border-radius: 0 !important;
             display: block !important;
             text-align: left !important;
@@ -391,6 +391,17 @@ if (!function_exists('getEventColor')) {
     .dark-mode .events::-webkit-scrollbar-thumb {
         background: #475569;
     }
+    /* ===== FIX NOMOR TANGGAL GA GEPENG ===== */
+
+.calendar td .date {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    aspect-ratio: 1 / 1 !important;
+    flex-shrink: 0 !important;
+    line-height: 32px !important;
+}
     </style>
 </head>
 <body>
