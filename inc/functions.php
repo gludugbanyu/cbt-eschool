@@ -125,101 +125,101 @@ function bersihkan_html($html) {
     // buang <p> kosong, <p><br></p>, <p>&nbsp;</p>
     $html = preg_replace('#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $html);
 
-    // buang <br> sisa
-    $html = preg_replace('#<br\s*/?>#i', '', $html);
+// buang <br> sisa
+$html = preg_replace('#<br\s* /?>#i', '', $html);
 
     // rapikan spasi
     $html = trim($html);
 
     return $html;
-}
-function only_admin(){
-    if(($_SESSION['role'] ?? '') != 'admin'){
-        header("Location: dashboard.php?akses=1");
-        exit;
     }
-}
+    function only_admin(){
+    if(($_SESSION['role'] ?? '') != 'admin'){
+    header("Location: dashboard.php?akses=1");
+    exit;
+    }
+    }
 
-// Fungsi untuk mendapatkan informasi kredensial yang terenkripsi
-function get_encrypted_credit() {
+    // Fungsi untuk mendapatkan informasi kredensial yang terenkripsi
+    function get_encrypted_credit() {
     global $koneksi;
 
-    $query = "SELECT encrypt FROM profil WHERE id = 1";  // Ganti dengan ID yang sesuai
+    $query = "SELECT encrypt FROM profil WHERE id = 1"; // Ganti dengan ID yang sesuai
     $result = mysqli_query($koneksi, $query);
 
     if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        return $row['encrypt'];
+    $row = mysqli_fetch_assoc($result);
+    return $row['encrypt'];
     }
 
     return null;
-}
-// Fungsi untuk pemilik soal
-function only_pemilik_soal_by_id($id_soal){
+    }
+    // Fungsi untuk pemilik soal
+    function only_pemilik_soal_by_id($id_soal){
     global $koneksi;
 
     $role = $_SESSION['role'] ?? '';
     $id_admin = $_SESSION['admin_id'] ?? 0;
 
     if($role == 'admin'){
-        return;
+    return;
     }
 
     $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE id_soal='$id_soal'");
     $d = mysqli_fetch_assoc($q);
 
     if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
-        $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
-        header("Location: soal.php?akses=1");
-        exit;
+    $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
+    header("Location: soal.php?akses=1");
+    exit;
     }
-}
+    }
 
 
-function only_pemilik_soal_by_kode($kode_soal){
+    function only_pemilik_soal_by_kode($kode_soal){
     global $koneksi;
 
     $role = $_SESSION['role'] ?? '';
     $id_admin = $_SESSION['admin_id'] ?? 0;
 
     if($role == 'admin'){
-        return;
+    return;
     }
 
     $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE kode_soal='$kode_soal'");
     $d = mysqli_fetch_assoc($q);
 
     if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
-        $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
-        header("Location: soal.php?akses=1");
-        exit;
+    $_SESSION['warning_message'] = 'Anda tidak punya akses ke soal ini!';
+    header("Location: soal.php?akses=1");
+    exit;
     }
-}
-function only_preview_soal_by_kode($kode_soal){
+    }
+    function only_preview_soal_by_kode($kode_soal){
     global $koneksi;
 
     $role = $_SESSION['role'] ?? '';
     $id_admin = $_SESSION['admin_id'] ?? 0;
 
     if($role == 'admin'){
-        return;
+    return;
     }
 
     $q = mysqli_query($koneksi,"SELECT id_pembuat FROM soal WHERE kode_soal='$kode_soal'");
     $d = mysqli_fetch_assoc($q);
 
     if(!$d || !in_array($id_admin, explode(',', $d['id_pembuat']))){
-        $_SESSION['warning_message'] = 'Anda tidak punya akses!';
-        header("Location: hasil.php?akses=1");
-        exit;
+    $_SESSION['warning_message'] = 'Anda tidak punya akses!';
+    header("Location: hasil.php?akses=1");
+    exit;
     }
-}
+    }
 
-function base_url($path = '')
-{
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') 
-                ? "https://" 
-                : "http://";
+    function base_url($path = '')
+    {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    ? "https://"
+    : "http://";
 
     $host = $_SERVER['HTTP_HOST'];
 
@@ -227,12 +227,12 @@ function base_url($path = '')
     $folder = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'))[0];
 
     return $protocol . $host . '/' . $folder . '/' . ltrim($path, '/');
-}
-function project_url($path = '')
-{
+    }
+    function project_url($path = '')
+    {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-                ? "https://"
-                : "http://";
+    ? "https://"
+    : "http://";
 
     $host = $_SERVER['HTTP_HOST'];
 
@@ -246,15 +246,15 @@ function project_url($path = '')
 
     // Jika ada /admin, naik satu level
     if (substr($dir, -6) === '/admin') {
-        $dir = dirname($dir);
+    $dir = dirname($dir);
     }
 
     if ($dir === '/' || $dir === '\\') {
-        $dir = '';
+    $dir = '';
     }
 
     return rtrim($protocol . $host . $dir, '/') . '/' . ltrim($path, '/');
-}
-// Ambil teks terenkripsi
-$encryptedText = get_encrypted_credit();
-?>
+    }
+    // Ambil teks terenkripsi
+    $encryptedText = get_encrypted_credit();
+    ?>
