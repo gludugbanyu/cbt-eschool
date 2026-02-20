@@ -95,15 +95,22 @@ QRcode::png($verifyURL,$qrFile,QR_ECLEVEL_H,5);
    MEDAL ICON
 ============================= */
 $medal = "";
-if($rank == 1) $medal = "ðŸ¥‡";
-elseif($rank == 2) $medal = "ðŸ¥ˆ";
-elseif($rank == 3) $medal = "ðŸ¥‰";
+
+if($rank == 1){
+    $medal = '<i class="fa fa-trophy" style="color:#FFD700;text-shadow:0 0 5px #FFD700;"></i>';
+}elseif($rank == 2){
+    $medal = '<i class="fa fa-trophy" style="color:#C0C0C0;text-shadow:0 0 3px #C0C0C0;"></i>';
+}elseif($rank == 3){
+    $medal = '<i class="fa fa-trophy" style="color:#CD7F32;text-shadow:0 0 3px #CD7F32;"></i>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
     <title>Sertifikat - <?= htmlspecialchars($data['nama_siswa']) ?></title>
+    <link rel="icon" type="image/png" href="../assets/images/icon.png" />
+    <link href="../assets/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
