@@ -87,8 +87,17 @@ if (!$result) {
                                     <h5 class="card-title mb-0">Daftar Soal</h5>
                                 </div>
                                 <div class="card-body table-wrapper">
-                                    <a href="tambah_soal.php" class="btn btn-primary mb-3"><i class="fas fa-plus"></i>
-                                        Tambah Soal Baru</a>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+
+                                        <a href="tambah_soal.php" class="btn btn-primary">
+                                            <i class="fas fa-plus"></i> Tambah Soal Baru
+                                        </a>
+
+                                        <a href="jadwal_ujian.php" class="btn btn-outline-secondary">
+                                            <i class="fas fa-calendar-check"></i> Jadwal Ujian
+                                        </a>
+
+                                    </div>
                                     <table id="soalTable" class="table table-hover">
                                         <thead>
                                             <tr>

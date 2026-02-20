@@ -13,7 +13,6 @@ $role = $_SESSION['role'] ?? 'editor';
         </a>
 
         <ul class="sidebar-nav">
-            <li class="sidebar-header">Menu Utama</li>
 
             <li class="sidebar-item <?= ($currentPage == 'dashboard.php') ? 'active' : '' ?>">
                 <a class="sidebar-link" href="dashboard.php">
@@ -26,7 +25,7 @@ $role = $_SESSION['role'] ?? 'editor';
         <?= ($currentPage == 'tambah_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'preview_soal.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'daftar_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'upload-gambar.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'kartu_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'daftar_hadir.php') ? 'active' : '' ?>
-        <?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?>">
+        <?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?> <?= ($currentPage == 'jadwal_ujian.php') ? 'active' : '' ?>">
                 <a data-bs-toggle="collapse" href="#soal" class="sidebar-link collapsed">
                     <i class="align-middle fa fa-file"></i> <span class="align-middle">Manajemen Ujian </span><i
                         class="fa fa-chevron-down ms-auto float-end"></i>
