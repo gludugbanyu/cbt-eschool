@@ -341,17 +341,19 @@ if (
 
                                         <!-- Chart Statistik -->
                                         <div class="col-lg-4 md-4">
-                                            <div class="card mb-3 chart-card">
+                                            <div class="card mb-3 chart-card doughnut-card">
                                                 <div class="card-header">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                    <h5 class="card-title mb-0">10 Siswa Nilai Tertinggi</h5>
-                                                    <a href="ranking_siswa.php" class="btn btn-sm btn-primary">
-                                                        Semua Hasil
-                                                    </a>
-                                                </div>
+                                                        <h5 class="card-title mb-0">10 Siswa Nilai Tertinggi</h5>
+                                                        <a href="ranking_siswa.php" class="btn btn-sm btn-primary">
+                                                            Semua Hasil
+                                                        </a>
+                                                    </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartTopSiswa"></canvas>
+                                                    <div class="chart-wrapper">
+                                                        <canvas id="chartTopSiswa"></canvas>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -361,7 +363,9 @@ if (
                                                     <h5 class="card-title mb-0">Rekap Peserta Ujian</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartRekapUjian"></canvas>
+                                                    <div class="chart-wrapper">
+                                                        <canvas id="chartRekapUjian"></canvas>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -372,7 +376,9 @@ if (
                                                     <h5 class="card-title mb-0">Statistik Nilai</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <canvas id="chartKodeSoal"></canvas>
+                                                    <div class="chart-wrapper">
+                                                        <canvas id="chartKodeSoal"></canvas>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -477,7 +483,6 @@ if (
         }
     });
 
-    // Grafik 10 Siswa dengan Rata-rata Nilai Tertinggi
     // Grafik 10 Siswa dengan Rata-rata Nilai Tertinggi (Doughnut Chart)
     const ctxTop = document.getElementById('chartTopSiswa').getContext('2d');
     const chartTopSiswa = new Chart(ctxTop, {
@@ -497,6 +502,9 @@ if (
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+
             plugins: {
                 tooltip: {
                     callbacks: {
@@ -510,13 +518,22 @@ if (
                     }
                 },
                 legend: {
-                    position: 'bottom'
+                    position: 'right',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 10
+                    }
                 },
                 title: {
                     display: true,
                     text: 'Top 10 Siswa (Rata-rata Nilai)'
                 }
             },
+
+            layout: {
+                padding: 10
+            },
+
             animation: {
                 animateRotate: true,
                 duration: 1500

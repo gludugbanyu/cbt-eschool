@@ -1714,4 +1714,21 @@ main.content,
 .dark-mode .buttons-excel span{
     color:white !important;
 }
+/* khusus doughnut jangan flex */
+.doughnut-card .card-body {
+    display: block !important;
+    position: relative;
+}
+
+/* tinggi terkontrol */
+.doughnut-card .chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 340px;
+}
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 340px;
+}
 </style>
