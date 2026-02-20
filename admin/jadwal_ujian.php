@@ -58,11 +58,9 @@ if (!function_exists('getEventColor')) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Ujian</title>
     <?php include '../inc/css.php'; ?>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
     <style>
     /* === VARIABEL === */
     :root {
-        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
         --border-light: #e2e8f0;
         --border-dark: #334155;
         --bg-cell-light: #ffffff;
@@ -90,7 +88,6 @@ if (!function_exists('getEventColor')) {
         width: 100%;
         border-collapse: collapse;
         min-width: 1000px;
-        font-family: var(--font-sans);
     }
 
     .calendar th {
@@ -182,7 +179,6 @@ if (!function_exists('getEventColor')) {
         transition: all 0.2s ease;
         cursor: pointer;
         border-left: 4px solid transparent;
-        font-family: var(--font-sans);
         background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
         background-blend-mode: overlay;
     }
