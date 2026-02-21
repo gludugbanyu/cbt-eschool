@@ -62,7 +62,7 @@ function copyRecursive($source, $dest, $root_path) {
 
             $rel = str_replace($root_path . DIRECTORY_SEPARATOR, '', $destPath);
 
-            // 🔒 SKIP folder koneksi/
+            // ðŸ”’ SKIP folder koneksi/
             if (preg_match('#^koneksi(/|\\\\)#', $rel)) {
                 continue;
             }
@@ -157,7 +157,7 @@ if ($zip->open($tmp_zip) === TRUE) {
         $realTargetDir = realpath($targetDir);
 
         if ($realTargetDir === false || strpos($realTargetDir, $realBase) !== 0) {
-            continue;
+            continue; 
         }
 
         if (substr($entry, -1) === '/') {
@@ -189,7 +189,7 @@ if ($zip->open($tmp_zip) === TRUE) {
 
         file_put_contents(
             __DIR__ . '/update_log.txt',
-            "[" . date('Y-m-d H:i:s') . "] Update berhasil → versi baru: $versi_baru_safe\n",
+            "[" . date('Y-m-d H:i:s') . "] Update berhasil â†’ versi baru: $versi_baru_safe\n",
             FILE_APPEND
         );
 

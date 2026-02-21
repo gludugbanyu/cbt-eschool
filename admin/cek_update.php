@@ -7,7 +7,7 @@ include '../inc/dataadmin.php';
 
 header('Content-Type: application/json');
 
-// Ambil versi aplikasi dari database
+// Ambil versi aplikasi dari database 
 $q = mysqli_query($koneksi, "SELECT versi_aplikasi FROM pengaturan WHERE id = 1");
 $dataDb = mysqli_fetch_assoc($q);
 $versi_saat_ini = $dataDb['versi_aplikasi'] ?? '0.0.0';
