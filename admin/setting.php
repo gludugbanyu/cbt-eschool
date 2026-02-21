@@ -330,7 +330,6 @@ include '../inc/dataadmin.php';
                                                 versi_baru: data
                                                     .versi_baru,
                                                 url: data.download_url,
-                                                hash: data.hash,
                                                 csrf_token: "<?= $_SESSION['csrf_update']; ?>"
                                             })
                                         })
