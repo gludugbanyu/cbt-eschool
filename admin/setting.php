@@ -406,7 +406,7 @@ include '../inc/dataadmin.php';
                 b.classList.remove('border-3', 'border-dark');
                 b.classList.add('border');
             });
-            // Tandai yang terpilih
+            // Tandai yang terpilih 
             this.classList.remove('border');
             this.classList.add('border-3', 'border-dark');
 
