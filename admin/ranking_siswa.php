@@ -323,7 +323,7 @@ while($t=mysqli_fetch_assoc($qTop)){
                                         <td><strong><?= $row['rata_rata'] ?? 0 ?></strong></td>
                                         <td>
                                             <?php if($valid_rank > 0 && $valid_rank <= 3 && $row['rata_rata'] > 0): ?>
-                                            <a href="sertifikat.php?id=<?= $row['id_siswa'] ?>&rank=<?= $valid_rank ?>&kelas=<?= $row['kelas'] ?>"
+                                            <a href="sertifikat.php?id=<?= $row['id_siswa'] ?>&rank=<?= $valid_rank ?>&kelas=<?= $angkatan_filter ?: 'all' ?>"
                                                 target="_blank" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-file-pdf"></i> Sertifikat
                                             </a>
