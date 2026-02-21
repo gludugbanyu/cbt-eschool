@@ -7,7 +7,6 @@ include '../inc/dataadmin.php';
 
 // Cek login
 check_login('admin');
-only_admin();
 
 // Cek koneksi
 if (!$koneksi) {

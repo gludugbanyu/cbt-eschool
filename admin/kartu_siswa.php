@@ -128,7 +128,7 @@ if (!$koneksi) {
                                                 <table style="width: 100%;">
                                                     <tr>
                                                         <td style="width: 20%;">
-                                                        <center><img src="<?= base_url('assets/images/kemdikbud.png'); ?>" style="height:35px;"></center>
+                                                        <center><img src="<?= project_url('assets/images/kemdikbud.png'); ?>" style="height:35px;"></center>
                                                         </td>
                                                         <td style="width: 80%; text-align: right; font-size: 12px;">
                                                             <center><strong>KARTU PESERTA UJIAN CBT</strong><br>

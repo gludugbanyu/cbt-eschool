@@ -73,7 +73,7 @@ $result = mysqli_query($koneksi, $sql);
         QRcode::png($row['username'], $qr_path, QR_ECLEVEL_L, 3);
     }
 
-    $qr_url = base_url('assets/temp_qr/' . $qr_file);
+    $qr_url = project_url('assets/temp_qr/' . $qr_file);
 ?>
 
 <div class="col-lg-4 col-md-6 mb-4">
@@ -84,7 +84,7 @@ $result = mysqli_query($koneksi, $sql);
             <tr>
                 <td style="width:20%;">
                     <center>
-                        <img src="<?= base_url('assets/images/kemdikbud.png'); ?>" style="height:35px;">
+                        <img src="<?= project_url('assets/images/kemdikbud.png'); ?>" style="height:35px;">
                     </center>
                 </td>
                 <td style="width:80%; font-size:12px;">
