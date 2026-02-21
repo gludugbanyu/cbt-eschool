@@ -13,8 +13,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+
+if (
+    empty($data['csrf_token']) ||
+    !hash_equals($_SESSION['csrf_update'], $data['csrf_token'])
+) {
+    echo json_encode([
+        'success'=>false,
+        'message'=>'CSRF token tidak valid'
+    ]);
+    exit;
+}
+
 $versi_baru = $data['versi_baru'] ?? '';
-$url = $data['url'] ?? '';
+$url        = $data['url'] ?? '';
+$hash       = $data['hash'] ?? '';
+
+if (!$hash) {
+    echo json_encode([
+        'success'=>false,
+        'message'=>'Hash tidak ada'
+    ]);
+    exit;
+}
 
 if (!$versi_baru || !$url) {
     echo json_encode(['success' => false, 'message' => 'Data tidak lengkap']);
@@ -34,11 +55,23 @@ function copyRecursive($source, $dest, $root_path) {
             $srcPath  = $source . DIRECTORY_SEPARATOR . $file;
             $destPath = $dest   . DIRECTORY_SEPARATOR . $file;
 
-            // 🔒 SKIP folder koneksi/
-            $relativeDest = str_replace($root_path . DIRECTORY_SEPARATOR, '', $destPath);
-            if (strpos($relativeDest, 'koneksi' . DIRECTORY_SEPARATOR) === 0) {
-                continue;
-            }
+$targetDir = dirname($destPath);
+
+if (!is_dir($targetDir)) {
+    mkdir($targetDir, 0755, true);
+}
+
+$realDest = realpath($targetDir);
+
+if ($realDest === false || strpos($realDest, $root_path) !== 0) {
+    continue;
+}
+
+$rel = str_replace($root_path . DIRECTORY_SEPARATOR, '', $destPath);
+
+if (preg_match('#^koneksi(/|\\\\)#', $rel)) {
+    continue;
+}
 
             copyRecursive($srcPath, $destPath, $root_path);
         }
@@ -70,7 +103,16 @@ $root_path = realpath(__DIR__ . '/../'); // Path root aplikasi
 
 // Download update
 file_put_contents($tmp_zip, file_get_contents($url));
+$local_hash = hash_file('sha256', $tmp_zip);
 
+if ($local_hash !== $hash) {
+    unlink($tmp_zip);
+    echo json_encode([
+        'success'=>false,
+        'message'=>'Update dibatalkan! File tidak valid.'
+    ]);
+    exit;
+}
 // Ekstrak file ZIP
 $zip = new ZipArchive();
 if ($zip->open($tmp_zip) === TRUE) {
@@ -78,9 +120,45 @@ if ($zip->open($tmp_zip) === TRUE) {
         mkdir($folder_extract, 0755, true);
     }
 
-    $zip->extractTo($folder_extract);
-    $zip->close();
-    unlink($tmp_zip);
+    for ($i = 0; $i < $zip->numFiles; $i++) {
+
+    $entry = $zip->getNameIndex($i);
+
+    // ❌ Tolak path traversal
+    if (strpos($entry, '..') !== false) continue;
+    if (substr($entry, 0, 1) === '/') continue;
+    if (substr($entry, 0, 1) === '\\') continue;
+    if (substr($entry, 0, 1) === '.') continue;
+
+    $targetPath = $folder_extract . $entry;
+    $targetDir  = dirname($targetPath);
+
+    // ❌ Pastikan tetap di dalam folder_extract
+    $realBase = realpath($folder_extract);
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
+
+    $realTargetDir = realpath($targetDir);
+    if ($realTargetDir === false || strpos($realTargetDir, $realBase) !== 0) {
+        continue;
+    }
+
+    // ❌ Block file berbahaya
+    $ext = strtolower(pathinfo($entry, PATHINFO_EXTENSION));
+    $blocked = ['exe','sh','bat','cmd','msi'];
+
+    if (in_array($ext, $blocked)) continue;
+
+    if (substr($entry, -1) === '/') {
+        @mkdir($targetPath, 0755, true);
+    } else {
+        copy("zip://".$tmp_zip."#".$entry, $targetPath);
+    }
+}
+
+$zip->close();
+unlink($tmp_zip);
 
     $folders = array_diff(scandir($folder_extract), ['.', '..']);
     $source_folder = null;

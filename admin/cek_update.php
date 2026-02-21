@@ -33,15 +33,19 @@ $versi_tag = $data['tag_name'] ?? '';
 $versi_baru = ltrim($versi_tag, 'v');
 $changelog = $data['body'] ?? '';
 $download_url = "https://github.com/gludugbanyu/cbt-eschool/archive/refs/tags/{$versi_tag}.zip";
-
+$tmp = sys_get_temp_dir() . '/cbt_update.zip';
+file_put_contents($tmp, file_get_contents($download_url));
+$hash = hash_file('sha256', $tmp);
+unlink($tmp);
 if (version_compare($versi_baru, $versi_saat_ini, '>')) {
     echo json_encode([
-        'status' => 'update',
-        'versi_saat_ini' => $versi_saat_ini,
-        'versi_baru' => $versi_baru,
-        'changelog' => nl2br($changelog),
-        'download_url' => $download_url
-    ]);
+    'status' => 'update',
+    'versi_saat_ini' => $versi_saat_ini,
+    'versi_baru' => $versi_baru,
+    'changelog' => nl2br($changelog),
+    'download_url' => $download_url,
+    'hash' => $hash
+]);
 } else {
     echo json_encode([
         'status' => 'uptodate',

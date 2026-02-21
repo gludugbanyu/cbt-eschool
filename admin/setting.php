@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (empty($_SESSION['csrf_update'])) {
+    $_SESSION['csrf_update'] = bin2hex(random_bytes(32));
+}
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
@@ -110,14 +113,15 @@ include '../inc/dataadmin.php';
 
                                             <!-- Waktu Sinkronisasi -->
                                             <div class="col-12 col-md-6">
-                                                <label for="waktu_sinkronisasi" class="form-label">Waktu Sinkronisasi Ujian
+                                                <label for="waktu_sinkronisasi" class="form-label">Waktu Sinkronisasi
+                                                    Ujian
                                                     (detik)</label>
                                                 <input type="number" class="form-control" name="waktu_sinkronisasi"
                                                     id="waktu_sinkronisasi"
                                                     value="<?= $data['waktu_sinkronisasi'] ?? 60 ?>" min="10" required>
                                             </div>
 
-                                            
+
 
                                             <!-- Status Login Ganda -->
                                             <div class="col-12 col-md-6">
@@ -134,31 +138,34 @@ include '../inc/dataadmin.php';
                                             </div>
 
                                             <div class="col-12 col-md-6">
-    <label class="form-label">Izinkan Siswa Melanjutkan Ujian Tanpa Reset</label>
-    <select class="form-select" name="izinkan_lanjut_ujian" required>
-        <option value="tidak" <?= $data['izinkan_lanjut_ujian'] === 'tidak' ? 'selected' : '' ?>>
-            Tidak (Harus Reset Admin)
-        </option>
-        <option value="ya" <?= $data['izinkan_lanjut_ujian'] === 'ya' ? 'selected' : '' ?>>
-            Ya (Boleh Masuk Lagi Tanpa Reset)
-        </option>
-    </select>
-</div>
+                                                <label class="form-label">Izinkan Siswa Melanjutkan Ujian Tanpa
+                                                    Reset</label>
+                                                <select class="form-select" name="izinkan_lanjut_ujian" required>
+                                                    <option value="tidak"
+                                                        <?= $data['izinkan_lanjut_ujian'] === 'tidak' ? 'selected' : '' ?>>
+                                                        Tidak (Harus Reset Admin)
+                                                    </option>
+                                                    <option value="ya"
+                                                        <?= $data['izinkan_lanjut_ujian'] === 'ya' ? 'selected' : '' ?>>
+                                                        Ya (Boleh Masuk Lagi Tanpa Reset)
+                                                    </option>
+                                                </select>
+                                            </div>
 
-                     
 
-                                        <div class="col-12 col-md-6">
-                                            <label for="chat" class="form-label">Fitur ChatBox Siswa</label>
-                                            <select class="form-select" name="chat" id="chat" required>
-                                                <option value="izinkan"
-                                                    <?= $data['chat'] === 'izinkan' ? 'selected' : '' ?>>
-                                                    Izinkan</option>
-                                                <option value="blokir"
-                                                    <?= $data['chat'] === 'blokir' ? 'selected' : '' ?>>
-                                                    Blokir</option>
-                                            </select>
-                                        </div>
-                                        <!-- Sembunyikan Nilai -->
+
+                                            <div class="col-12 col-md-6">
+                                                <label for="chat" class="form-label">Fitur ChatBox Siswa</label>
+                                                <select class="form-select" name="chat" id="chat" required>
+                                                    <option value="izinkan"
+                                                        <?= $data['chat'] === 'izinkan' ? 'selected' : '' ?>>
+                                                        Izinkan</option>
+                                                    <option value="blokir"
+                                                        <?= $data['chat'] === 'blokir' ? 'selected' : '' ?>>
+                                                        Blokir</option>
+                                                </select>
+                                            </div>
+                                            <!-- Sembunyikan Nilai -->
                                             <div class="col-12 col-md-6 d-flex align-items-center">
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input"
@@ -168,45 +175,45 @@ include '../inc/dataadmin.php';
                                                         Nilai Siswa (Dashboard Siswa)</label>
                                                 </div>
                                             </div>
-                                </div>
+                                        </div>
 
-                                <div class="d-flex justify-content-start gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Simpan Pengaturan
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" id="btnCekUpdate">
-                                        <i class="fas fa-sync-alt"></i> Cek Update
-                                    </button>
-                                     <!-- Tambahkan setelah tombol Cek Update -->
-                                    <button type="button" class="btn btn-outline-info" id="btnLihatLog">
-                                        <i class="fas fa-clipboard-list"></i> Lihat Log Update
-                                    </button>
+                                        <div class="d-flex justify-content-start gap-2 mt-4">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Simpan Pengaturan
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary" id="btnCekUpdate">
+                                                <i class="fas fa-sync-alt"></i> Cek Update
+                                            </button>
+                                            <!-- Tambahkan setelah tombol Cek Update -->
+                                            <button type="button" class="btn btn-outline-info" id="btnLihatLog">
+                                                <i class="fas fa-clipboard-list"></i> Lihat Log Update
+                                            </button>
+                                        </div>
+                                        <div id="hasilUpdate" class="form-text text-muted mt-2"></div>
+                                    </form>
                                 </div>
-                                <div id="hasilUpdate" class="form-text text-muted mt-2"></div>
-                                </form>
                             </div>
                         </div>
                     </div>
+
                 </div>
+            </main>
+            <!-- Modal untuk log update -->
+            <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title" id="logModalLabel" style="color:white;">Riwayat Update</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="font-family: monospace; white-space: pre-wrap;">
+                            Memuat log...
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
-        </main>
-<!-- Modal untuk log update -->
-<div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="logModalLabel" style="color:white;">Riwayat Update</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" style="font-family: monospace; white-space: pre-wrap;">
-        Memuat log...
-      </div>
-    </div>
-  </div>
-</div>
-
-    </div>
     </div>
     <?php include '../inc/js.php'; ?>
     <script>
@@ -322,7 +329,9 @@ include '../inc/dataadmin.php';
                                             body: JSON.stringify({
                                                 versi_baru: data
                                                     .versi_baru,
-                                                url: data.download_url
+                                                url: data.download_url,
+                                                hash: data.hash,
+                                                csrf_token: "<?= $_SESSION['csrf_update']; ?>"
                                             })
                                         })
                                         .then(res => res.json())
@@ -420,22 +429,22 @@ include '../inc/dataadmin.php';
             b.classList.add('border');
         });
     });
-    
-    document.getElementById('btnLihatLog').addEventListener('click', function() {
-    fetch('lihat_update_log.php')
-        .then(res => res.text())
-        .then(data => {
-            document.querySelector('#logModal .modal-body').textContent = data || 'Belum ada log update.';
-            var modal = new bootstrap.Modal(document.getElementById('logModal'));
-            modal.show();
-        })
-        .catch(() => {
-            document.querySelector('#logModal .modal-body').textContent = 'Gagal memuat log.';
-            var modal = new bootstrap.Modal(document.getElementById('logModal'));
-            modal.show();
-        });
-});
 
+    document.getElementById('btnLihatLog').addEventListener('click', function() {
+        fetch('lihat_update_log.php')
+            .then(res => res.text())
+            .then(data => {
+                document.querySelector('#logModal .modal-body').textContent = data ||
+                    'Belum ada log update.';
+                var modal = new bootstrap.Modal(document.getElementById('logModal'));
+                modal.show();
+            })
+            .catch(() => {
+                document.querySelector('#logModal .modal-body').textContent = 'Gagal memuat log.';
+                var modal = new bootstrap.Modal(document.getElementById('logModal'));
+                modal.show();
+            });
+    });
     </script>
 </body>
 
