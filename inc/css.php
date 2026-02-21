@@ -1731,4 +1731,53 @@ main.content,
     width: 100%;
     height: 340px;
 }
+/* =======================================================
+   DATATABLES PAGINATION – LIGHT MODE (COMPACT & CLEAN)
+======================================================= */
+
+.pagination {
+
+    --bs-pagination-padding-x: 10px;
+    --bs-pagination-padding-y: 3px;
+    --bs-pagination-font-size: 13px;
+
+    --bs-pagination-bg: #ffffff;
+    --bs-pagination-color: #495057;
+    --bs-pagination-border-color: #dee2e6;
+
+    --bs-pagination-hover-bg: #f8f9fa;
+    --bs-pagination-hover-color: #212529;
+    --bs-pagination-hover-border-color: #ced4da;
+
+    --bs-pagination-active-bg: #0d6efd;
+    --bs-pagination-active-color: #ffffff;
+    --bs-pagination-active-border-color: #0d6efd;
+
+    --bs-pagination-disabled-bg: #ffffff;
+    --bs-pagination-disabled-color: #adb5bd;
+    --bs-pagination-disabled-border-color: #dee2e6;
+}
+
+/* kecilin tombol */
+.pagination .page-link{
+    margin:0 1px;
+    min-width:28px;
+    height:28px;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.12s ease;
+}
+
+/* hover subtle aja */
+.pagination .page-link:hover{
+    transform:none;
+    background:#f1f3f5;
+}
+
+/* active jangan glow lebay */
+.pagination .page-item.active .page-link{
+    box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
 </style>

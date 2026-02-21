@@ -51,23 +51,46 @@ include '../inc/dataadmin.php';
                                     <h5 class="card-title mb-0">Daftar Siswa</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                        <div class="btn-group" role="group" aria-label="Button group">
+
+                                    <div class="d-flex justify-content align-items-center mb-3 flex-wrap gap-2">
+
+                                        <div style="width:180px;">
+                                            <select id="filterKelas" class="form-select">
+                                                <option value="">Semua Kelas</option>
+                                                <?php
+            $kelas = mysqli_query($koneksi,"
+                SELECT DISTINCT CONCAT(kelas,rombel) as kls 
+                FROM siswa 
+                ORDER BY kelas,rombel
+            ");
+            while($k = mysqli_fetch_assoc($kelas)){
+                echo '<option value="'.$k['kls'].'">'.$k['kls'].'</option>';
+            }
+            ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="btn-group">
                                             <a href="tambah_siswa.php" class="btn btn-primary">
                                                 <i class="fas fa-plus"></i> Tambah Siswa
                                             </a>
+
                                             <button id="deleteSelected" class="btn btn-danger" disabled>
                                                 <i class="fa fa-trash"></i> Hapus Terpilih
                                                 <span id="selectedCount" class="badge bg-light text-dark ms-2">0</span>
                                             </button>
+
                                             <a href="import_siswa.php" class="btn btn-outline-secondary">
                                                 <i class="fas fa-file-import"></i> Import Siswa
                                             </a>
+
                                             <button id="exportExcel" class="btn btn-outline-secondary">
                                                 <i class="fas fa-file-excel"></i> Export Excel
                                             </button>
                                         </div>
+
                                     </div>
+
                                     <div class=" table-wrapper">
                                         <table id="siswaTable" class="table table-striped nowrap">
                                             <thead>
@@ -102,7 +125,7 @@ include '../inc/dataadmin.php';
                                 <input type='checkbox' class='row-check' value='{$data['id_siswa']}'>
                               </td>";
                         echo "<td style='display:none;'>{$data['id_siswa']}</td>";
-                        echo "<td>{$no}</td>";
+                        echo "<td class='row-number'></td>";
                         echo "<td>{$data['nama_siswa']}</td>";
                         echo "<td>{$data['kelas']}{$data['rombel']}</td>";
                         echo "<td>{$data['username']}</td>";
@@ -155,6 +178,7 @@ include '../inc/dataadmin.php';
     <script src="../assets/datatables/buttons.html5.min.js"></script>
     <script>
     const table = $('#siswaTable').DataTable({
+      
         dom:
             // Baris 1: Export buttons + Search box
             '<"row mb-3"' +
@@ -201,7 +225,28 @@ include '../inc/dataadmin.php';
             }
         }]
     });
+
+    table.on('draw.dt', function () {
+
+    let PageInfo = table.page.info();
+
+    table.column(2, { page: 'current' }).nodes().each(function (cell, i) {
+        cell.innerHTML = i + 1 + PageInfo.start;
+    });
+
+}).draw();
+    
     let selectedIds = new Set();
+    $('#filterKelas').on('change', function() {
+
+        let val = $(this).val();
+
+        table
+            .column(4) // kolom kelas
+            .search(val)
+            .draw();
+
+    });
     // Trigger export dari tombol luar
     $('#exportExcel').on('click', function() {
         table.button('.buttons-excel').trigger();
@@ -211,25 +256,47 @@ include '../inc/dataadmin.php';
     $(document).on('submit', '.delete-form', function(e) {
 
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         let form = this;
+        let id = $(this).find('input[name="id"]').val();
 
-        Swal.fire({
-            title: 'Yakin ingin menghapus?',
-            text: "Data siswa yang dihapus tidak bisa dikembalikan!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+        $(form).find('button').prop('disabled', true);
 
-            if (result.isConfirmed) {
-                form.submit();
+        $.post('cek_relasi_satu.php', {
+            id: id
+        }, function(res) {
+
+            let nama = res.nama;
+            let status = res.status;
+
+            let warningText = 'Siswa "' + nama + '" akan dihapus!';
+
+            if (status === 'ada') {
+                warningText =
+                    nama + ' memiliki data ujian.\nNilainya akan ikut terhapus!';
             }
 
-        });
+            Swal.fire({
+                title: 'Yakin ingin menghapus?',
+                text: warningText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    form.submit();
+                } else {
+                    $(form).find('button').prop('disabled', false);
+                }
+
+            });
+
+        }, 'json');
 
     });
 
@@ -330,66 +397,88 @@ include '../inc/dataadmin.php';
             return;
         }
 
-        Swal.fire({
-            title: 'Hapus siswa?',
-            text: ids.length + " siswa akan dihapus!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33'
-        }).then((result) => {
+        // 🔥 CEK RELASI DULU
+        $.post('cek_relasi_siswa.php', {
+            ids: ids
+        }, function(relasiCount) {
 
-            if (result.isConfirmed) {
+            relasiCount = parseInt(relasiCount);
 
-                let total = ids.length;
-                let done = 0;
+            let warningText = ids.length + " siswa akan dihapus!";
 
-                let modal = new bootstrap.Modal(document.getElementById('progressModal'));
-                modal.show();
+            if (relasiCount > 0) {
 
-                function deleteNext() {
+                warningText =
+                    relasiCount + " dari " + ids.length +
+                    " siswa memiliki data ujian.\nNilainya akan ikut terhapus!";
 
-                    if (ids.length === 0) {
+            } else {
 
-                        modal.hide();
+                warningText =
+                    ids.length + " siswa akan dihapus!";
+            }
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'siswa berhasil dihapus',
-                            confirmButtonColor: '#28a745'
-                        }).then(() => {
-                            location.reload();
+            Swal.fire({
+                title: 'Hapus siswa?',
+                text: warningText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    let total = ids.length;
+                    let done = 0;
+
+                    let modal = new bootstrap.Modal(document.getElementById('progressModal'));
+                    modal.show();
+
+                    function deleteNext() {
+
+                        if (ids.length === 0) {
+
+                            modal.hide();
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'siswa berhasil dihapus'
+                            }).then(() => {
+                                location.reload();
+                            });
+
+                            return;
+                        }
+
+                        let id = ids.shift();
+
+                        $.post('hapus_siswa_multi.php', {
+                            id: id
+                        }, function() {
+
+                            done++;
+
+                            let percent = Math.round((done / total) * 100);
+
+                            $('#deleteProgressBar')
+                                .css('width', percent + '%')
+                                .text(percent + '%');
+
+                            $('#progressText')
+                                .text(done + ' dari ' + total + ' siswa dihapus');
+
+                            deleteNext();
+
                         });
 
-                        return;
                     }
 
-                    let id = ids.shift();
-
-                    $.post('hapus_siswa_multi.php', {
-                        id: id
-                    }, function() {
-
-                        done++;
-
-                        let percent = Math.round((done / total) * 100);
-
-                        $('#deleteProgressBar')
-                            .css('width', percent + '%')
-                            .text(percent + '%');
-
-                        $('#progressText')
-                            .text(done + ' dari ' + total + ' siswa dihapus');
-
-                        deleteNext();
-
-                    });
+                    deleteNext();
 
                 }
 
-                deleteNext();
-
-            }
+            });
 
         });
 
