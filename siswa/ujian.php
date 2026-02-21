@@ -21,32 +21,210 @@ $basePath = rtrim(dirname($scriptPath, 1), '/');
     <title>Ujian Siswa</title>
     <?php include '../inc/css.php'; ?>
     <style>
-    .ujian-card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border-radius: 16px;
-        background: linear-gradient(to bottom right, #f9f9f9, #ffffff);
-        border: 1px solid #999999 !important;
-        /* border tipis abu-abu terang */
-    }
-
-    .ujian-card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        background: linear-gradient(to bottom right, #e9f5ff, #fdfdfd);
-    }
-
-    .icon-wrapper {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #e0f0ff;
+    /* FLEX */
+    .ujian-flex {
         display: flex;
-        justify-content: center;
+        gap: 16px;
         align-items: center;
     }
 
-    #last-updated {
-        color: white !important;
+    /* QR */
+    .icon-wrapper {
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0;
+    }
+
+    /* RIGHT */
+    .ujian-right {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* HEADER */
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* KODE */
+    .kode {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* INFO */
+    .info {
+        font-size: 13px;
+        opacity: .8;
+    }
+
+    /* META */
+    .meta {
+        font-size: 12px;
+        opacity: .6;
+    }
+
+    /* STATUS CLEAN */
+    .status {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    /* LOCKED */
+    .status.text-danger {
+        color: #d32f2f !important;
+    }
+
+    /* READY */
+    .status.text-success {
+        color: #2e7d32 !important;
+    }
+
+    /* BUTTON */
+    .btn-masuk {
+        margin-top: 8px;
+        align-self: flex-end;
+        font-size: 12px;
+        padding: 4px 14px;
+        border-radius: 8px;
+    }
+
+    /* READY CARD */
+    .ujian-card:has(.text-success) {
+        border-left: 4px solid #2e7d32 !important;
+    }
+
+    /* LOCKED */
+    .ujian-card:has(.text-danger) {
+        border-left: 4px solid #d32f2f !important;
+    }
+
+    /* FLEX */
+    .ujian-flex {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+    }
+
+    /* LEFT SIDE */
+    .ujian-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90px;
+    }
+
+    /* QR BESAR */
+    .icon-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* STATUS DI BAWAH QR */
+    .status {
+        font-size: 10px;
+        margin-top: 4px;
+        text-align: center;
+        line-height: 1;
+    }
+
+    /* RIGHT */
+    .ujian-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* KODE */
+    .kode {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    /* MAPEL */
+    .info {
+        font-size: 13px;
+        opacity: .8;
+    }
+
+    /* META */
+    .meta {
+        font-size: 12px;
+        opacity: .6;
+        margin-bottom: 4px;
+    }
+
+    /* BUTTON */
+    .btn-masuk {
+        align-self: flex-start;
+        font-size: 12px;
+        padding: 4px 14px;
+        border-radius: 8px;
+    }
+
+    /* READY */
+    .countdown.text-success {
+        color: #2e7d32 !important;
+    }
+
+    /* LOCKED */
+    .countdown.text-danger {
+        color: #d32f2f !important;
+    }
+
+    .ujian-card {
+        position: relative;
+        border-radius: 14px !important;
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.04) !important;
+
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.04),
+            0 2px 6px rgba(0, 0, 0, 0.06);
+
+        transition: .2s ease;
+        overflow: hidden;
+    }
+
+    /* INNER BORDER (CRISP EDGE) */
+    .ujian-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        pointer-events: none;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+    }
+
+    .dark-mode .ujian-card {
+        background: #1e1e1e !important;
+        border: 1px solid rgba(255, 255, 255, 0.04) !important;
+
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.6),
+            0 3px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .dark-mode .ujian-card::after {
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .ujian-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 4px 10px rgba(0, 0, 0, 0.08),
+            0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .dark-mode .ujian-card:hover {
+        box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.7),
+            0 2px 6px rgba(0, 0, 0, 0.5);
     }
     </style>
 </head>
@@ -64,7 +242,7 @@ $basePath = rtrim(dirname($scriptPath, 1), '/');
                                 <div
                                     class="card-header d-flex bg-secondary text-white justify-content-between align-items-center flex-wrap gap-2">
                                     <h5 class="card-title mb-0 text-white">Ujian Aktif</h5>
-                                    <small id="last-updated" class="text-muted text-white"></small>
+                                    <small id="last-updated" class="text-white"></small>
                                 </div>
                                 <div class="card-body">
                                     <input type="text" id="searchInput" class="form-control mb-3"
@@ -89,62 +267,88 @@ $basePath = rtrim(dirname($scriptPath, 1), '/');
     let semuaUjian = [];
 
     function tampilkanUjian(data) {
-    const container = document.getElementById('ujian-container');
-    container.innerHTML = '';
+        const container = document.getElementById('ujian-container');
+        container.innerHTML = '';
 
-    if (data.length === 0) {
-        container.innerHTML =
-            '<div class="col-12 text-center py-5"><i class="fa fa-user-slash fa-3x text-muted mb-3"></i><br>Tidak ada ujian ditemukan.</div>';
-        return;
-    }
-
-    const pathNameParts = window.location.pathname.split('/').filter(Boolean);
-    const appFolder = pathNameParts.length > 0 ? '/' + pathNameParts[0] : '';
-
-    let allCardsHTML = '';
-    const qrList = []; // Simpan data QR yang perlu digenerate
-
-    data.forEach(ujian => {
-        const cardId = 'qr-' + ujian.kode_soal;
-        const qrLink = `${window.location.origin}${appFolder}/siswa/konfirmasi_ujian.php?kode_soal=${encodeURIComponent(ujian.kode_soal)}`;
-
-        qrList.push({ id: cardId, link: qrLink }); // Simpan data QR-nya
-
-        allCardsHTML += `
-        <div class="col-12 col-lg-4 col-xl-3 col-sm-6 col-md-4">
-            <div class="card ujian-card h-100 shadow-sm border-0 bg-light ujian-card-hover">
-                <div class="card-body d-flex flex-column text-center py-4">
-                    <div id="${cardId}" class="icon-wrapper mb-3 mx-auto"></div>
-                    <h5 class="card-title text-dark fw-bold mb-2">${ujian.kode_soal}</h5>
-                    <hr class="my-2">
-                    <p class="mb-1"><i class="far fa-file-alt text-secondary me-1"></i> ${ujian.mapel}</p>
-                    <p class="mb-1"><i class="fas fa-stopwatch text-secondary me-1"></i> ${ujian.waktu_ujian} menit</p>
-                    <p class="mb-3"><i class="far fa-calendar text-secondary me-1"></i> ${ujian.tanggal}</p>
-                    <a href="konfirmasi_ujian.php?kode_soal=${ujian.kode_soal}" class="btn btn-outline-secondary mt-auto">
-                        <i class="fa fa-sign-in-alt me-1"></i> Masuk Ujian
-                    </a>
-                </div>
-            </div>
-        </div>`;
-    });
-
-    container.innerHTML = allCardsHTML;
-
-    // Setelah semua elemen ada di DOM, generate semua QR code
-    qrList.forEach(({ id, link }) => {
-        const el = document.getElementById(id);
-        if (el) {
-            new QRCode(el, {
-                text: link,
-                width: 80,
-                height: 80,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.L
-            });
+        if (data.length === 0) {
+            container.innerHTML =
+                '<div class="col-12 text-center py-5"><i class="fa fa-user-slash fa-3x text-muted mb-3"></i><br>Tidak ada ujian ditemukan.</div>';
+            return;
         }
-    });
-}
+
+        const pathNameParts = window.location.pathname.split('/').filter(Boolean);
+        const appFolder = pathNameParts.length > 0 ? '/' + pathNameParts[0] : '';
+
+        let allCardsHTML = '';
+        const qrList = []; // Simpan data QR yang perlu digenerate
+
+        data.forEach(ujian => {
+            const cardId = 'qr-' + ujian.kode_soal;
+            const qrLink =
+                `${window.location.origin}${appFolder}/siswa/konfirmasi_ujian.php?kode_soal=${encodeURIComponent(ujian.kode_soal)}`;
+
+            qrList.push({
+                id: cardId,
+                link: qrLink
+            }); // Simpan data QR-nya
+
+            allCardsHTML += `
+        <div class="col-12 col-lg-4 col-xl-3 col-sm-6 col-md-4">
+            <div class="card ujian-card h-100 border-0">
+<div class="card-body ujian-flex">
+
+<div class="ujian-left">
+<div id="${cardId}" class="icon-wrapper"></div>
+
+<div class="status countdown text-danger"
+data-tanggal="${ujian.tanggal}">
+Belum dimulai
+</div>
+</div>
+
+<div class="ujian-right">
+
+<h5 class="kode">${ujian.kode_soal}</h5>
+
+<div class="info">${ujian.mapel}</div>
+
+<div class="meta">
+${ujian.waktu_ujian} menit • ${ujian.tanggal}
+</div>
+
+<a href="konfirmasi_ujian.php?kode_soal=${ujian.kode_soal}"
+class="btn btn-outline-secondary btn-masuk">
+Masuk Ujian
+</a>
+
+</div>
+
+</div>
+</div>
+</div>
+        </div>`;
+        });
+
+        container.innerHTML = allCardsHTML;
+
+        // Setelah semua elemen ada di DOM, generate semua QR code
+        qrList.forEach(({
+            id,
+            link
+        }) => {
+            const el = document.getElementById(id);
+            if (el) {
+                new QRCode(el, {
+                    text: link,
+                    width: 80,
+                    height: 80,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.L
+                });
+            }
+        });
+    }
 
     function loadUjian() {
         fetch('get_ujian.php')
@@ -152,12 +356,13 @@ $basePath = rtrim(dirname($scriptPath, 1), '/');
             .then(data => {
                 semuaUjian = data;
                 tampilkanUjian(data);
+                updateCountdown();
 
                 // Update waktu terakhir
                 let now = new Date();
                 $('#last-updated').html(
                     `<i class="fa fa-refresh fa-spin text-success me-1"></i> Terakhir diperbarui: ${now.toLocaleTimeString('id-ID')}`
-                    );
+                );
             });
     }
 
@@ -174,14 +379,71 @@ $basePath = rtrim(dirname($scriptPath, 1), '/');
     // Jalankan saat load dan per 1 menit
     loadUjian();
     setInterval(loadUjian, 60000);
+
+    function updateCountdown() {
+
+        const now = new Date();
+
+        // ambil tanggal hari ini jam 00:00
+        const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+        );
+
+        document.querySelectorAll('.countdown').forEach(el => {
+
+            let tgl = el.dataset.tanggal; // format: 2026-02-25
+            let p = tgl.split('-');
+
+            let mulai = new Date(
+                parseInt(p[0]),
+                parseInt(p[1]) - 1,
+                parseInt(p[2])
+            );
+
+            let diff = mulai - today;
+            let btn = el.closest('.card-body').querySelector('.btn-masuk');
+
+            if (diff <= 0) {
+
+                el.innerHTML = "Sudah bisa dikerjakan";
+                el.classList.remove('text-danger');
+                el.classList.add('text-success');
+                btn.disabled = false;
+
+            } else {
+
+                btn.disabled = true;
+
+                let hari = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+                if (hari === 1) {
+                    el.innerHTML = "Dimulai besok";
+                } else if (hari <= 7) {
+                    el.innerHTML = "Mulai " + hari + " hari lagi";
+                } else if (hari <= 30) {
+                    let minggu = Math.ceil(hari / 7);
+                    el.innerHTML = "Mulai sekitar " + minggu + " minggu lagi";
+                } else {
+                    el.innerHTML = "Belum waktunya dikerjakan";
+                }
+
+            }
+
+        });
+
+    }
+
+    setInterval(updateCountdown, 60000);
     </script>
-    <?php if (isset($_SESSION['alert'])): ?>
+    <?php if (!empty($_SESSION['warning_message'])): ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
             icon: 'warning',
             title: 'Warning!',
-            text: '<?php echo $_SESSION['warning_message']; ?>',
+            text: <?= json_encode($_SESSION['warning_message']); ?>,
             showConfirmButton: false,
             timer: 2000
         });
