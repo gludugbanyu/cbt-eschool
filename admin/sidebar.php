@@ -1,6 +1,22 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
 $role = $_SESSION['role'] ?? 'editor';
+
+$soalPages = [
+'soal.php','edit_soal.php','tambah_soal.php',
+'edit_butir_soal.php','tambah_butir_soal.php',
+'preview_soal.php','daftar_butir_soal.php',
+'upload-gambar.php','kartu_siswa.php',
+'daftar_hadir.php','berita_acara.php',
+'jadwal_ujian.php'
+];
+
+$hasilPages = ['hasil.php','ranking_siswa.php'];
+$backupPages = ['backup.php','backup_gbr.php','reset_database.php'];
+
+$isSoalOpen   = in_array($currentPage,$soalPages);
+$isHasilOpen  = in_array($currentPage,$hasilPages);
+$isBackupOpen = in_array($currentPage,$backupPages);
 ?>
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
@@ -20,27 +36,34 @@ $role = $_SESSION['role'] ?? 'editor';
                 </a>
             </li>
 
-            <li class="sidebar-item <?= ($currentPage == 'soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_soal.php') ? 'active' : '' ?>  
+            <li
+                class="sidebar-item <?= ($currentPage == 'soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_soal.php') ? 'active' : '' ?>  
         <?= ($currentPage == 'tambah_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'tambah_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'preview_soal.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'daftar_butir_soal.php') ? 'active' : '' ?> <?= ($currentPage == 'upload-gambar.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'kartu_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'daftar_hadir.php') ? 'active' : '' ?>
         <?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?> <?= ($currentPage == 'jadwal_ujian.php') ? 'active' : '' ?>">
-                <a data-bs-toggle="collapse" href="#soal" class="sidebar-link collapsed">
-                    <i class="align-middle fa fa-file"></i> <span class="align-middle">Manajemen Ujian </span><i
-                        class="fa fa-chevron-down ms-auto float-end"></i>
+                <a data-bs-toggle="collapse" href="#soal" class="sidebar-link <?= $isSoalOpen?'':'collapsed'?>">
+                    <i class="align-middle fa fa-file"></i> <span class="align-middle">Manajemen Ujian </span>
                 </a>
-                <ul id="soal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="soal.php"><i
-                                class="align-middle fas fa-book"></i> Bank Soal</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="upload-gambar.php"><i
-                                class="align-middle fas fa-upload"></i> Upload Gambar</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="kartu_siswa.php"><i
-                                class="align-middle fa fa-id-card"></i> Cetak Kartu Ujian</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="daftar_hadir.php"><i
-                                class="align-middle fa fa-print"></i> Cetak Daftar Hadir</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="berita_acara.php"><i
-                                class="align-middle fa fa-print"></i> Cetak Berita Acara</a></li>
+                <ul id="soal"
+                    class="sidebar-dropdown list-unstyled collapse timeline-submenu <?= $isSoalOpen?'show':''?>"
+                    data-bs-parent="#sidebar">
+                    <li class="sidebar-item submenu <?= ($currentPage == 'soal.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="soal.php"><i class="align-middle fas fa-book"></i> Bank Soal</a>
+                    </li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'upload-gambar.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="upload-gambar.php"><i class="align-middle fas fa-upload"></i>
+                            Upload Gambar</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'kartu_siswa.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="kartu_siswa.php"><i class="align-middle fa fa-id-card"></i> Cetak
+                            Kartu Ujian</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'daftar_hadir.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="daftar_hadir.php"><i class="align-middle fa fa-print"></i> Cetak
+                            Daftar Hadir</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'berita_acara.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="berita_acara.php"><i class="align-middle fa fa-print"></i> Cetak
+                            Berita Acara</a></li>
                 </ul>
             </li>
 
@@ -76,13 +99,16 @@ $role = $_SESSION['role'] ?? 'editor';
             <li class="sidebar-item  <?= ($currentPage == 'ranking_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
         <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>">
                 <a data-bs-toggle="collapse" href="#hasil" class="sidebar-link collapsed">
-                    <i class="align-middle fas fa-chart-pie"></i> <span class="align-middle">Hasil Ujian </span><i
-                        class="fa fa-chevron-down ms-auto float-end"></i>
+                    <i class="align-middle fas fa-chart-pie"></i> <span class="align-middle">Hasil Ujian </span>
                 </a>
-                <ul id="hasil" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="hasil.php"><i
-                                class="align-middle fas fa-chart-line"></i> Hasil Ujian</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="ranking_siswa.php"><i
+                <ul id="hasil"
+                    class="sidebar-dropdown list-unstyled collapse timeline-submenu <?= $isHasilOpen?'show':''?>"
+                    data-bs-parent="#sidebar">
+                    <li class="sidebar-item submenu <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="hasil.php"><i class="align-middle fas fa-chart-line"></i> Hasil
+                            Ujian</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'ranking_siswa.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="ranking_siswa.php"><i
                                 class="align-middle fas fa-trophy"></i>Ranking Siswa</a></li>
                 </ul>
             </li>
@@ -119,15 +145,19 @@ $role = $_SESSION['role'] ?? 'editor';
             <li
                 class="sidebar-item <?= ($currentPage == 'backup.php') ? 'active' : '' ?> <?= ($currentPage == 'reset_database.php') ? 'active' : '' ?> <?= ($currentPage == 'backup_gbr.php') ? 'active' : '' ?>">
                 <a data-bs-toggle="collapse" href="#backup" class="sidebar-link collapsed">
-                    <i class="align-middle fa fa-hdd"></i> <span class="align-middle">Backup </span><i
-                        class="fa fa-chevron-down ms-auto float-end"></i>
+                    <i class="align-middle fa fa-hdd"></i> <span class="align-middle">Backup </span>
                 </a>
-                <ul id="backup" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="backup.php"><i
-                                class="align-middle fa fa-database"></i> Backup Database</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="backup_gbr.php"><i
-                                class="align-middle fa fa-download"></i> Backup Gambar Soal</a></li>
-                    <li class="sidebar-item submenu"><a class="sidebar-link" href="reset_database.php"><i
+                <ul id="backup"
+                    class="sidebar-dropdown list-unstyled collapse timeline-submenu <?= $isBackupOpen?'show':''?>"
+                    data-bs-parent="#sidebar">
+                    <li class="sidebar-item submenu <?= ($currentPage == 'backup.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="backup.php"><i class="align-middle fa fa-database"></i> Backup
+                            Database</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'backup_gbr.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="backup_gbr.php"><i class="align-middle fa fa-download"></i>
+                            Backup Gambar Soal</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'reset_database.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="reset_database.php"><i
                                 class="align-middle fa-regular fa-floppy-disk"></i> Reset Database</a></li>
                 </ul>
             </li>
@@ -157,6 +187,7 @@ $role = $_SESSION['role'] ?? 'editor';
                     <i class="align-middle fas fa-sign-out-alt"></i> <span class="align-middle">Logout</span>
                 </a>
             </li>
+            <br><br>
 
         </ul>
     </div>

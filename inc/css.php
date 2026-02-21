@@ -65,8 +65,7 @@ table td {
 }
 
 li.sidebar-item.submenu>a.sidebar-link {
-    background: linear-gradient(to left, #222e3c, #3a4d63) !important;
-    border-bottom: 2px solid #222e3c;
+    border-bottom: 2px solid transparent !important;
 }
 
 /* === FIX CARD DASHBOARD MOBILE === */
@@ -1607,7 +1606,6 @@ main.content,
 ========================= */
 
 .dark-mode li.sidebar-item.submenu>a.sidebar-link {
-    background: linear-gradient(to left, #222e3c, #1b222d) !important;
     color: #e4e6eb !important;
     border-bottom: 2px solid #222e3c;
 }
@@ -1757,8 +1755,6 @@ main.content,
     --bs-pagination-disabled-color: #adb5bd;
     --bs-pagination-disabled-border-color: #dee2e6;
 }
-
-/* kecilin tombol */
 .pagination .page-link{
     margin:0 1px;
     min-width:28px;
@@ -1769,15 +1765,140 @@ main.content,
     justify-content:center;
     transition:0.12s ease;
 }
-
-/* hover subtle aja */
 .pagination .page-link:hover{
     transform:none;
     background:#f1f3f5;
 }
-
-/* active jangan glow lebay */
 .pagination .page-item.active .page-link{
     box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+/* ===============================
+   TIMELINE SUBMENU SIDEBAR
+=================================*/
+
+.timeline-submenu {
+    position: relative;
+    padding-left: 10px;
+}
+
+/* GARIS VERTIKAL */
+.timeline-submenu::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 28px;
+    width: 2px;
+    background: rgba(255,255,255,0.25);
+}
+
+/* ITEM */
+.timeline-submenu .sidebar-item {
+    position: relative;
+    left:31px;
+    background: transparent !important;
+}
+
+/* TITIK */
+.timeline-submenu .sidebar-link {
+    position: relative;
+    background: transparent !important;
+}
+
+.timeline-submenu .sidebar-link::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: #1f2a37;
+    z-index: 2;
+}
+
+/* ACTIVE TITIK */
+.timeline-submenu .sidebar-item.active > .sidebar-link::before {
+    background: #3b7ddd;
+    border-color: #3b7ddd;
+}
+.timeline-submenu .sidebar-link.active::before {
+    background: #3b7ddd !important;
+    border-color: #3b7ddd !important;
+}
+.timeline-submenu .sidebar-item.active > .sidebar-link {
+    border-left: 3px solid transparent !important;
+}
+.timeline-submenu .sidebar-item.active > .sidebar-link {
+    background: transparent !important;
+}
+/* HOVER SUBMENU TIMELINE */
+.timeline-submenu .sidebar-link:hover {
+    border-left: 3px solid transparent !important;
+    background: transparent !important;
+}
+/* ===============================
+   FIX PARENT ACTIVE DROPDOWN
+=================================*/
+
+.sidebar-item.active > .sidebar-link[data-bs-toggle="collapse"] {
+    background: transparent !important;
+}
+
+/* Dark mode juga */
+.dark-mode .sidebar-item.active > .sidebar-link[data-bs-toggle="collapse"] {
+    background: transparent !important;
+}
+/* ===============================
+   TIMELINE DOT HOVER = FILLED
+=================================*/
+
+.timeline-submenu .sidebar-link:hover::before {
+    background: #3b7ddd !important;
+    border-color: #3b7ddd !important;
+}
+/* ===============================
+   AUTO COLLAPSE ARROW ADMIN KIT
+=================================*/
+
+.sidebar-link[data-bs-toggle="collapse"]{
+    display:flex;
+    align-items:center;
+}
+
+/* default = RIGHT */
+.sidebar-link[data-bs-toggle="collapse"]::after{
+    content:"\f105";
+    font-family:"Font Awesome 6 Free";
+    font-weight:900;
+    margin-left:auto;
+    transition:.2s ease;
+}
+
+/* OPEN = DOWN */
+.sidebar-link[data-bs-toggle="collapse"]:not(.collapsed)::after{
+    transform:rotate(90deg);
+}
+/* ===============================
+   FORCE ARROW COLOR FIX ADMIN KIT
+=================================*/
+
+.sidebar-link[data-bs-toggle="collapse"]::after,
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after{
+    color:#cfd8e3 !important;
+}
+
+/* HOVER */
+.sidebar-link[data-bs-toggle="collapse"]:hover::after{
+    color:#ffffff !important;
+}
+
+/* ACTIVE / OPEN */
+.sidebar-item.active > 
+.sidebar-link[data-bs-toggle="collapse"]::after,
+.sidebar-link[data-bs-toggle="collapse"]:not(.collapsed)::after{
+    color:#ffffff !important;
 }
 </style>

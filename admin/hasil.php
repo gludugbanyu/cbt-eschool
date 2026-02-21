@@ -247,7 +247,7 @@ foreach($ids as $id){
     <td>
         <strong><?= $c['kode_soal'] ?></strong><br>
         <?php foreach($nama_list as $nm): ?>
-            <span class="badge bg-dark me-1"><?= $nm ?></span>
+            <span class="badge bg-secondary me-1"><?= $nm ?></span>
         <?php endforeach; ?>
     </td>
     <td class="text-center text-danger fw-bold"><?= $c['belum'] ?? 0 ?></td>
