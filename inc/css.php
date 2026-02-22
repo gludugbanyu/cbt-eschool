@@ -1943,4 +1943,11 @@ main.content,
     background:#3b7ddd !important;
     border-color:#3b7ddd !important;
 }
+@media (max-width: 576px){
+    .cta-ribbon{
+        font-size:8px !important;
+        padding:3px 8px !important;
+        border-bottom-left-radius:6px !important;
+    }
+}
 </style>
