@@ -23,7 +23,68 @@ function check_login($role) {
     }
 
 }
+function is_ajax_request() {
+    return (
+        !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+    );
+}
+function check_login_api($role) {
 
+    if (!isset($_SESSION[$role . '_logged_in']) || $_SESSION[$role . '_logged_in'] !== true) {
+
+        http_response_code(403);
+
+        if (is_ajax_request()) {
+
+            // Kalau dipanggil Summernote
+            echo json_encode([
+                'status' => false,
+                'message' => 'Unauthorized'
+            ]);
+
+        } else {
+
+            // Kalau dibuka langsung via browser
+            echo "<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <link rel='icon' type='image/png' href='../assets/images/icon.png'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <meta name='robots' content='noindex, nofollow'>
+                <title>Akses Ditolak</title>
+                <style>
+                    body{
+                        font-family:sans-serif;
+                        background:#f4f6f9;
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        height:100vh;
+                    }
+                    .card{
+                        background:#fff;
+                        padding:40px;
+                        border-radius:8px;
+                        text-align:center;
+                        box-shadow:0 0 10px rgba(0,0,0,.1);
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='card'>
+                    <h2>🚫 Akses Ditolak</h2>
+                    <p>Silakan login terlebih dahulu.</p>
+                </div>
+            </body>
+            </html>";
+
+        }
+
+        exit;
+    }
+}
 // Fungsi untuk autentikasi user pakai mysqli
 function authenticate_user($username, $password_input, $role) {
     global $koneksi;
@@ -125,14 +186,94 @@ function bersihkan_html($html) {
     // buang <p> kosong, <p><br></p>, <p>&nbsp;</p>
     $html = preg_replace('#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $html);
 
-// buang <br> sisa
-$html = preg_replace('#<br\s* /?>#i', '', $html);
+    // buang <br> sisa
+    $html = preg_replace('#<br\s* /?>#i', '', $html);
 
     // rapikan spasi
     $html = trim($html);
 
     return $html;
     }
+function sanitize_summernote($html) {
+
+    if (!$html) return '';
+
+    libxml_use_internal_errors(true);
+
+    $doc = new DOMDocument();
+    $doc->loadHTML('<?xml encoding="utf-8" ?>' . $html, 
+        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+
+    $allowed_tags = [
+        'p','br','b','strong','i','em','u',
+        'ul','ol','li',
+        'table','tr','td','th','tbody','thead',
+        'img'
+    ];
+
+    $allowed_attrs = [
+        'img' => ['src','style']
+    ];
+
+    $xpath = new DOMXPath($doc);
+
+    foreach ($xpath->query('//*') as $node) {
+
+        if (!in_array($node->nodeName, $allowed_tags)) {
+            $node->parentNode->removeChild($node);
+            continue;
+        }
+
+        if ($node->hasAttributes()) {
+
+            $attrs_to_remove = [];
+
+            foreach ($node->attributes as $attr) {
+
+                $name = strtolower($attr->nodeName);
+                $value = $attr->nodeValue;
+
+                if (strpos($name, 'on') === 0) {
+                    $attrs_to_remove[] = $name;
+                }
+
+                if (strpos($value, 'javascript:') !== false) {
+                    $attrs_to_remove[] = $name;
+                }
+
+                if (strpos($value, 'data:') !== false) {
+                    $attrs_to_remove[] = $name;
+                }
+
+                if ($node->nodeName == 'img') {
+                    if (!in_array($name, $allowed_attrs['img'])) {
+                        $attrs_to_remove[] = $name;
+                    }
+                }
+            }
+
+            foreach ($attrs_to_remove as $attr) {
+                $node->removeAttribute($attr);
+            }
+        }
+    }
+
+    $clean = $doc->saveHTML();
+
+// buang xml header
+$clean = preg_replace('/<\?xml.*?\?>/i', '', $clean);
+
+// buang <p><br></p> atau <p>&nbsp;</p>
+$clean = preg_replace('#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $clean);
+
+// kalau sisa cuma <br>
+$clean = preg_replace('#^<br\s*/?>$#i', '', trim($clean));
+
+$clean = trim($clean);
+
+return $clean;
+}
     function only_admin(){
     if(($_SESSION['role'] ?? '') != 'admin'){
     header("Location: dashboard.php?akses=1");

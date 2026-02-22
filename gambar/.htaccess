@@ -1,3 +1,11 @@
-<FilesMatch "\.(php|php[0-9]?|phtml)$">
-    Deny from all
-</FilesMatch>
+# 🚫 MATIKAN PHP ENGINE TOTAL
+php_flag engine off
+
+# 🚫 HAPUS SEMUA HANDLER PHP
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8
+
+# 🚫 PAKSA JADI FILE BIASA
+AddType text/plain .php .phtml .php3 .php4 .php5 .php7 .php8
+
+# 🚫 MATIKAN CGI EXEC
+Options -ExecCGI

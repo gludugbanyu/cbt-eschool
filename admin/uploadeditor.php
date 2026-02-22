@@ -1,88 +1,82 @@
 <?php
+session_start();
+include '../inc/functions.php';
+
+// 🔐 Cek login admin khusus API
+check_login_api('admin');
+
+// 🔐 Wajib POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit(json_encode(['error'=>'Method not allowed']));
+}
+
+// 🔐 Cek CSRF Token
+if (!isset($_POST['token']) || $_POST['token'] !== ($_SESSION['upload_token'] ?? '')) {
+    http_response_code(403);
+    exit(json_encode(['error'=>'Invalid CSRF Token']));
+}
 if ($_FILES['file']['name']) {
-    $allowedMimeTypes = ['image/gif', 'image/jpeg', 'image/png'];
-    $allowedExtensions = ['gif', 'jpg', 'jpeg', 'png'];
 
-    $fileName = $_FILES['file']['name'];
     $fileTmpName = $_FILES['file']['tmp_name'];
-    $fileSize = $_FILES['file']['size'];
-    $fileType = mime_content_type($fileTmpName);
-    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-    if (in_array($fileType, $allowedMimeTypes) && in_array($fileExt, $allowedExtensions) && $fileSize <= 1024 * 1024) {
-        $uploadDir = '../gambar/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime  = finfo_file($finfo, $fileTmpName);
+    finfo_close($finfo);
 
-        $newFileName = uniqid() . '.' . $fileExt;
-        $filePath = $uploadDir . $newFileName;
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/gif'  => 'gif'
+    ];
 
-        if (move_uploaded_file($fileTmpName, $filePath)) {
-            // Resize image max 3000px
-            list($width, $height) = getimagesize($filePath);
-            $maxDim = 5000;
-
-            if ($width > $maxDim || $height > $maxDim) {
-                if ($width > $height) {
-                    $newWidth = $maxDim;
-                    $newHeight = $height * ($maxDim / $width);
-                } else {
-                    $newHeight = $maxDim;
-                    $newWidth = $width * ($maxDim / $height);
-                }
-
-                $thumb = imagecreatetruecolor($newWidth, $newHeight);
-
-                switch ($fileType) {
-                    case 'image/jpeg':
-                        $source = imagecreatefromjpeg($filePath);
-                        break;
-                    case 'image/png':
-                        $source = imagecreatefrompng($filePath);
-                        break;
-                    case 'image/gif':
-                        $source = imagecreatefromgif($filePath);
-                        break;
-                    default:
-                        echo json_encode(['error' => 'Unsupported image type']);
-                        exit;
-                }
-
-                imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-                switch ($fileType) {
-                    case 'image/jpeg':
-                        imagejpeg($thumb, $filePath);
-                        break;
-                    case 'image/png':
-                        imagepng($thumb, $filePath);
-                        break;
-                    case 'image/gif':
-                        imagegif($thumb, $filePath);
-                        break;
-                }
-
-                imagedestroy($thumb);
-                imagedestroy($source);
-            }
-//$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-//$host = $_SERVER['HTTP_HOST'];
-//$scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-//$basePath = rtrim(dirname($scriptPath, 1), '/');
-// Return correct URL path for browser
-//$publicPath = $protocol . $host . $basePath . '/gambar/' . $newFileName;
-//$imgTag = '<img id="gbrsoal" src="' . $publicPath . '">';
-//echo json_encode(['img' => $imgTag, 'url' => $publicPath]);
-$relativePath = '../gambar/' . $newFileName;
-$imgTag = '<img id="gbrsoal" src="' . $relativePath . '" style="width: 100%;">';
-echo json_encode(['img' => $imgTag, 'url' => $relativePath]);
-        } else {
-            echo json_encode(['error' => 'Failed to move uploaded file']);
-        }
-    } else {
-        echo json_encode(['error' => 'Invalid file type or size']);
+    if (!isset($allowed[$mime])) {
+        exit(json_encode(['error'=>'Invalid image']));
     }
+
+    switch ($mime) {
+        case 'image/jpeg':
+            $img = imagecreatefromjpeg($fileTmpName);
+            break;
+        case 'image/png':
+            $img = imagecreatefrompng($fileTmpName);
+            break;
+        case 'image/gif':
+            $img = imagecreatefromgif($fileTmpName);
+            break;
+        default:
+            exit(json_encode(['error'=>'Invalid image data']));
+    }
+
+    if (!$img) {
+        exit(json_encode(['error'=>'Invalid image']));
+    }
+
+    $uploadDir = '../gambar/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $newFileName = bin2hex(random_bytes(16)) . '.' . $allowed[$mime];
+    $filePath = $uploadDir . $newFileName;
+
+    // 🚨 REWRITE IMAGE (hapus webshell polyglot)
+    switch ($mime) {
+        case 'image/jpeg':
+            imagejpeg($img, $filePath, 90);
+            break;
+        case 'image/png':
+            imagepng($img, $filePath, 6);
+            break;
+        case 'image/gif':
+            imagegif($img, $filePath);
+            break;
+    }
+
+    imagedestroy($img);
+
+    $relativePath = '../gambar/' . $newFileName;
+    echo json_encode(['url'=>$relativePath]);
 } else {
     echo json_encode(['error' => 'No file uploaded']);
 }

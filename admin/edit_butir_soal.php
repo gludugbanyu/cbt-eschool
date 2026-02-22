@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (empty($_SESSION['upload_token'])) {
+    $_SESSION['upload_token'] = bin2hex(random_bytes(32));
+}
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
@@ -40,14 +43,19 @@ if(mysqli_num_rows($query_butir) == 0){
 }
 $butir_soal = mysqli_fetch_assoc($query_butir);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
 
     // VALIDASI WAJIB
     if (empty($_POST['pertanyaan']) || empty($_POST['tipe_soal']) || empty($_POST['nomor_soal'])) {
         $swal = "form_kosong";
     }
 
-    $pertanyaan = mysqli_real_escape_string($koneksi, bersihkan_html($_POST['pertanyaan']));
+    $pertanyaan = mysqli_real_escape_string(
+    $koneksi,
+    bersihkan_html(
+        sanitize_summernote($_POST['pertanyaan'])
+    )
+);
     $tipe_soal  = mysqli_real_escape_string($koneksi, $_POST['tipe_soal']);
     $nomor_soal = mysqli_real_escape_string($koneksi, $_POST['nomor_soal']);
 
@@ -71,6 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($swal)) {
 
         if ($tipe_soal == 'Pilihan Ganda' || $tipe_soal == 'Pilihan Ganda Kompleks') {
+            $p1 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_1'])));
+$p2 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_2'])));
+$p3 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_3'])));
+$p4 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_4'])));
+$p5 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_5'])));
 
             $jawaban_benar = implode(",", $_POST['jawaban_benar']);
 
@@ -78,28 +91,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 pertanyaan='$pertanyaan',
                 tipe_soal='$tipe_soal',
                 nomer_soal='$nomor_soal',
-                pilihan_1='".mysqli_real_escape_string($koneksi, $_POST['pilihan_1'])."',
-                pilihan_2='".mysqli_real_escape_string($koneksi, $_POST['pilihan_2'])."',
-                pilihan_3='".mysqli_real_escape_string($koneksi, $_POST['pilihan_3'])."',
-                pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
-                pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
+                pilihan_1='$p1',
+pilihan_2='$p2',
+pilihan_3='$p3',
+pilihan_4='$p4',
+pilihan_5='$p5',
                 jawaban_benar='$jawaban_benar'
                 WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
 ";
 
         } elseif ($tipe_soal == 'Benar/Salah') {
 
+        $p1 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_1'])));
+$p2 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_2'])));
+$p3 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_3'])));
+$p4 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_4'])));
+$p5 = mysqli_real_escape_string($koneksi, bersihkan_html(sanitize_summernote($_POST['pilihan_5'])));
             $jawaban_benar = implode("|", $_POST['jawaban_benar'] ?? []);
 
             $query = "UPDATE butir_soal SET
                 pertanyaan='$pertanyaan',
                 tipe_soal='$tipe_soal',
                 nomer_soal='$nomor_soal',
-                pilihan_1='".mysqli_real_escape_string($koneksi, $_POST['pilihan_1'])."',
-                pilihan_2='".mysqli_real_escape_string($koneksi, $_POST['pilihan_2'])."',
-                pilihan_3='".mysqli_real_escape_string($koneksi, $_POST['pilihan_3'])."',
-                pilihan_4='".mysqli_real_escape_string($koneksi, $_POST['pilihan_4'])."',
-                pilihan_5='".mysqli_real_escape_string($koneksi, $_POST['pilihan_5'])."',
+                pilihan_1='$p1',
+pilihan_2='$p2',
+pilihan_3='$p3',
+pilihan_4='$p4',
+pilihan_5='$p5',
                 jawaban_benar='$jawaban_benar'
                 WHERE id_soal='$id_soal' AND kode_soal='$kode_soal'
 ";
@@ -107,10 +125,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } elseif ($tipe_soal == 'Menjodohkan') {
 
             $pairs = [];
-            foreach ($_POST['pasangan_soal'] as $i => $s) {
-                $j = $_POST['pasangan_jawaban'][$i];
-                if ($s && $j) $pairs[] = "$s:$j";
-            }
+
+foreach ($_POST['pasangan_soal'] as $i => $s) {
+
+    $j = $_POST['pasangan_jawaban'][$i];
+
+    if ($s && $j) {
+
+        $s = mysqli_real_escape_string($koneksi,
+            bersihkan_html(
+                sanitize_summernote($s)
+            )
+        );
+
+        $j = mysqli_real_escape_string($koneksi,
+            bersihkan_html(
+                sanitize_summernote($j)
+            )
+        );
+
+        $pairs[] = "$s:$j";
+    }
+}
             $jawaban_benar = implode("|", $pairs);
 
             $query = "UPDATE butir_soal SET
@@ -123,7 +159,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         } else { // Uraian
 
-            $jawaban_benar = mysqli_real_escape_string($koneksi, $_POST['jawaban_benar']);
+            $jawaban_benar = mysqli_real_escape_string(
+    $koneksi,
+    bersihkan_html(
+        sanitize_summernote($_POST['jawaban_benar'])
+    )
+);
 
             $query = "UPDATE butir_soal SET
                 pertanyaan='$pertanyaan',
@@ -192,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 <div class="mb-3">
                                     <label class="form-label">Pertanyaan</label>
-                                    <textarea class="form-control" id="pertanyaan" name="pertanyaan" required><?= $butir_soal['pertanyaan'] ?></textarea>
+                                    <textarea class="form-control" id="pertanyaan" name="pertanyaan" required><?= htmlspecialchars($butir_soal['pertanyaan'], ENT_QUOTES, 'UTF-8') ?></textarea>
                                 </div>
                                 <hr>
 
@@ -203,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     ?>
                                         <div class="border-box">
                                             <label class="form-label">Pilihan <?= $i ?></label>
-                                            <textarea class="form-control editor-opsi" name="pilihan_<?= $i ?>"><?= $butir_soal['pilihan_'.$i] ?></textarea>
+                                            <textarea class="form-control editor-opsi" name="pilihan_<?= $i ?>"><?= htmlspecialchars($butir_soal['pilihan_'.$i], ENT_QUOTES, 'UTF-8') ?></textarea>
                                             <div class="mt-2">
                                                 <input type="checkbox" name="jawaban_benar[]" value="pilihan_<?= $i ?>" class="pg-check" <?= in_array("pilihan_$i", $jawaban_arr) ? 'checked' : '' ?>> Jawaban Benar
                                             </div>
@@ -222,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="border-box bs-row position-relative" id="bs_row_<?= $i ?>">
 
                                             <label class="form-label">Pernyataan <?= $i ?></label>
-                                            <textarea class="form-control editor-simple" name="pilihan_<?= $i ?>"><?= $val_pilihan ?></textarea>
+                                            <textarea class="form-control editor-simple" name="pilihan_<?= $i ?>"><?= htmlspecialchars($val_pilihan, ENT_QUOTES, 'UTF-8') ?></textarea>
                                             <div class="mt-2">
                                                 <label><input type="radio" name="jawaban_benar[<?= $i-1 ?>]" value="Benar" <?= ($jawaban_bs[$i-1] ?? '') == 'Benar' ? 'checked' : '' ?>> Benar</label>
                                                 <label class="ms-3"><input type="radio" name="jawaban_benar[<?= $i-1 ?>]" value="Salah" <?= ($jawaban_bs[$i-1] ?? '') == 'Salah' ? 'checked' : '' ?>> Salah</label>
@@ -249,8 +290,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             $item = explode(':', $p);
                                         ?>
                                         <div class="row mb-2 match-row">
-                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_soal[]"><?= $item[0] ?? '' ?></textarea></div>
-                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_jawaban[]"><?= $item[1] ?? '' ?></textarea></div>
+                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_soal[]"><?= htmlspecialchars($item[0] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea></div>
+                                            <div class="col-md-5"><textarea class="form-control" name="pasangan_jawaban[]"><?= htmlspecialchars($item[1] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea></div>
                                             <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button></div>
                                         </div>
                                         <?php endforeach; ?>
@@ -261,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div id="uraian-fields" class="d-none">
                                     <div class="mb-3">
                                         <label class="form-label">Kunci Jawaban</label>
-                                        <textarea class="form-control" name="jawaban_benar" rows="3"><?= $butir_soal['jawaban_benar'] ?></textarea>
+                                        <textarea class="form-control" name="jawaban_benar" rows="3"><?= htmlspecialchars($butir_soal['jawaban_benar'], ENT_QUOTES, 'UTF-8') ?></textarea>
                                     </div>
                                 </div>
 
@@ -295,6 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 function sendFile(file, editor) {
     let data = new FormData();
     data.append("file", file);
+    data.append("token", "<?= $_SESSION['upload_token']; ?>");
 
     $.ajax({
         url: "uploadeditor.php",
