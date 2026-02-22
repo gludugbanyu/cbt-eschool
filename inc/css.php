@@ -1778,7 +1778,7 @@ main.content,
 
 .timeline-submenu {
     position: relative;
-    padding-left: 10px;
+    padding-left: -20px;
 }
 
 /* GARIS VERTIKAL */
@@ -1787,7 +1787,7 @@ main.content,
     position: absolute;
     top: 8px;
     bottom: 8px;
-    left: 28px;
+    left: 35px;
     width: 2px;
     background: rgba(255,255,255,0.25);
 }
@@ -1795,7 +1795,7 @@ main.content,
 /* ITEM */
 .timeline-submenu .sidebar-item {
     position: relative;
-    left:31px;
+    left:49px;
     background: transparent !important;
 }
 
@@ -1900,5 +1900,47 @@ main.content,
 .sidebar-link[data-bs-toggle="collapse"]::after,
 .sidebar-link[data-bs-toggle="collapse"]:not(.collapsed)::after{
     color:#ffffff !important;
+}
+.sidebar .sidebar-link i {
+    width: 22px !important;
+    text-align: center !important;
+    margin-right:8px !important;
+    font-size: 15px !important;
+}
+.timeline-submenu .sidebar-link::before{
+    display:none !important;
+}
+.timeline-submenu .sidebar-item{
+    position:relative;
+    left:0 !important;
+    padding-left:30px !important;
+}
+.timeline-submenu::before{
+    left:38px !important;
+    width:2px;
+}
+
+.timeline-submenu .sidebar-item::before{
+    content:"";
+    position:absolute;
+    left:39px;           /* ⬅️ SAMA DENGAN TENGAH GARIS */
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,0.5);
+    background:#1f2a37;
+    z-index:3;
+}
+
+.timeline-submenu .sidebar-item.active::before{
+    background:#3b7ddd;
+    border-color:#3b7ddd;
+}
+/* HOVER DOT */
+.timeline-submenu .sidebar-item:hover::before{
+    background:#3b7ddd !important;
+    border-color:#3b7ddd !important;
 }
 </style>
