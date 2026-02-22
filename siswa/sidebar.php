@@ -14,7 +14,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 </a>
 
                 <ul class="sidebar-nav">
-                    <li class="sidebar-header">Menu Utama</li>
 
                     <li class="sidebar-item <?= ($currentPage == 'dashboard.php') ? 'active' : '' ?>">
                         <a class="sidebar-link" href="dashboard.php">
