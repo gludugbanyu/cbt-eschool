@@ -321,17 +321,29 @@ foreach ($_POST['pasangan_soal'] as $i => $s) {
     <?php include '../inc/js.php'; ?>
     <script src="../assets/summernote/summernote-bs5.js"></script>
     <script>
-        function makeEditor(el, height=100) {
+    function makeEditor(el, height=100) {
     $(el).summernote({
         height: height,
         toolbar: [['insert', ['picture']], ['view', ['codeview']]],
         callbacks: {
+
             onImageUpload: function(files) {
                 sendFile(files[0], $(this));
+            },
+
+            onMediaDelete: function(target) {
+
+                let src = target[0].src;
+
+                $.post('hapus_gambar_editor.php', {
+                    src: src
+                });
+
             }
         }
     });
 }
+
 
 function sendFile(file, editor) {
     let data = new FormData();
