@@ -391,19 +391,30 @@ Swal.fire({
     <script src="../assets/summernote/summernote-bs5.js"></script>
     <script>
     function makeEditor(el, height = 100) {
-        $(el).summernote({
-            height: height,
-            toolbar: [
-                ['insert', ['picture']],
-                ['view', ['codeview']]
-            ],
-            callbacks: {
-                onImageUpload: function(files) {
-                    sendFile(files[0], $(this));
-                }
+    $(el).summernote({
+        height: height,
+        toolbar: [
+            ['insert', ['picture']],
+            ['view', ['codeview']]
+        ],
+        callbacks: {
+
+            onImageUpload: function(files) {
+                sendFile(files[0], $(this));
+            },
+
+            onMediaDelete: function(target) {
+
+                let src = target[0].src;
+
+                $.post('hapus_gambar_editor.php', {
+                    src: src
+                });
+
             }
-        });
-    }
+        }
+    });
+}
 
     $(document).ready(function() {
 
