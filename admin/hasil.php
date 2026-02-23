@@ -327,17 +327,12 @@ foreach($ids as $id){
                                             }
                                             ?>
                                     </select>
-
-                                    <!-- TOMBOL ANALISA -->
-                                    <button type="button" id="btnAnalisa" class="btn btn-info">
-                                        <i class="fa fa-chart-bar"></i> Analisa Soal
-                                    </button>
                                 </div>
                             </div>
 
                             <div class="col-md-2 d-grid">
                                 <button type="button" class="btn btn-light" onclick="resetFilter()">
-                                    <i class="fas fa-sync"></i> Reset
+                                    <i class="fas fa-sync"></i> Semua Hasil
                                 </button>
                             </div>
                         </form>

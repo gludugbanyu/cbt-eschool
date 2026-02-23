@@ -2109,16 +2109,6 @@ background:#fee2e2;
 color:#7f1d1d;
 }
 
-/* ============================
-REKOMENDASI BOX
-============================ */
-
-#rekomendasiBox{
-border-radius:12px;
-border:1px solid #fecaca;
-background:#fff1f2;
-color:#7f1d1d;
-}
 
 /* ============================
 DARK MODE SUPPORT
@@ -2168,12 +2158,6 @@ background:#4c0000;
 color:#f87171;
 }
 
-/* rekomendasi dark */
-.dark-mode #rekomendasiBox{
-background:#3a0000;
-border:1px solid #5e0000;
-color:#ffb3b3;
-}
 
 /* ============================
 RESPONSIVE
@@ -2247,5 +2231,161 @@ opacity:.4;
 }
 .dark-mode .stat-card::before{
 background:#444;
+}
+
+.metode-wrap{
+padding:12px 16px;
+border-radius:12px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+}
+
+.metode-title{
+font-size:13px;
+font-weight:600;
+margin-bottom:8px;
+color:#374151;
+}
+
+.metode-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:10px;
+}
+
+.metode-item{
+padding:10px;
+border-radius:10px;
+background:#fff;
+border:1px solid #eee;
+transition:.2s;
+}
+
+.metode-item:hover{
+box-shadow:0 4px 10px rgba(0,0,0,.05);
+}
+
+.metode-head{
+font-weight:600;
+font-size:13px;
+margin-bottom:2px;
+}
+
+.metode-formula{
+font-size:12px;
+color:#6b7280;
+}
+
+.metode-note{
+font-size:11px;
+opacity:.75;
+margin-top:4px;
+line-height:1.3;
+}
+
+/* DARK MODE */
+.dark-mode .metode-wrap{
+background:#23272f;
+border:1px solid #3a3f47;
+}
+
+.dark-mode .metode-item{
+background:#2a2e34;
+border:1px solid #444;
+}
+
+.dark-mode .metode-title{
+color:#ddd;
+}
+
+.dark-mode .metode-formula{
+color:#aaa;
+}
+
+/* =============================
+REKOMENDASI BOX
+============================= */
+.rekom-box{
+padding:12px 14px !important;
+border-radius:10px !important;
+font-size:13px;
+line-height:1.5;
+background:#f6f8fb;
+border:1px solid #e4e8f0;
+color:#344054;
+box-shadow:0 1px 2px rgba(16,24,40,.04);
+}
+
+/* INFO (N sangat kecil) */
+.rekom-info{
+background:#f4f7ff !important;
+border:1px solid #d9e3ff !important;
+color:#3b5bcc !important;
+}
+
+/* WARNING (N belum stabil) */
+.rekom-warn{
+background:#fff9f2 !important;
+border:1px solid #ffe2b5 !important;
+color:#a66300 !important;
+}
+
+/* BAD (soal jelek) */
+.rekom-bad{
+background:#fff5f5 !important;
+border:1px solid #ffd6d6 !important;
+color:#c0392b !important;
+}
+
+/* DARK MODE */
+.dark-mode .rekom-box{
+background:#1f2937 !important;
+border-color:#374151 !important;
+color:#e5e7eb !important;
+}
+
+.dark-mode .rekom-info{
+background:#1e2636 !important;
+border-color:#2f3a55 !important;
+color:#9bb6ff !important;
+}
+
+.dark-mode .rekom-warn{
+background:#2b2518 !important;
+border-color:#4a3a1c !important;
+color:#ffcc66 !important;
+}
+
+.dark-mode .rekom-bad{
+background:#2b1f1f !important;
+border-color:#4a2a2a !important;
+color:#ff8a8a !important;
+}
+/* LIGHT MODE */
+.row-bad{background:#fff4f4;}
+.row-good{background:#f2fff5;}
+
+/* DARK MODE */
+.dark-mode .row-bad{
+background:#40292c !important;
+}
+
+.dark-mode .row-good{
+background:#243a2c !important;
+}
+
+.info-sampel{
+padding:10px 14px;
+border-radius:8px;
+background:#f8fafc;
+border:1px solid #e2e8f0;
+font-size:13px;
+color:#475569;
+}
+
+.dark-mode .info-sampel{
+background:#1e293b;
+border:1px solid #334155;
+color:#cbd5e1;
 }
 </style>
