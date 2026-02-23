@@ -37,7 +37,7 @@ function check_login_api($role) {
 
         if (is_ajax_request()) {
 
-            // Kalau dipanggil Summernote
+            // ✅ Kalau dipanggil Summernote / AJAX → tetap JSON
             echo json_encode([
                 'status' => false,
                 'message' => 'Unauthorized'
@@ -45,40 +45,100 @@ function check_login_api($role) {
 
         } else {
 
-            // Kalau dibuka langsung via browser
-            echo "<!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset='UTF-8'>
-                <link rel='icon' type='image/png' href='../assets/images/icon.png'>
-                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                <meta name='robots' content='noindex, nofollow'>
-                <title>Akses Ditolak</title>
-                <style>
-                    body{
-                        font-family:sans-serif;
-                        background:#f4f6f9;
-                        display:flex;
-                        justify-content:center;
-                        align-items:center;
-                        height:100vh;
-                    }
-                    .card{
-                        background:#fff;
-                        padding:40px;
-                        border-radius:8px;
-                        text-align:center;
-                        box-shadow:0 0 10px rgba(0,0,0,.1);
-                    }
-                </style>
-            </head>
-            <body>
-                <div class='card'>
-                    <h2>🚫 Akses Ditolak</h2>
-                    <p>Silakan login terlebih dahulu.</p>
-                </div>
-            </body>
-            </html>";
+            // ✅ Tangkap Bootstrap + SweetAlert dari css.php
+            ob_start();
+            include '../inc/css.php';
+            $css = ob_get_clean();
+
+           echo '
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="../assets/images/icon.png">
+'.$css.'
+<title>Akses Ditolak</title>
+
+<style>
+body{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.lock-card{
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    width:100%;
+    max-width:420px;
+    color:#fff;
+    box-shadow:0 10px 40px rgba(0,0,0,.3);
+    animation:fadeIn .4s ease;
+}
+
+.lock-icon{
+    font-size:70px;
+    color:#f87171;
+    margin-bottom:15px;
+    animation:shake 1.5s infinite;
+}
+
+.btn-login{
+    border-radius:50px;
+    padding:10px;
+    font-weight:600;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes shake{
+    0%,100%{transform:rotate(0deg)}
+    25%{transform:rotate(5deg)}
+    75%{transform:rotate(-5deg)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="lock-card">
+
+<i class="fas fa-lock lock-icon"></i>
+
+<h4 class="fw-bold mb-2 text-white">Akses Ditolak</h4>
+
+<p class="text-light mb-4">
+Session anda telah berakhir atau belum login.
+<br>
+Silakan login kembali untuk melanjutkan.
+</p>
+
+<a href="../admin/" class="btn btn-danger btn-login w-100">
+<i class="fas fa-sign-in-alt me-1"></i> Login Sekarang
+</a>
+
+</div>
+
+<script>
+setTimeout(()=>{
+    window.location.href="../admin/";
+},5000);
+</script>
+
+</body>
+</html>
+';
 
         }
 

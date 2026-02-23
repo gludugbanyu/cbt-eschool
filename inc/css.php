@@ -1950,4 +1950,37 @@ main.content,
         border-bottom-left-radius:6px !important;
     }
 }
+/* ===== Summernote Image Popover Dark Mode ===== */
+
+.dark-mode .note-popover.popover {
+    background-color: #1e1e2f !important;
+    border: 1px solid #3a3b4f !important;
+}
+
+.dark-mode .note-popover .popover-body {
+    background-color: #1e1e2f !important;
+}
+
+.dark-mode .note-popover .note-btn {
+    background-color: #2b2c40 !important;
+    border-color: #3a3b4f !important;
+    color: #ddd !important;
+}
+
+.dark-mode .note-popover .note-btn:hover {
+    background-color: #3a3b4f !important;
+    color: #fff !important;
+}
+
+.dark-mode .note-popover .popover-arrow::before,
+.dark-mode .note-popover .popover-arrow::after {
+    border-bottom-color: #1e1e2f !important;
+}
+
+.dark-mode .note-popover .note-icon-trash,
+.dark-mode .note-popover .note-icon-float-left,
+.dark-mode .note-popover .note-icon-float-right,
+.dark-mode .note-popover .note-icon-rollback {
+    color: #ddd !important;
+}
 </style>

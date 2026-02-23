@@ -5,6 +5,19 @@ include '../inc/functions.php';
 // 🔐 Cek login admin khusus API
 check_login_api('admin');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+    // 👉 Dibuka langsung via browser
+    if (!is_ajax_request()) {
+        header("Location: ../admin/dashboard.php?notallowed=1");
+        exit;
+    }
+
+    // 👉 Dipanggil AJAX (Summernote dll)
+    http_response_code(405);
+    echo json_encode(['error' => 'Method not allowed']);
+    exit;
+}
 // 🔐 Wajib POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
