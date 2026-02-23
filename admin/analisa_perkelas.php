@@ -10,6 +10,7 @@ include '../inc/dataadmin.php';
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analisa Per Kelas</title>
     <?php include '../inc/css.php'; ?>
 </head>
