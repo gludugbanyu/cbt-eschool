@@ -136,23 +136,26 @@ $query = "SELECT n.id_nilai, n.id_siswa, s.nama_siswa, s.kelas, s.rombel,
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hasil Ujian</title>
     <?php include '../inc/css.php'; ?>
     <style>
-        td.nilai-col {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-        .table-wrapper {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
+    td.nilai-col {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .table-wrapper {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
     </style>
 </head>
+
 <body>
     <div class="wrapper">
         <?php include 'sidebar.php'; ?>
@@ -160,7 +163,7 @@ $query = "SELECT n.id_nilai, n.id_siswa, s.nama_siswa, s.kelas, s.rombel,
             <?php include 'navbar.php'; ?>
             <main class="content">
                 <div class="container-fluid p-0">
-<?php
+                    <?php
 $id_admin = $_SESSION['admin_id'] ?? 0;
 $role = $_SESSION['role'] ?? '';
 
@@ -211,26 +214,26 @@ $qCompact = mysqli_query($koneksi, "
 ");
 ?>
 
-<div class="card shadow-sm border-0 mb-3">
-    <div class="card-body p-2">
+                    <div class="card shadow-sm border-0 mb-3">
+                        <div class="card-body p-2">
 
-        <div class="fw-bold mb-2">
-            Ringkasan Koreksi per Kode Soal
-        </div>
+                            <div class="fw-bold mb-2">
+                                Ringkasan Koreksi per Kode Soal
+                            </div>
 
-        <div style="max-height:200px; overflow-y:auto;">
-            <table class="table table-sm table-bordered mb-0" style="font-size:12px;">
-                <thead class="table-light">
-                    <tr>
-                        <th>Kode</th>
-                        <th class="text-center text-danger">Belum</th>
-                        <th class="text-center text-success">Sudah</th>
-                    </tr>
-                </thead>
-                <tbody>
-<?php while($c = mysqli_fetch_assoc($qCompact)): ?>
+                            <div style="max-height:200px; overflow-y:auto;">
+                                <table class="table table-sm table-bordered mb-0" style="font-size:12px;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Kode</th>
+                                            <th class="text-center text-danger">Belum</th>
+                                            <th class="text-center text-success">Sudah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while($c = mysqli_fetch_assoc($qCompact)): ?>
 
-<?php
+                                        <?php
 $ids = explode(',', $c['id_pembuat']);
 $nama_list = [];
 
@@ -243,49 +246,49 @@ foreach($ids as $id){
 }
 ?>
 
-<tr>
-    <td>
-        <strong><?= $c['kode_soal'] ?></strong><br>
-        <?php foreach($nama_list as $nm): ?>
-            <span class="badge bg-secondary me-1"><?= $nm ?></span>
-        <?php endforeach; ?>
-    </td>
-    <td class="text-center text-danger fw-bold"><?= $c['belum'] ?? 0 ?></td>
-    <td class="text-center text-success fw-bold"><?= $c['sudah'] ?? 0 ?></td>
-</tr>
+                                        <tr>
+                                            <td>
+                                                <strong><?= $c['kode_soal'] ?></strong><br>
+                                                <?php foreach($nama_list as $nm): ?>
+                                                <span class="badge bg-secondary me-1"><?= $nm ?></span>
+                                                <?php endforeach; ?>
+                                            </td>
+                                            <td class="text-center text-danger fw-bold"><?= $c['belum'] ?? 0 ?></td>
+                                            <td class="text-center text-success fw-bold"><?= $c['sudah'] ?? 0 ?></td>
+                                        </tr>
 
-<?php endwhile; ?>
-</tbody>
+                                        <?php endwhile; ?>
+                                    </tbody>
 
-            </table>
-        </div>
+                                </table>
+                            </div>
 
-    </div>
-</div>
-
-</div>
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Daftar Nilai Ujian</h5>
                         </div>
-                        <div class="card-body">
-                            <form id="filterForm" method="POST" class="row g-3 mb-4 align-items-end">
-                                <div class="col-md-4">
-                                    <label for="nama_siswa" class="form-label">Cari Siswa</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                        <input type="text" class="form-control" name="nama_siswa" id="nama_siswa"
-                                            placeholder="Ketikan nama siswa...">
-                                    </div>
-                                </div>
+                    </div>
 
-                                <div class="col-md-3">
-                                    <label for="kelas_rombel" class="form-label">Kelas & Rombel</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-users"></i></span>
-                                        <select class="form-select" name="kelas_rombel" id="kelas_rombel">
-                                            <option value="">Semua Kelas</option>
-                                            <?php
+                </div>
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Daftar Nilai Ujian</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="filterForm" method="POST" class="row g-3 mb-4 align-items-end">
+                            <div class="col-md-4">
+                                <label for="nama_siswa" class="form-label">Cari Siswa</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" name="nama_siswa" id="nama_siswa"
+                                        placeholder="Ketikan nama siswa...">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="kelas_rombel" class="form-label">Kelas & Rombel</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-users"></i></span>
+                                    <select class="form-select" name="kelas_rombel" id="kelas_rombel">
+                                        <option value="">Semua Kelas</option>
+                                        <?php
                                             $qKR = mysqli_query($koneksi, "SELECT DISTINCT CONCAT(kelas, ' - ', rombel) 
                                                                           AS kelas_rombel FROM siswa 
                                                                           ORDER BY kelas, rombel");
@@ -293,17 +296,17 @@ foreach($ids as $id){
                                                 echo "<option value='{$kr['kelas_rombel']}'>{$kr['kelas_rombel']}</option>";
                                             }
                                             ?>
-                                        </select>
-                                    </div>
+                                    </select>
                                 </div>
+                            </div>
 
-                                <div class="col-md-3">
-                                    <label for="kode_soal" class="form-label">Kode Soal</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
-                                        <select class="form-select" name="kode_soal" id="kode_soal">
-                                            <option value="">Semua Kode</option>
-                                            <?php
+                            <div class="col-md-3">
+                                <label for="kode_soal" class="form-label">Kode Soal</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
+                                    <select class="form-select" name="kode_soal" id="kode_soal">
+                                        <option value="">Semua Kode</option>
+                                        <?php
                                             $id_admin = $_SESSION['admin_id'] ?? 0;
                                             $role = $_SESSION['role'] ?? '';
 
@@ -323,35 +326,35 @@ foreach($ids as $id){
                                                 echo "<option value='{$soal['kode_soal']}'>{$soal['kode_soal']}</option>";
                                             }
                                             ?>
-                                        </select>
+                                    </select>
 
-                                                                                <!-- TOMBOL ANALISA -->
-                                        <button type="button" id="btnAnalisa" class="btn btn-info">
-                                            <i class="fa fa-chart-bar"></i> Analisa Soal
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2 d-grid">
-                                    <button type="button" class="btn btn-light" onclick="resetFilter()">
-                                        <i class="fas fa-sync"></i> Reset
+                                    <!-- TOMBOL ANALISA -->
+                                    <button type="button" id="btnAnalisa" class="btn btn-info">
+                                        <i class="fa fa-chart-bar"></i> Analisa Soal
                                     </button>
                                 </div>
-                            </form>
+                            </div>
 
-                            <div id="nilaiTable" class="table-wrapper"></div>
-                        </div>
+                            <div class="col-md-2 d-grid">
+                                <button type="button" class="btn btn-light" onclick="resetFilter()">
+                                    <i class="fas fa-sync"></i> Reset
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="nilaiTable" class="table-wrapper"></div>
                     </div>
                 </div>
-            </main>
         </div>
+        </main>
+    </div>
     </div>
 
     <?php include '../inc/js.php'; ?>
     <script>
     $(document).ready(function() {
         let delayTimer;
-        
+
         // Live Search
         $('#nama_siswa').on('input', function() {
             clearTimeout(delayTimer);
@@ -370,7 +373,9 @@ foreach($ids as $id){
                 url: '',
                 type: 'POST',
                 data: $(this).serialize(),
-                beforeSend: () => $('#nilaiTable').html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>'),
+                beforeSend: () => $('#nilaiTable').html(
+                    '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>'
+                    ),
                 success: function(response) {
                     $('#nilaiTable').html(response);
                     initDataTable();
@@ -388,7 +393,7 @@ foreach($ids as $id){
             $('#nilaiTableData').DataTable({
                 dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"l><"col-sm-12 col-md-7 text-end"p>>',
                 buttons: [
-                    'copy', 'excel', 
+                    'copy', 'excel',
                     {
                         extend: 'pdf',
                         text: 'PDF',
@@ -397,12 +402,24 @@ foreach($ids as $id){
                     'print'
                 ],
                 responsive: true,
-                order: [[8, 'desc']],
-                columnDefs: [
-                    { targets: 0, orderable: false, searchable: false },
-                    { targets: -1, orderable: false, searchable: false }
+                order: [
+                    [8, 'desc']
                 ],
-                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
+                columnDefs: [{
+                        targets: 0,
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "Semua"]
+                ],
                 language: {
                     decimal: ",",
                     thousands: ".",
@@ -415,7 +432,10 @@ foreach($ids as $id){
                 },
                 drawCallback: function(settings) {
                     var api = this.api();
-                    api.column(0, {search: 'applied', order: 'applied'}).nodes().each(function(cell, i) {
+                    api.column(0, {
+                        search: 'applied',
+                        order: 'applied'
+                    }).nodes().each(function(cell, i) {
                         cell.innerHTML = i + 1;
                     });
                 }
@@ -440,7 +460,9 @@ foreach($ids as $id){
                 confirmButtonText: 'Ya, Hapus!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.post('hapus_nilai.php', {id_nilai: id}, () => {
+                    $.post('hapus_nilai.php', {
+                        id_nilai: id
+                    }, () => {
                         Swal.fire('Sukses!', 'Data berhasil dihapus', 'success');
                         $('#filterForm').submit();
                     }).fail(() => Swal.fire('Error', 'Gagal menghapus data', 'error'));
@@ -452,13 +474,19 @@ foreach($ids as $id){
         $(document).on('click', '.btnKoreksi', function() {
             const id_siswa = $(this).data('id_siswa');
             const kode_soal = $(this).data('kode_soal');
-            
-            $('#koreksiContent').html('<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>');
+
+            $('#koreksiContent').html(
+                '<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>'
+                );
             $('#modalKoreksiUraian').modal('show');
-            
-            $.post('koreksi_uraian.php', {id_siswa, kode_soal}, (res) => {
+
+            $.post('koreksi_uraian.php', {
+                id_siswa,
+                kode_soal
+            }, (res) => {
                 $('#koreksiContent').html(res);
-            }).fail(() => $('#koreksiContent').html('<div class="alert alert-danger">Gagal memuat data</div>'));
+            }).fail(() => $('#koreksiContent').html(
+                '<div class="alert alert-danger">Gagal memuat data</div>'));
         });
 
         // Submit Koreksi
@@ -473,32 +501,31 @@ foreach($ids as $id){
     });
 
     // Tombol Analisa
-$('#btnAnalisa').on('click', function(){
-    var kode = $('#kode_soal').val();
+    $('#btnAnalisa').on('click', function() {
+        var kode = $('#kode_soal').val();
 
-    if(!kode){
-        Swal.fire({
-            icon: 'warning',
-            title: 'Pilih Kode Soal dulu!'
-        });
-        return;
-    }
+        if (!kode) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Pilih Kode Soal dulu!'
+            });
+            return;
+        }
 
-    window.open('analisa_perbutir.php?kode_soal=' + kode, '_blank');
-});
-
+        window.open('analisa_perbutir.php?kode_soal=' + kode, '_blank');
+    });
     </script>
-     <?php if(isset($_GET['akses'])): ?>
-<script src="../assets/swal/sweetalert2.all.min.js"></script>
-<script>
-Swal.fire({
-    icon: 'error',
-    title: 'Akses Ditolak!',
-    text: 'Halaman tersebut hanya bisa diakses oleh Pemilik Soal.',
-    confirmButtonColor: '#d33'
-});
-</script>
-<?php endif; ?>
+    <?php if(isset($_GET['akses'])): ?>
+    <script src="../assets/swal/sweetalert2.all.min.js"></script>
+    <script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Akses Ditolak!',
+        text: 'Halaman tersebut hanya bisa diakses oleh Pemilik Soal.',
+        confirmButtonColor: '#d33'
+    });
+    </script>
+    <?php endif; ?>
 
     <!-- Modal Koreksi -->
     <div class="modal fade" id="modalKoreksiUraian" tabindex="-1">
@@ -522,4 +549,5 @@ Swal.fire({
     </div>
 
 </body>
+
 </html>

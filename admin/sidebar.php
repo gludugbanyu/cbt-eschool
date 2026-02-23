@@ -11,7 +11,7 @@ $soalPages = [
 'jadwal_ujian.php'
 ];
 
-$hasilPages = ['hasil.php','ranking_siswa.php'];
+$hasilPages = ['hasil.php','ranking_siswa.php','analisasoal.php','analisa_perbutir.php'];
 $backupPages = ['backup.php','backup_gbr.php','reset_database.php'];
 
 $isSoalOpen   = in_array($currentPage,$soalPages);
@@ -97,7 +97,7 @@ $isBackupOpen = in_array($currentPage,$backupPages);
             </li>
 
             <li class="sidebar-item  <?= ($currentPage == 'ranking_siswa.php') ? 'active' : '' ?> <?= ($currentPage == 'edit_butir_soal.php') ? 'active' : '' ?> 
-        <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>">
+        <?= ($currentPage == 'hasil.php') ? 'active' : '' ?> <?= ($currentPage == 'analisasoal.php') ? 'active' : '' ?>">
                 <a data-bs-toggle="collapse" href="#hasil" class="sidebar-link collapsed">
                     <i class="align-middle fas fa-chart-pie fa-fw"></i> <span class="align-middle">Hasil Ujian </span>
                 </a>
@@ -107,6 +107,8 @@ $isBackupOpen = in_array($currentPage,$backupPages);
                     <li class="sidebar-item submenu <?= ($currentPage == 'hasil.php') ? 'active' : '' ?>"><a
                             class="sidebar-link" href="hasil.php"><i class="align-middle fas fa-chart-line fa-fw"></i> Hasil
                             Ujian</a></li>
+                    <li class="sidebar-item submenu <?= ($currentPage == 'analisasoal.php') ? 'active' : '' ?> <?= ($currentPage == 'analisa_perbutir.php') ? 'active' : '' ?>"><a
+                            class="sidebar-link" href="analisasoal.php"><i class="align-middle fas fa-chart-bar fa-fw"></i> Analisa Soal</a></li>
                     <li class="sidebar-item submenu <?= ($currentPage == 'ranking_siswa.php') ? 'active' : '' ?>"><a
                             class="sidebar-link" href="ranking_siswa.php"><i
                                 class="align-middle fas fa-trophy fa-fw"></i>Ranking Siswa</a></li>

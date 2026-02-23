@@ -1983,4 +1983,269 @@ main.content,
 .dark-mode .note-popover .note-icon-rollback {
     color: #ddd !important;
 }
+/* ============================
+INSIGHT CARD BASE
+============================ */
+
+.stat-card{
+height:100%;
+min-height:95px;
+padding:18px 22px;
+border-radius:14px;
+background:#ffffff;
+border:1px solid #e5e7eb;
+display:flex;
+flex-direction:column;
+justify-content:center;
+position:relative;
+overflow:hidden;
+transition:.25s ease;
+
+/* resting depth */
+box-shadow:
+0 1px 2px rgba(0,0,0,.04),
+0 4px 10px rgba(0,0,0,.03);
+
+/* inner light */
+background-image:
+linear-gradient(to bottom,
+rgba(255,255,255,.7),
+rgba(255,255,255,.4));
+}
+
+/* hover floating feel */
+.stat-card:hover{
+transform:translateY(-2px);
+box-shadow:
+0 8px 18px rgba(0,0,0,.08),
+0 2px 6px rgba(0,0,0,.06);
+border-color:#d1d5db;
+}
+
+/* title */
+.stat-title{
+font-size:12px;
+font-weight:500;
+color:#9ca3af;
+margin-bottom:4px;
+}
+
+/* value */
+.stat-value{
+font-size:24px;
+font-weight:600;
+color:#111827;
+}
+
+.dark-mode .stat-card{
+background:#202b38 !important;
+border:1px solid #3a3f47;
+
+box-shadow:
+0 1px 1px rgba(0,0,0,.4),
+0 6px 12px rgba(0,0,0,.25);
+
+background-image:
+linear-gradient(to bottom,
+rgba(255,255,255,.02),
+rgba(0,0,0,.15));
+}
+
+/* ============================
+INDICATOR LEFT BORDER
+============================ */
+
+.indicator{
+position:absolute;
+left:0;
+top:0;
+width:4px;
+height:100%;
+border-radius:16px 0 0 16px;
+transition:.3s ease;
+}
+
+/* P STATUS */
+.p-sukar{ background:#ef4444; }
+.p-sedang{ background:#3b82f6; }
+.p-mudah{ background:#f59e0b; }
+
+/* D STATUS */
+.d-jelek{ background:#ef4444; }
+.d-cukup{ background:#f59e0b; }
+.d-baik{ background:#10b981; }
+
+/* ============================
+DECISION BADGE
+============================ */
+
+.decision-badge{
+display:inline-flex;
+align-items:center;
+gap:10px;
+padding:10px 20px;
+border-radius:50px;
+font-size:14px;
+font-weight:600;
+transition:.3s ease;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+/* Layak */
+.badge-layak{
+background:#d1fae5;
+color:#065f46;
+}
+
+/* Revisi */
+.badge-revisi{
+background:#fef3c7;
+color:#92400e;
+}
+
+/* Buang */
+.badge-buang{
+background:#fee2e2;
+color:#7f1d1d;
+}
+
+/* ============================
+REKOMENDASI BOX
+============================ */
+
+#rekomendasiBox{
+border-radius:12px;
+border:1px solid #fecaca;
+background:#fff1f2;
+color:#7f1d1d;
+}
+
+/* ============================
+DARK MODE SUPPORT
+============================ */
+
+.dark-mode .stat-card{
+background:#262a31;
+border:1px solid #3a3f47;
+box-shadow:none;
+}
+
+.dark-mode .stat-title{
+color:#9ca3af;
+}
+
+.dark-mode .stat-value{
+color:#e4e6eb;
+}
+
+/* indikator tetap jelas */
+.dark-mode .p-sukar{ background:#f87171; }
+.dark-mode .p-sedang{ background:#60a5fa; }
+.dark-mode .p-mudah{ background:#facc15; }
+
+.dark-mode .d-jelek{ background:#f87171; }
+.dark-mode .d-cukup{ background:#facc15; }
+.dark-mode .d-baik{ background:#34d399; }
+
+/* badge dark */
+.dark-mode .decision-badge{
+box-shadow:0 0 0 1px rgba(255,255,255,.05),
+0 6px 18px rgba(0,0,0,.4);
+}
+
+.dark-mode .badge-layak{
+background:#063b2e;
+color:#34d399;
+}
+
+.dark-mode .badge-revisi{
+background:#4b3700;
+color:#facc15;
+}
+
+.dark-mode .badge-buang{
+background:#4c0000;
+color:#f87171;
+}
+
+/* rekomendasi dark */
+.dark-mode #rekomendasiBox{
+background:#3a0000;
+border:1px solid #5e0000;
+color:#ffb3b3;
+}
+
+/* ============================
+RESPONSIVE
+============================ */
+
+@media(max-width:768px){
+
+.stat-card{
+min-height:75px;
+padding:14px;
+}
+
+.stat-value{
+font-size:20px;
+}
+
+}
+
+/* BIKIN CARD NGISI COL */
+.stat-row .stat-card{
+flex:1;
+}
+@media(max-width:768px){
+.stat-row > div{
+margin-bottom:6px;
+}
+}
+.stat-meta{
+font-size:11px;
+margin-top:2px;
+opacity:.7;
+}
+
+/* subtle status */
+.meta-sukar{ color:#ef4444; }
+.meta-sedang{ color:#3b82f6; }
+.meta-mudah{ color:#f59e0b; }
+
+.meta-jelek{ color:#ef4444; }
+.meta-cukup{ color:#f59e0b; }
+.meta-baik{ color:#10b981; }
+
+/* dark */
+.dark-mode .meta-sukar{ color:#f87171; }
+.dark-mode .meta-sedang{ color:#60a5fa; }
+.dark-mode .meta-mudah{ color:#facc15; }
+
+.dark-mode .meta-jelek{ color:#f87171; }
+.dark-mode .meta-cukup{ color:#facc15; }
+.dark-mode .meta-baik{ color:#34d399; }
+.stat-row .col-md-3{
+display:flex;
+}
+
+.stat-row .stat-card{
+flex:1;
+}
+.stat-card{
+padding:18px 22px;
+}
+
+.stat-card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:3px;
+background:#e5e7eb;
+opacity:.4;
+}
+.dark-mode .stat-card::before{
+background:#444;
+}
 </style>
