@@ -43,11 +43,9 @@ if (isset($_POST['import'])) {
 
                 try {
 
-                    // disable FK & unique checks (WAJIB buat dump CBT)
                     mysqli_query($koneksi,"SET FOREIGN_KEY_CHECKS=0");
                     mysqli_query($koneksi,"SET UNIQUE_CHECKS=0");
 
-                    // pecah query dump
                     $queries = explode(";\n", $sql);
 
                     foreach ($queries as $query) {
@@ -56,6 +54,11 @@ if (isset($_POST['import'])) {
 
                         if (!empty($query)) {
 
+                            // MODE RESTORE AMAN
+                            if (stripos($query, 'INSERT INTO') === 0) {
+    $query = preg_replace('/^INSERT INTO/i', 'INSERT IGNORE INTO', $query);
+}
+
                             if (!mysqli_query($koneksi, $query)) {
                                 throw new Exception(mysqli_error($koneksi));
                             }
@@ -63,12 +66,11 @@ if (isset($_POST['import'])) {
                         }
                     }
 
-                    // aktifkan lagi FK
                     mysqli_query($koneksi,"SET FOREIGN_KEY_CHECKS=1");
                     mysqli_query($koneksi,"SET UNIQUE_CHECKS=1");
 
                     mysqli_commit($koneksi);
-                    $success = "Database berhasil di-restore 🎉";
+                    $success = "Restore Aman Berhasil 🎉";
 
                 } catch (Exception $e) {
 
@@ -86,7 +88,6 @@ if (isset($_POST['import'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -147,7 +148,7 @@ text: '<?= addslashes($error) ?>'
 </div>
 
 <button type="submit" name="import" class="btn btn-success">
-<i class="fa fa-upload"></i> Import Database
+<i class="fa fa-upload"></i> Restore Database
 </button>
 </form>
 
