@@ -4,12 +4,13 @@ include '../koneksi/koneksi.php';
 include '../inc/functions.php';
 check_login('admin');
 only_admin();
-
 include '../inc/dataadmin.php';
 
 $success = '';
 $error = '';
 global $key;
+
+// fungsi decrypt backup
 function decrypt_data($data, $key) {
     $data = base64_decode($data);
     $iv = substr($data, 0, 16);
@@ -18,37 +19,72 @@ function decrypt_data($data, $key) {
 }
 
 if (isset($_POST['import'])) {
-    $maxFileSize = 10 * 1024 * 1024; // 10 MB
+
+    $maxFileSize = 10 * 1024 * 1024; // 10MB
 
     if ($_FILES['file']['error'] === 0) {
+
         if ($_FILES['file']['size'] > $maxFileSize) {
-            $error = "Ukuran file terlalu besar. Maksimal 10 MB.";
-        } elseif (pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION) === 'dbk') {
+            $error = "Ukuran file terlalu besar. Maksimal 10MB.";
+        }
+
+        elseif (pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION) === 'dbk') {
+
             $encrypted = file_get_contents($_FILES['file']['tmp_name']);
             $sql = decrypt_data($encrypted, $key);
 
-            if ($sql === false) {
-                $error = "Gagal dekripsi file. Pastikan kunci benar dan file valid.";
-            } else {
+            if (!$sql) {
+                $error = "Gagal decrypt file backup.";
+            }
+
+            else {
+
                 mysqli_begin_transaction($koneksi);
-                if (mysqli_multi_query($koneksi, $sql)) {
-                    do {
-                        if ($result = mysqli_store_result($koneksi)) {
-                            mysqli_free_result($result);
+
+                try {
+
+                    mysqli_query($koneksi,"SET FOREIGN_KEY_CHECKS=0");
+                    mysqli_query($koneksi,"SET UNIQUE_CHECKS=0");
+
+                    $queries = explode(";\n", $sql);
+
+                    foreach ($queries as $query) {
+
+                        $query = trim($query);
+
+                        if (!empty($query)) {
+
+                            // MODE RESTORE AMAN
+                            if (stripos($query, 'INSERT INTO') === 0) {
+    $query = preg_replace('/^INSERT INTO/i', 'INSERT IGNORE INTO', $query);
+}
+
+                            if (!mysqli_query($koneksi, $query)) {
+                                throw new Exception(mysqli_error($koneksi));
+                            }
+
                         }
-                    } while (mysqli_more_results($koneksi) && mysqli_next_result($koneksi));
+                    }
+
+                    mysqli_query($koneksi,"SET FOREIGN_KEY_CHECKS=1");
+                    mysqli_query($koneksi,"SET UNIQUE_CHECKS=1");
+
                     mysqli_commit($koneksi);
-                    $success = 'Database berhasil di-import dari file backup.';
-                } else {
+                    $success = "Restore Aman Berhasil 🎉";
+
+                } catch (Exception $e) {
+
                     mysqli_rollback($koneksi);
-                    $error = "Gagal menjalankan query restore: " . mysqli_error($koneksi);
+                    $error = "Restore gagal: " . $e->getMessage();
                 }
             }
+
         } else {
-            $error = 'File tidak valid. Harus file berekstensi .dbk dan tidak rusak.';
+            $error = "File harus berekstensi .dbk";
         }
+
     } else {
-        $error = 'Terjadi kesalahan upload file.';
+        $error = "Upload file error.";
     }
 }
 ?>
@@ -62,82 +98,86 @@ if (isset($_POST['import'])) {
 <script src="../assets/js/sweetalert.js"></script>
 </head>
 <body>
+
 <div class="wrapper">
-    <?php include 'sidebar.php'; ?>
-    <div class="main">
-        <?php include 'navbar.php'; ?>
-        <main class="content">
-            <div class="container-fluid p-0">
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Backup Restore</h5>
-                            </div>
-                            <div class="card-body">
+<?php include 'sidebar.php'; ?>
+<div class="main">
+<?php include 'navbar.php'; ?>
 
-                                <?php if ($success): ?>
-                                <script>
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Sukses',
-                                    text: '<?= addslashes($success) ?>',
-                                    confirmButtonText: 'OK'
-                                });
-                                </script>
-                                <?php elseif ($error): ?>
-                                <script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal',
-                                    text: '<?= addslashes($error) ?>',
-                                    confirmButtonText: 'Coba Lagi'
-                                });
-                                </script>
-                                <?php endif; ?>
+<main class="content">
+<div class="container-fluid p-0">
+<div class="row">
+<div class="col-12 col-lg-8">
 
-                                <!-- Tombol Backup -->
-                                <button id="backupBtn" class="btn btn-primary mb-3">
-                                    <i class="fa fa-download"></i> Backup Database
-                                </button>
+<div class="card">
+<div class="card-header">
+<h5 class="card-title mb-0">Backup Restore</h5>
+</div>
 
-                                <!-- Form Import -->
-                                <form method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
-                                    <div class="mb-3">
-                                        <label for="file" class="form-label">Upload File Backup (.dbk)</label>
-                                        <input type="file" name="file" id="file" accept=".dbk" required class="form-control" />
-                                    </div>
-                                    <button type="submit" name="import" class="btn btn-success">
-                                        <i class="fa fa-upload"></i> Import Database
-                                    </button>
-                                </form>
+<div class="card-body">
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+<?php if ($success): ?>
+<script>
+Swal.fire({
+icon: 'success',
+title: 'Sukses',
+text: '<?= addslashes($success) ?>'
+});
+</script>
+<?php endif; ?>
+
+<?php if ($error): ?>
+<script>
+Swal.fire({
+icon: 'error',
+title: 'Gagal',
+text: '<?= addslashes($error) ?>'
+});
+</script>
+<?php endif; ?>
+
+<button id="backupBtn" class="btn btn-primary mb-3">
+<i class="fa fa-download"></i> Backup Database
+</button>
+
+<form method="post" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+<div class="mb-3">
+<label class="form-label">Upload File Backup (.dbk)</label>
+<input type="file" name="file" accept=".dbk" required class="form-control" />
+</div>
+
+<button type="submit" name="import" class="btn btn-success">
+<i class="fa fa-upload"></i> Restore Database
+</button>
+</form>
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</main>
+
+</div>
 </div>
 
 <?php include '../inc/js.php'; ?>
 
 <script>
 document.getElementById('backupBtn').addEventListener('click', function () {
-    Swal.fire({
-        title: 'Yakin ingin melakukan backup database?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, backup!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Redirect ke file backup_download.php untuk proses backup dan download
-            window.location.href = 'backup_download.php';
-        }
-    });
+Swal.fire({
+title: 'Yakin ingin backup?',
+icon: 'warning',
+showCancelButton: true,
+confirmButtonText: 'Ya!',
+cancelButtonText: 'Batal'
+}).then((result) => {
+if (result.isConfirmed) {
+window.location.href = 'backup_download.php';
+}
+});
 });
 </script>
 
