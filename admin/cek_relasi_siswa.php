@@ -2,11 +2,8 @@
 session_start();   // 🔥 WAJIB
 include '../koneksi/koneksi.php';
 
-if(!isset($_SESSION['admin_logged_in'])){
-    echo 0;
-    exit;
-}
-
+include '../inc/functions.php';
+check_login('admin');
 $ids = $_POST['ids'];
 $count = 0;
 

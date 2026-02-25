@@ -1,5 +1,9 @@
 <?php
+session_start();
+include '../inc/functions.php';
 include '../koneksi/koneksi.php';
+
+check_login_api('admin');
 
 $current = $_GET['current'] ?? '';
 $current_ids = explode(',', $current);

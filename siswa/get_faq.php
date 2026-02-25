@@ -1,5 +1,8 @@
 <?php
-include '../koneksi/koneksi.php'; // ganti dengan path koneksi Anda
+session_start();
+include '../inc/functions.php';
+
+check_login_api('siswa'); // 🔥 ini yang handle redirect
 
 $query = mysqli_query($koneksi, "SELECT question, answer FROM faq");
 $faq = [];
@@ -9,5 +12,4 @@ while ($row = mysqli_fetch_assoc($query)) {
 }
 
 header('Content-Type: application/json');
-echo json_encode($faq, JSON_UNESCAPED_UNICODE);
-?>
+echo json_encode($faq);

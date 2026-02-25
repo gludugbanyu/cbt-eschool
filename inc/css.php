@@ -2388,4 +2388,73 @@ background:#1e293b;
 border:1px solid #334155;
 color:#cbd5e1;
 }
+/* SELECT2 DARK MODE */
+.dark-mode .select2-container--default .select2-selection--multiple{
+    background-color:#1e293b;
+    border:1px solid #334155;
+    color:#f1f5f9;
+}
+
+.dark-mode .select2-selection__choice{
+    background:#334155;
+    border:none;
+    color:#fff;
+}
+
+.dark-mode .select2-selection__choice__remove{
+    color:#fff;
+}
+
+.dark-mode .select2-dropdown{
+    background:#1e293b;
+    border:1px solid #334155;
+}
+
+.dark-mode .select2-results__option{
+    color:#f1f5f9;
+}
+
+.dark-mode .select2-results__option--highlighted{
+    background:#3b82f6 !important;
+    color:#fff !important;
+}
+
+.dark-mode .select2-search__field{
+    background:#1e293b;
+    color:#fff;
+}
+/* ===== SELECT2 TAG DARK FIX ===== */
+
+.dark-mode 
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice{
+    background-color:#334155 !important;
+    color:#f8fafc !important;
+    border:1px solid #475569 !important;
+}
+
+/* tombol x di tiap tag */
+.dark-mode 
+.select2-selection__choice__remove{
+    color:#cbd5e1 !important;
+}
+
+.dark-mode 
+.select2-selection__choice__remove:hover{
+    color:#ef4444 !important;
+}
+
+/* tombol clear all (×) */
+.dark-mode 
+.select2-selection__clear{
+    color:#f8fafc !important;
+}
+
+/* input search di dalam tag */
+.dark-mode 
+.select2-search__field{
+    background:transparent !important;
+    color:#f8fafc !important;
+}
 </style>

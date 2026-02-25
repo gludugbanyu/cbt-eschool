@@ -1,6 +1,18 @@
 <?php
 include '../koneksi/koneksi.php';
+include '../inc/functions.php';
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+    if (!is_ajax_request()) {
+        header("Location: ../admin/dashboard.php?notallowed=1");
+        exit;
+    }
+
+    http_response_code(405);
+    echo 'SESSION_EXPIRED';
+    exit;
+}
 $kode=$_POST['kode'];
 $rombel=$_POST['rombel'];
 

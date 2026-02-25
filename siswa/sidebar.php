@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../inc/guard.php';
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <nav id="sidebar" class="sidebar js-sidebar">

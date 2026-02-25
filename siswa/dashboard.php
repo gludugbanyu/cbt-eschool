@@ -318,7 +318,24 @@ $result = mysqli_query($koneksi, $query);
     });
     </script>
     <?php unset($_SESSION['error']); endif; ?>
+<?php if(isset($_GET['notallowed'])): ?>
+<script src="../assets/swal/sweetalert2.all.min.js"></script>
+<script>
+Swal.fire({
+    icon: 'warning',
+    title: 'Akses Ditolak!',
+    text: 'Endpoint API tidak boleh diakses langsung.',
+    confirmButtonColor: '#3085d6'
+});
 
+// 🧹 hapus parameter dari URL biar ga muncul lagi kalau refresh
+if (window.history.replaceState) {
+    const url = new URL(window.location);
+    url.searchParams.delete('notallowed');
+    window.history.replaceState({}, document.title, url.pathname);
+}
+</script>
+<?php endif; ?>
 </body>
 
 </html>

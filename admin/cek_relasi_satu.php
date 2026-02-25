@@ -2,11 +2,7 @@
 session_start();
 include '../koneksi/koneksi.php';
 include '../inc/functions.php';
-
-if(!isset($_SESSION['admin_logged_in'])){
-    echo 0;
-    exit;
-}
+check_login('admin');
 
 header('Content-Type: application/json');
 

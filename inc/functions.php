@@ -124,7 +124,7 @@ Session anda telah berakhir atau belum login.
 Silakan login kembali untuk melanjutkan.
 </p>
 
-<a href="../admin/" class="btn btn-danger btn-login w-100">
+<a href="../" class="btn btn-danger btn-login w-100">
 <i class="fas fa-sign-in-alt me-1"></i> Login Sekarang
 </a>
 
@@ -132,7 +132,7 @@ Silakan login kembali untuk melanjutkan.
 
 <script>
 setTimeout(()=>{
-    window.location.href="../admin/";
+    window.location.href="../";
 },5000);
 </script>
 

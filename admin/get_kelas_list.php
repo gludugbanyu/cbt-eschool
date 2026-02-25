@@ -1,5 +1,9 @@
 <?php
+session_start();
+include '../inc/functions.php';
 include '../koneksi/koneksi.php';
+// 🔒 wajib login admin
+check_login_api('admin');
 
 $current = $_GET['current'] ?? '';
 $current_arr = array_map('trim', explode(',', $current));

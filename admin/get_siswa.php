@@ -1,4 +1,13 @@
 <?php
+session_start();
+include '../inc/functions.php';
+
+// 🔒 wajib login admin
+check_login_api('admin');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../admin/dashboard.php?notallowed=1");
+    exit;
+}
 include '../koneksi/koneksi.php';
 
 $kelas = $_POST['kelas'];
