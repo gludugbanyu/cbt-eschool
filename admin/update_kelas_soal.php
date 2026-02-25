@@ -1,7 +1,21 @@
 <?php
 session_start();
-include '../koneksi/koneksi.php';
+include '../inc/functions.php';
 
+// 🔒 wajib login admin
+check_login_api('admin');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+    if (!is_ajax_request()) {
+        header("Location: ../admin/dashboard.php?notallowed=1");
+        exit;
+    }
+
+    http_response_code(405);
+    echo 'SESSION_EXPIRED';
+    exit;
+}
+include '../koneksi/koneksi.php';
 header('Content-Type: application/json');
 
 $id    = $_POST['id_soal'] ?? '';

@@ -1,4 +1,10 @@
 <?php
+session_start();
+include '../inc/functions.php';
+
+// 🔥 WAJIB ADMIN LOGIN
+check_login_api('admin');
+
 include '../koneksi/koneksi.php';
 
 $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 12;
