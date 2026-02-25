@@ -70,7 +70,7 @@ if (isset($_POST['import'])) {
                     mysqli_query($koneksi,"SET UNIQUE_CHECKS=1");
 
                     mysqli_commit($koneksi);
-                    $success = "Restore Aman Berhasil 🎉";
+                    $success = "Restore Database Berhasil";
 
                 } catch (Exception $e) {
 

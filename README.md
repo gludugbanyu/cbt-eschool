@@ -1,9 +1,21 @@
 # CBT eSchool  
 ### Modern Open-Source Computer-Based Test Platform
 
-CBT eSchool adalah sistem ujian berbasis komputer (Computer-Based Test) yang dibangun menggunakan PHP 8 dan JavaScript.
+CBT eSchool adalah sistem ujian berbasis komputer (Computer-Based Test) yang dibangun menggunakan PHP 8 dan JavaScript. Dirancang untuk sekolah dan institusi pendidikan yang membutuhkan sistem ujian online yang stabil, mudah digunakan, dan siap dikembangkan lebih lanjut secara open-source.
 
-Dirancang untuk sekolah dan institusi pendidikan yang membutuhkan sistem ujian online yang stabil, mudah digunakan, dan siap dikembangkan lebih lanjut secara open-source.
+Sistem ini kini telah mendukung penuh format soal AKM (Asesmen Kompetensi Minimum) dengan fitur utama:
+
+Multivariasi Bentuk Soal: Mendukung 5 tipe soal standar nasional, yaitu:
+
+  - Pilihan Ganda: Jawaban tunggal.
+  - Pilihan Ganda Kompleks: Siswa dapat memilih lebih dari satu jawaban benar (kotak centang).
+  - Menjodohkan: Menghubungkan premis dan respon menggunakan garis atau drag-and-drop.
+  - Uraian: Jawaban berupa angka atau kata kunci dan penjelasan.
+  - Benar/Salah: Pilihan Jawaban benar atau Salah.
+
+Media Literasi & Numerasi: Fitur unggah gambar, tabel, grafik, dan stimulus bacaan yang interaktif untuk menguji daya nalar siswa.
+Navigasi Ujian Fleksibel: Panel navigasi soal yang memudahkan siswa berpindah antar nomor.
+Analisis Otomatis: Penilaian instan untuk tipe soal objektif guna mempercepat evaluasi hasil belajar.
 
 ![Version](https://img.shields.io/badge/version-2.0.6-blue)
 ![PHP](https://img.shields.io/badge/PHP-8.x-777BB4)
