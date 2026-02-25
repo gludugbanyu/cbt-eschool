@@ -1,9 +1,18 @@
 <?php
-header('Content-Type: application/json');
-include '../koneksi/koneksi.php';
+session_start();
+include '../inc/functions.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// 🔒 wajib login admin
+check_login_api('admin');
+
+// 🚫 hanya AJAX
+if (!is_ajax_request()) {
+    header("Location: ../admin/dashboard.php?notallowed=1");
+    exit;
+}
+
+include '../koneksi/koneksi.php';
+header('Content-Type: application/json');
 
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $length = isset($_GET['length']) ? $_GET['length'] : 10;
