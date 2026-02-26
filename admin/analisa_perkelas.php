@@ -69,20 +69,22 @@ include '../inc/dataadmin.php';
 
                             <div class="card mt-3" id="kelasBox" style="display:none;">
                                 <div class="card-body">
+                                    <div class="table-responsive">
 
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>No Soal</th>
-                                                <th>P Global</th>
-                                                <th>P Kelas</th>
-                                                <th>ΔP</th>
-                                                <th>Status</th>
-                                                <th>Preview Soal</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="isi"></tbody>
-                                    </table>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>No Soal</th>
+                                                    <th>P Global</th>
+                                                    <th>P Kelas</th>
+                                                    <th>ΔP</th>
+                                                    <th>Status</th>
+                                                    <th>Preview Soal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="isi"></tbody>
+                                        </table>
+                                    </div>
                                     <div class="mt-3 small text-muted">
 
                                         <b>Keterangan:</b><br>
@@ -141,25 +143,25 @@ include '../inc/dataadmin.php';
         </div>
     </div>
     <?php include '../inc/js.php'; ?>
-<script>
-function lihatSoal(kode, nomor){
+    <script>
+    function lihatSoal(kode, nomor) {
 
-document.getElementById('isiModalSoal').innerHTML='Loading...';
+        document.getElementById('isiModalSoal').innerHTML = 'Loading...';
 
-fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
-.then(res=>res.text())
-.then(html=>{
+        fetch('modal_lihat_soal.php?kode_soal=' + kode + '&nomor=' + nomor)
+            .then(res => res.text())
+            .then(html => {
 
-document.getElementById('isiModalSoal').innerHTML=html;
+                document.getElementById('isiModalSoal').innerHTML = html;
 
-new bootstrap.Modal(
-document.getElementById('modalSoal')
-).show();
+                new bootstrap.Modal(
+                    document.getElementById('modalSoal')
+                ).show();
 
-});
+            });
 
-}
-</script>
+    }
+    </script>
     <script>
     // LOAD ROMBEL
     $('#kode_soal').on('change', function() {
@@ -175,32 +177,32 @@ document.getElementById('modalSoal')
     });
 
     // ANALISA
-// ANALISA
-$('#rombel').on('change', function(){
+    // ANALISA
+    $('#rombel').on('change', function() {
 
-let kode   = $('#kode_soal').val();
-let rombel = $(this).val();
+        let kode = $('#kode_soal').val();
+        let rombel = $(this).val();
 
-if(!kode || !rombel) return;
+        if (!kode || !rombel) return;
 
-$.post('ajax_statistik_kelas.php',{
-kode:kode,
-rombel:rombel
-},function(res){
+        $.post('ajax_statistik_kelas.php', {
+            kode: kode,
+            rombel: rombel
+        }, function(res) {
 
-let d = JSON.parse(res);
+            let d = JSON.parse(res);
 
-$('#infoPeserta').html(d.info);
+            $('#infoPeserta').html(d.info);
 
-let html="";
+            let html = "";
 
-d.data.forEach(r=>{
+            d.data.forEach(r => {
 
-let cls="";
-if(r.st=="Perlu Perhatian") cls="row-bad";
-if(r.st=="Lebih Dikuasai") cls="row-good";
+                let cls = "";
+                if (r.st == "Perlu Perhatian") cls = "row-bad";
+                if (r.st == "Lebih Dikuasai") cls = "row-good";
 
-html+=`
+                html += `
 <tr class="${cls}">
 <td>${r.no}</td>
 <td>${r.Pg}</td>
@@ -216,14 +218,14 @@ Lihat Soal
 </tr>
 `;
 
-});
+            });
 
-$('#isi').html(html);
-$('#kelasBox').fadeIn();
+            $('#isi').html(html);
+            $('#kelasBox').fadeIn();
 
-});
+        });
 
-});
+    });
     </script>
 </body>
 
