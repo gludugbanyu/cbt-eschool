@@ -278,6 +278,170 @@ foreach($stat as $no=>$s){
             overflow: visible !important;
         }
     }
+
+    /* ==============================
+   FORCE LIGHT MODE SAAT PDF
+============================== */
+
+    #area-cetak.force-light,
+    #area-cetak.force-light * {
+        background-color: #fff !important;
+        color: #000 !important;
+    }
+
+    #area-cetak.force-light .table-dark {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+
+    #area-cetak.force-light .badge {
+        background-color: transparent !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+
+    @media print {
+
+        #tabelAnalisa .badge {
+            background: none !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
+            padding: 2px 4px !important;
+            font-size: 10px !important;
+            white-space: normal !important;
+        }
+
+        #tabelAnalisa th,
+        #tabelAnalisa td {
+            font-size: 11px !important;
+            padding: 4px !important;
+        }
+
+    }
+
+    @media print {
+
+        #tabelAnalisa {
+            table-layout: fixed !important;
+            width: 100% !important;
+            font-size: 11px !important;
+        }
+
+        #tabelAnalisa th,
+        #tabelAnalisa td {
+            padding: 4px !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Batasi kolom rekomendasi */
+        #tabelAnalisa th:nth-child(7),
+        #tabelAnalisa td:nth-child(7) {
+            width: 20%;
+        }
+
+        /* Kolom kualitas */
+        #tabelAnalisa th:nth-child(6),
+        #tabelAnalisa td:nth-child(6) {
+            width: 10%;
+            text-align: center;
+        }
+
+        /* Kolom lihat kecilkan */
+        #tabelAnalisa th:nth-child(8),
+        #tabelAnalisa td:nth-child(8) {
+            width: 6%;
+        }
+
+    }
+
+    @media print {
+
+        #tabelAnalisa th:nth-child(8),
+        #tabelAnalisa td:nth-child(8) {
+            display: none !important;
+        }
+    }
+
+    #tabelAnalisa {
+        table-layout: fixed !important;
+        width: 100% !important;
+    }
+
+    #tabelAnalisa th,
+    #tabelAnalisa td {
+        word-break: break-word;
+    }
+
+    #tabelAnalisa th:nth-child(5),
+    #tabelAnalisa td:nth-child(5) {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    #tabelAnalisa td:nth-child(5) .progress {
+        margin: 0 auto !important;
+    }
+
+    /* ===============================
+   MODE LAPORAN RESMI PDF
+================================ */
+
+    .print-resmi {
+        font-family: "Times New Roman", serif !important;
+        font-size: 12pt !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .print-resmi .card,
+    .print-resmi .card-body,
+    .print-resmi .table-responsive {
+        box-shadow: none !important;
+        border: none !important;
+        background: #fff !important;
+    }
+
+    .print-resmi .btn,
+    .print-resmi button,
+    .print-resmi .alert,
+    .print-resmi .modal,
+    .print-resmi small.text-muted {
+        display: none !important;
+    }
+
+    .print-resmi table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+    }
+
+    .print-resmi th,
+    .print-resmi td {
+        border: 1px solid #000 !important;
+        padding: 6px !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    .print-resmi th {
+        background: #eee !important;
+    }
+
+    .print-resmi .laporan-header {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .print-resmi .laporan-garis {
+        border-bottom: 2px solid #000;
+        margin: 10px 0 20px 0;
+    }
+
+    .print-resmi .laporan-footer {
+        margin-top: 30px;
+        text-align: right;
+        font-size: 10pt;
+    }
     </style>
 </head>
 
@@ -393,12 +557,8 @@ switch($tipeAsli){
                                             <td class="fw-bold text-center"><?= $tipeLabel ?></td>
 
                                             <td class="text-success fw-bold"><?= number_format($s['skor'],2) ?></td>
-                                            <td>
-                                                <div class="progress" style="height:18px;">
-                                                    <div class="progress-bar bg-<?= $badge ?>" style="width:<?= $p ?>%">
-                                                        <?= number_format($p,1) ?>%
-                                                    </div>
-                                                </div>
+                                            <td class="text-center fw-bold">
+                                                <?= number_format($p,1) ?>%
                                             </td>
                                             <td><span class="badge bg-<?= $badge ?>"><?= $ket ?></span></td>
                                             <td><?= $saran ?></td>
@@ -416,28 +576,73 @@ switch($tipeAsli){
                                         <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
                                         <script>
                                         function exportPDF() {
+
+                                            const htmlEl = document.documentElement;
+                                            const bodyEl = document.body;
                                             const element = document.getElementById('area-cetak');
 
+                                            const hadDarkHtml = htmlEl.classList.contains('dark-mode');
+                                            const hadDarkBody = bodyEl.classList.contains('dark-mode');
+
+                                            htmlEl.classList.remove('dark-mode');
+                                            bodyEl.classList.remove('dark-mode');
+
+                                            // =============================
+                                            // BUAT HEADER RESMI VIA JS
+                                            // =============================
+
+                                            const header = document.createElement("div");
+                                            header.className = "laporan-header";
+                                            header.innerHTML = `
+        <h3>LAPORAN ANALISA PERBUTIR SOAL</h3>
+        <div>Kode Soal: <b><?= $kode_soal ?></b></div>
+        <div>Kelas Peserta: <b><?= htmlspecialchars($kelas_text) ?></b></div>
+        <div>Total Peserta: <b><?= $jumlah_siswa ?></b></div>
+        <div class="laporan-garis"></div>
+    `;
+
+                                            element.prepend(header);
+
+                                            // =============================
+                                            // TAMBAH FOOTER TANGGAL CETAK
+                                            // =============================
+
+                                            const footer = document.createElement("div");
+                                            footer.className = "laporan-footer";
+                                            footer.innerHTML = `
+        Dicetak pada: ${new Date().toLocaleDateString('id-ID')}
+    `;
+
+                                            element.appendChild(footer);
+
+                                            element.classList.add("print-resmi");
+
                                             html2pdf().set({
-                                                margin: 0.2,
-                                                filename: 'Analisa_<?= $kode_soal ?>.pdf',
+                                                margin: 0.5,
+                                                filename: 'Laporan_Analisa_<?= $kode_soal ?>.pdf',
                                                 image: {
                                                     type: 'jpeg',
                                                     quality: 1
                                                 },
                                                 html2canvas: {
-                                                    scale: 3,
-                                                    useCORS: true
+                                                    scale: 2,
+                                                    backgroundColor: '#ffffff'
                                                 },
                                                 jsPDF: {
                                                     unit: 'in',
                                                     format: 'a4',
-                                                    orientation: 'portrait'
-                                                },
-                                                pagebreak: {
-                                                    mode: ['avoid-all', 'css', 'legacy']
+                                                    orientation: 'landscape'
                                                 }
-                                            }).from(element).save();
+                                            }).from(element).save().then(() => {
+
+                                                element.classList.remove("print-resmi");
+                                                header.remove();
+                                                footer.remove();
+
+                                                if (hadDarkHtml) htmlEl.classList.add('dark-mode');
+                                                if (hadDarkBody) bodyEl.classList.add('dark-mode');
+
+                                            });
                                         }
                                         </script>
                                         <script>
@@ -456,45 +661,45 @@ switch($tipeAsli){
 
         </div>
     </div>
- <!-- MODAL PREVIEW SOAL -->
- <div class="modal fade" id="modalSoal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
+    <!-- MODAL PREVIEW SOAL -->
+    <div class="modal fade" id="modalSoal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
 
-            <!-- HEADER -->
-            <div class="modal-header">
-                <h5 class="modal-title">Preview Butir Soal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Preview Butir Soal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body" id="isiModalSoal" style="max-height:90vh;overflow:auto;">
+                    Loading...
+                </div>
+
             </div>
-
-            <!-- BODY -->
-            <div class="modal-body" id="isiModalSoal" style="max-height:90vh;overflow:auto;">
-                Loading...
-            </div>
-
         </div>
     </div>
-</div>
 
     <script>
-    function lihatSoal(kode, nomor){
+    function lihatSoal(kode, nomor) {
 
-    const modalEl = document.getElementById('modalSoal');
+        const modalEl = document.getElementById('modalSoal');
 
-    document.getElementById('isiModalSoal').innerHTML = 'Loading...';
+        document.getElementById('isiModalSoal').innerHTML = 'Loading...';
 
-    fetch('modal_lihat_soal.php?kode_soal='+kode+'&nomor='+nomor)
-        .then(res => res.text())
-        .then(html => {
+        fetch('modal_lihat_soal.php?kode_soal=' + kode + '&nomor=' + nomor)
+            .then(res => res.text())
+            .then(html => {
 
-            document.getElementById('isiModalSoal').innerHTML = html;
+                document.getElementById('isiModalSoal').innerHTML = html;
 
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
 
-        });
+            });
 
-}
+    }
     </script>
     <?php include '../inc/js.php'; ?>
 </body>
