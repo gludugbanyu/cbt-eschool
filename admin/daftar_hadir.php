@@ -337,49 +337,74 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
     }
     </script>
     <script>
-    function exportPDF() {
-        var element = document.getElementById('canvas_div_pdf');
-        var images = element.getElementsByTagName('img');
-        var totalImages = images.length;
-        var imagesLoaded = 0;
+function exportPDF() {
 
-        if (totalImages === 0) generatePDF();
-        else {
-            for (var i = 0; i < totalImages; i++) {
-                if (images[i].complete) {
+    var element = document.getElementById('canvas_div_pdf');
+
+    // =========================
+    // SIMPAN STATUS DARK MODE
+    // =========================
+    var htmlEl = document.documentElement;
+    var bodyEl = document.body;
+
+    var htmlHadDark = htmlEl.classList.contains('dark-mode');
+    var bodyHadDark = bodyEl.classList.contains('dark-mode');
+
+    // =========================
+    // MATIKAN DARK MODE TOTAL
+    // =========================
+    htmlEl.classList.remove('dark-mode');
+    bodyEl.classList.remove('dark-mode');
+
+    // Paksa background putih
+    element.style.background = "#ffffff";
+    element.style.color = "#000000";
+
+    var images = element.getElementsByTagName('img');
+    var totalImages = images.length;
+    var imagesLoaded = 0;
+
+    if (totalImages === 0) generatePDF();
+    else {
+        for (var i = 0; i < totalImages; i++) {
+            if (images[i].complete) {
+                imagesLoaded++;
+                if (imagesLoaded === totalImages) generatePDF();
+            } else {
+                images[i].addEventListener('load', function() {
                     imagesLoaded++;
                     if (imagesLoaded === totalImages) generatePDF();
-                } else {
-                    images[i].addEventListener('load', function() {
-                        imagesLoaded++;
-                        if (imagesLoaded === totalImages) generatePDF();
-                    });
-                }
+                });
             }
         }
-
-        function generatePDF() {
-            html2pdf().set({
-                margin: [0.3, 0.5, 0.5, 0.5], // top, left, bottom, right in inches
-                filename: 'DaftarHadir_' + '<?= $kode_soal ?>' + '_<?= $kelas . $rombel ?>.pdf',
-                image: {
-                    type: 'jpeg',
-                    quality: 1
-                },
-                html2canvas: {
-                    scale: 2,
-                    logging: true
-                },
-                jsPDF: {
-                    unit: 'in',
-                    format: 'a4',
-                    orientation: 'portrait'
-                }
-            }).from(element).save();
-        }
     }
-    </script>
 
+    function generatePDF() {
+        html2pdf().set({
+            margin: [0.3, 0.5, 0.5, 0.5],
+            filename: 'DaftarHadir_<?= $kode_soal ?>_<?= $kelas . $rombel ?>.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+                scale: 2,
+                backgroundColor: '#ffffff'
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        }).from(element).save().then(function () {
+
+            // =========================
+            // KEMBALIKAN DARK MODE
+            // =========================
+            if (htmlHadDark) htmlEl.classList.add('dark-mode');
+            if (bodyHadDark) bodyEl.classList.add('dark-mode');
+
+        });
+    }
+}
+</script>
 </body>
 
 </html>

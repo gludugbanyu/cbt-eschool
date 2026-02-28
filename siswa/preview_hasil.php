@@ -246,6 +246,89 @@ $opsi_huruf = ['A','B','C','D','E'];
         list-style-type: none;
         padding-left: 0;
     }
+
+    /* ==============================
+   MODE RESMI UNTUK PDF (ANTI BOCOR)
+============================== */
+
+    #canvas_div_pdf.print-resmi {
+        font-family: "Times New Roman", serif !important;
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
+        color: #000 !important;
+    }
+
+    /* Bersihkan background */
+    #canvas_div_pdf.print-resmi .card,
+    #canvas_div_pdf.print-resmi .card-body,
+    #canvas_div_pdf.print-resmi .row,
+    #canvas_div_pdf.print-resmi .col-md-9,
+    #canvas_div_pdf.print-resmi .col-md-3 {
+        background: #fff !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Table resmi */
+    #canvas_div_pdf.print-resmi table {
+        border-collapse: collapse !important;
+        width: 100%;
+    }
+
+    #canvas_div_pdf.print-resmi table th,
+    #canvas_div_pdf.print-resmi table td {
+        border: 1px solid #000 !important;
+        padding: 4px !important;
+    }
+
+    /* Pembahasan */
+    #canvas_div_pdf.print-resmi .pembahasan {
+        background: none !important;
+        border: 1px solid #000 !important;
+        padding: 6px !important;
+        font-style: normal !important;
+    }
+
+    /* Skor */
+    #canvas_div_pdf.print-resmi .skor-soal {
+        background: none !important;
+        border: 1px solid #000 !important;
+        padding: 4px !important;
+    }
+
+    /* Hindari soal terpotong */
+    #canvas_div_pdf.print-resmi .card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    #canvas_div_pdf.print-resmi table,
+    #canvas_div_pdf.print-resmi img {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Garis pembatas setelah header */
+    #canvas_div_pdf.print-resmi .row.mb-4 {
+        border-bottom: 2px solid #000 !important;
+        padding-bottom: 15px !important;
+        margin-bottom: 20px !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    #canvas_div_pdf.print-resmi .row.mb-4 * {
+        color: #000 !important;
+    }
+
+    .dark-mode .card-header {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .dark-mode .card-body {
+        background: transparent !important;
+    }
     </style>
 </head>
 
@@ -419,9 +502,23 @@ $opsi_huruf = ['A','B','C','D','E'];
     <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
     <script>
     function exportPDF() {
-        var element = document.getElementById('canvas_div_pdf');
+
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+        const element = document.getElementById('canvas_div_pdf');
+
+        const hadDarkHtml = htmlEl.classList.contains('dark-mode');
+        const hadDarkBody = bodyEl.classList.contains('dark-mode');
+
+        // Matikan dark mode sementara
+        htmlEl.classList.remove('dark-mode');
+        bodyEl.classList.remove('dark-mode');
+
+        // Aktifkan mode resmi
+        element.classList.add("print-resmi");
+
         html2pdf().set({
-            margin: 0.2,
+            margin: 0.5,
             filename: '<?php echo $kode_soal;?>_<?php echo $nama_siswa;?>.pdf',
             image: {
                 type: 'jpeg',
@@ -429,14 +526,24 @@ $opsi_huruf = ['A','B','C','D','E'];
             },
             html2canvas: {
                 scale: 2,
-                logging: true
+                backgroundColor: '#ffffff'
+            },
+            pagebreak: {
+                mode: ['css', 'legacy']
             },
             jsPDF: {
                 unit: 'in',
                 format: 'a4',
                 orientation: 'portrait'
             }
-        }).from(element).save();
+        }).from(element).save().then(() => {
+
+            element.classList.remove("print-resmi");
+
+            if (hadDarkHtml) htmlEl.classList.add('dark-mode');
+            if (hadDarkBody) bodyEl.classList.add('dark-mode');
+
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function() {

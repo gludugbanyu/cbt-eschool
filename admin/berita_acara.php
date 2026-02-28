@@ -25,20 +25,23 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
     /* Style for Select2 */
     .select2-container--default .select2-selection--multiple {
         min-height: 70px !important;
-        border: 1px solid #ced4da !important; /* Default Bootstrap border color */
-        border-radius: 0.25rem !important; /* Bootstrap default border radius */
-        padding: 0.375rem 0.75rem !important; /* Bootstrap default padding */
+        border: 1px solid #ced4da !important;
+        /* Default Bootstrap border color */
+        border-radius: 0.25rem !important;
+        /* Bootstrap default border radius */
+        padding: 0.375rem 0.75rem !important;
+        /* Bootstrap default padding */
     }
-    
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         margin-top: 0.35rem !important;
         margin-right: 0.5rem !important;
     }
-    
+
     .select2-container--default .select2-selection--multiple .select2-selection__clear {
         margin-top: 0.5rem !important;
     }
-</style>
+    </style>
 </head>
 
 <body>
@@ -112,11 +115,13 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                                 <label for="pengawas" class="form-label">Nama Pengawas</label>
                                                 <textarea name="pengawas" id="pengawas" class="form-control" rows="3"
                                                     required></textarea>
-                                                    <small class="text-muted">Pisahkan dengan baris baru jika lebih dari satu</small>
+                                                <small class="text-muted">Pisahkan dengan baris baru jika lebih dari
+                                                    satu</small>
                                             </div>
                                             <div class="col-md-3 mt-3">
                                                 <label for="jumlah_hadir" class="form-label">Jumlah Hadir</label>
-                                                <input type="number" name="jumlah_hadir" id="jumlah_hadir" class="form-control" required>
+                                                <input type="number" name="jumlah_hadir" id="jumlah_hadir"
+                                                    class="form-control" required>
                                             </div>
                                             <div class="col-md-9 mt-3">
                                                 <label for="catatan" class="form-label">Catatan</label>
@@ -124,10 +129,13 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                             </div>
                                             <div class="col-md-12 mt-3">
                                                 <label for="tidak_hadir" class="form-label">Siswa Tidak Hadir</label>
-                                                <select name="tidak_hadir[]" id="tidak_hadir" class="form-control select2" multiple="multiple" style="width: 100%;height">
+                                                <select name="tidak_hadir[]" id="tidak_hadir"
+                                                    class="form-control select2" multiple="multiple"
+                                                    style="width: 100%;height">
                                                     <option value="">Pilih Kelas dan Rombel Dulu</option>
                                                 </select>
-                                                <small class="text-muted">Pilih Kelas, rombel dan Ketik untuk mencari atau pilih beberapa siswa</small>
+                                                <small class="text-muted">Pilih Kelas, rombel dan Ketik untuk mencari
+                                                    atau pilih beberapa siswa</small>
                                             </div>
 
                                             <div class="col-md-12 mt-3">
@@ -169,29 +177,34 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                     </div>
                                 </div>
 
-                                <div class="card-body" id="canvas_div_pdf">
+                                <div class="card-body">
+                                    <div class="pdf-scroll">
+                                        <div id="canvas_div_pdf">
 
-                                <table style="width: 100%; margin-bottom: 10px; border-collapse: collapse;">
-                                    <tr>
-                                        <!-- Logo di kiri -->
-                                        <td style="width: 80px; vertical-align: middle;">
-                                        <img src="<?= $logoSrc ?>" alt="Logo" style="height: 60px;">
-                                        </td>
+                                            <table style="width: 100%; margin-bottom: 10px; border-collapse: collapse;">
+                                                <tr>
+                                                    <!-- Logo di kiri -->
+                                                    <td style="width: 80px; vertical-align: middle;">
+                                                        <img src="<?= $logoSrc ?>" alt="Logo" style="height: 60px;">
+                                                    </td>
 
-                                        <!-- Judul di tengah -->
-                                        <td style="text-align: center;">
-                                            <h4 style="margin-bottom: 5px;text-align: center;">BERITA ACARA PELAKSANAAN</h4>
-                                            <h3 style="margin-bottom: 5px;text-align: center;"><?= strtoupper($nama_ujian) ?></h3>
-                                            <h4 style="margin-bottom: 0;text-align: center;"><?= strtoupper($nama_sekolah) ?></h4>
-                                        </td>
+                                                    <!-- Judul di tengah -->
+                                                    <td style="text-align: center;">
+                                                        <h4 style="margin-bottom: 5px;text-align: center;">BERITA ACARA
+                                                            PELAKSANAAN</h4>
+                                                        <h3 style="margin-bottom: 5px;text-align: center;">
+                                                            <?= strtoupper($nama_ujian) ?></h3>
+                                                        <h4 style="margin-bottom: 0;text-align: center;">
+                                                            <?= strtoupper($nama_sekolah) ?></h4>
+                                                    </td>
 
-                                        <!-- Kolom kanan kosong untuk keseimbangan -->
-                                        <td style="width: 80px;"></td>
-                                    </tr>
-                                </table>
+                                                    <!-- Kolom kanan kosong untuk keseimbangan -->
+                                                    <td style="width: 80px;"></td>
+                                                </tr>
+                                            </table>
 
-                            <hr style="border-top: 4px double black;">
-                            <?php
+                                            <hr style="border-top: 4px double black;">
+                                            <?php
                                 // Mendapatkan informasi tanggal hari ini
                                 $hariArray = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                                 $bulanArray = [
@@ -204,40 +217,47 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                 $bulan = $bulanArray[date('m')];
                                 $tahun = date('Y');
                             ?>
-                            <p style="text-align: justify; font-size: 13px;padding:10px;">
-                                Pada hari ini, <strong><?= $hariIni ?></strong> tanggal <strong><?= $tanggal ?></strong> bulan <strong><?= $bulan ?></strong> tahun <strong><?= $tahun ?></strong>, 
-                                di <strong><?= strtoupper($nama_sekolah) ?></strong>, telah diselenggarakan <strong><?= strtoupper($nama_ujian) ?></strong> untuk mata pelajaran 
-                                <strong><?= strtoupper($soal['mapel']) ?></strong> dengan kode soal <strong><?= $soal['kode_soal'] ?></strong>.
-                            </p>
-                            <table class="table table-bordered mb-3" style="width: 100%; font-size: 12px; border-collapse: collapse;">
-                                <tr>
-                                    <td style="width: 30%;"><strong>Kode Soal</strong></td>
-                                    <td>: <?= $soal['kode_soal'] ?></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Waktu Ujian</strong></td>
-                                    <td>: <?= $soal['waktu_ujian'] ?> menit</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Tanggal</strong></td>
-                                    <td>: <?= $tanggal_hari_ini ?></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Mata Pelajaran</strong></td>
-                                    <td>: <?= $soal['mapel'] ?></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Kelas / Rombel</strong></td>
-                                    <td>: <?= $kelas ?> / <?= $rombel ?></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Jumlah Hadir</strong></td>
-                                    <td>: <?= $jumlah_hadir ?></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Siswa Tidak Hadir</strong></td>
-                                    <td>
-                                    <?php
+                                            <p style="text-align: justify; font-size: 13px;padding:10px;">
+                                                Pada hari ini, <strong><?= $hariIni ?></strong> tanggal
+                                                <strong><?= $tanggal ?></strong> bulan <strong><?= $bulan ?></strong>
+                                                tahun
+                                                <strong><?= $tahun ?></strong>,
+                                                di <strong><?= strtoupper($nama_sekolah) ?></strong>, telah
+                                                diselenggarakan
+                                                <strong><?= strtoupper($nama_ujian) ?></strong> untuk mata pelajaran
+                                                <strong><?= strtoupper($soal['mapel']) ?></strong> dengan kode soal
+                                                <strong><?= $soal['kode_soal'] ?></strong>.
+                                            </p>
+                                            <table class="table table-bordered mb-3"
+                                                style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                                <tr>
+                                                    <td style="width: 30%;"><strong>Kode Soal</strong></td>
+                                                    <td>: <?= $soal['kode_soal'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Waktu Ujian</strong></td>
+                                                    <td>: <?= $soal['waktu_ujian'] ?> menit</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Tanggal</strong></td>
+                                                    <td>: <?= $tanggal_hari_ini ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Mata Pelajaran</strong></td>
+                                                    <td>: <?= $soal['mapel'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Kelas / Rombel</strong></td>
+                                                    <td>: <?= $kelas ?> / <?= $rombel ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Jumlah Hadir</strong></td>
+                                                    <td>: <?= $jumlah_hadir ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Siswa Tidak Hadir</strong></td>
+                                                    <td>
+                                                        <?php
                                     if (count($tidak_hadir) > 0) {
                                         if (count($tidak_hadir) == 1) {
                                             // Jika hanya satu siswa, tampilkan tanpa koma
@@ -250,26 +270,27 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                         echo "Tidak ada.";
                                     }
                                     ?>
-                                </td>
-                                </tr>
-                            </table>
-                            <div class="mt-4">
-                            <h6><strong>Catatan :</strong></h6>
-                             <table class="table table-bordered" style="width: 100%;border-collapse: collapse;">
-                                <tr>
-                                    <td style="text-align: center;height:100px;">
-                                        <?= nl2br($catatan) ?>
-                                    </td>
-                                </tr>
-                            </table>
-                                    </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="mt-4">
+                                                <h6><strong>Catatan :</strong></h6>
+                                                <table class="table table-bordered"
+                                                    style="width: 100%;border-collapse: collapse;">
+                                                    <tr>
+                                                        <td style="text-align: center;height:100px;">
+                                                            <?= nl2br($catatan) ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
 
 
-                                    <!-- TAMPILKAN DAFTAR PENGAWAS DENGAN KOLOM TANDA TANGAN -->
-                                    <div class="mt-5">
-                                        <h6><strong>Pengawas Ujian:</strong></h6>
-                                        <table class="table table-bordered" style="width: 100%;">
-                                            <?php
+                                            <!-- TAMPILKAN DAFTAR PENGAWAS DENGAN KOLOM TANDA TANGAN -->
+                                            <div class="mt-5">
+                                                <h6><strong>Pengawas Ujian:</strong></h6>
+                                                <table class="table table-bordered" style="width: 100%;">
+                                                    <?php
                                             $totalPengawas = count($daftar_pengawas);
                                             for ($i = 0; $i < $totalPengawas; $i += 2) {
                                                 echo "<tr>";
@@ -290,83 +311,162 @@ $logoSrc = 'data:image/png;base64,' . $logoData;
                                                 echo "</tr>";
                                             }
                                             ?>
-                                        </table>
+                                                </table>
+                                            </div>
+                                            <br><br>
+                                            <p class="text-center" id="encr" style="font-size:9px;color:grey;"></p>
+                                        </div>
                                     </div>
-                                    <br><br>
-                                   <p class="text-center" id="encr" style="font-size:9px;color:grey;"></p>             
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-<?php include '../inc/js.php'; ?>
-<link href="../assets/js/select2.min.css" rel="stylesheet" />
-<script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
-<script src="../assets/js/select2.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Pilih siswa",
-        allowClear: true
+    <?php include '../inc/js.php'; ?>
+    <link href="../assets/js/select2.min.css" rel="stylesheet" />
+    <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
+    <script src="../assets/js/select2.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Pilih siswa",
+            allowClear: true
+        });
     });
-});
-</script>
+    </script>
     <style>
+        .pdf-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#canvas_div_pdf {
+    min-width: 800px; /* atau 8.27in kalau mau presisi A4 */
+}
     @media print {
-    @page {
-        size: A4 portrait;
-        margin: 0;
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        #canvas_div_pdf,
+        #canvas_div_pdf * {
+            visibility: visible !important;
+        }
+
+        #canvas_div_pdf {
+            width: 7.7in !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+        }
+
+        #canvas_div_pdf table {
+            width: 100%;
+            table-layout: fixed;
+            /* Pastikan semua kolom proporsional */
+        }
+
+        .btn,
+        .btn * {
+            display: none !important;
+        }
+
+        .card,
+        .card-body {
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .card-header {
+            /* Tambahan penting */
+            display: none !important;
+        }
     }
 
-    body,
-    html {
-        margin: 0;
-        padding: 0;
-    }
-
-    body * {
-        visibility: hidden !important;
-    }
-
-    #canvas_div_pdf,
-    #canvas_div_pdf * {
-        visibility: visible !important;
-    }
+    /* ===============================
+   A4 FIX LAYOUT
+================================ */
 
     #canvas_div_pdf {
-        width: 7.5in !important; /* Kunci ke 7.5in */
-        padding: 0.2in !important;
-        box-sizing: border-box !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        min-height: 100vh;
-        margin: 0 !important;
+        width: 8.27in;
+        /* Lebar A4 */
+        min-height: 11.69in;
+        /* Tinggi A4 */
+        margin: 0 auto;
+        padding: 0.3in 0.5in 0.5in 0.5in;
+        /* atas lebih kecil */
+        background: #ffffff;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
+
+    /* Hilangkan margin bawaan heading */
+    #canvas_div_pdf h1,
+    #canvas_div_pdf h2,
+    #canvas_div_pdf h3,
+    #canvas_div_pdf h4,
+    #canvas_div_pdf h5,
+    #canvas_div_pdf h6,
+    #canvas_div_pdf p {
+        margin-top: 0;
+    }
+
+    /* Table lebih presisi */
     #canvas_div_pdf table {
-    width: 100%;
-    table-layout: fixed; /* Pastikan semua kolom proporsional */
+        width: 100%;
+        border-collapse: collapse;
     }
 
-    .btn,
-    .btn * {
-        display: none !important;
-    }
+    /* PRINT MODE */
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
 
-    .card,
-    .card-body {
-        box-shadow: none !important;
-        border: none !important;
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background: #ffffff !important;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        #canvas_div_pdf,
+        #canvas_div_pdf * {
+            visibility: visible !important;
+        }
+
+        #canvas_div_pdf {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .card-header,
+        .btn {
+            display: none !important;
+        }
     }
-    .card-header { /* Tambahan penting */
-        display: none !important;
-    }
-}
-</style>
+    </style>
 
     <script>
     function printDiv() {
@@ -374,60 +474,100 @@ $(document).ready(function() {
     }
     </script>
     <script>
-function exportPDF() {
-    var element = document.getElementById('canvas_div_pdf');
-    var images = element.getElementsByTagName('img');
-    var totalImages = images.length;
-    var imagesLoaded = 0;
+    function exportPDF() {
 
-    if (totalImages === 0) generatePDF();
-    else {
-        for (var i = 0; i < totalImages; i++) {
-            if (images[i].complete) {
-                imagesLoaded++;
-                if (imagesLoaded === totalImages) generatePDF();
-            } else {
-                images[i].addEventListener('load', function () {
-                    imagesLoaded++;
-                    if (imagesLoaded === totalImages) generatePDF();
-                });
+        const element = document.getElementById('canvas_div_pdf');
+
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+
+        // Simpan status dark mode
+        const htmlHadDark = htmlEl.classList.contains('dark-mode');
+        const bodyHadDark = bodyEl.classList.contains('dark-mode');
+
+        // Matikan dark mode total
+        htmlEl.classList.remove('dark-mode');
+        bodyEl.classList.remove('dark-mode');
+
+        // Paksa putih
+        element.style.background = "#ffffff";
+        element.style.color = "#000000";
+
+        // Tunggu gambar load
+        const images = element.getElementsByTagName('img');
+        let loaded = 0;
+
+        if (images.length === 0) {
+            generatePDF();
+        } else {
+            for (let i = 0; i < images.length; i++) {
+                if (images[i].complete) {
+                    loaded++;
+                    if (loaded === images.length) generatePDF();
+                } else {
+                    images[i].addEventListener('load', function() {
+                        loaded++;
+                        if (loaded === images.length) generatePDF();
+                    });
+                }
             }
         }
-    }
 
-    function generatePDF() {
-        html2pdf().set({
-            margin: [0.3, 0.5, 0.5, 0.5], // top, left, bottom, right in inches
-            filename: 'BeritaAcara_' + '<?= $kode_soal ?>' + '_<?= $kelas . $rombel ?>.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, logging: true },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-        }).from(element).save();
-    }
-}
-</script>
-<script>
-$(document).ready(function(){
-    function loadSiswa() {
-        var kelas = $("#kelas").val();
-        var rombel = $("#rombel").val();
-        if(kelas !== "" && rombel !== ""){
-            $.ajax({
-                url: "get_siswa.php",
-                type: "POST",
-                data: {kelas: kelas, rombel: rombel},
-                success: function(data){
-                    $("#tidak_hadir").html(data);
+        function generatePDF() {
+
+            html2pdf().set({
+                margin: 0, // TIDAK ADA MARGIN
+                filename: 'BeritaAcara_<?= $kode_soal ?>_<?= $kelas . $rombel ?>.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 1
+                },
+                html2canvas: {
+                    scale: 2,
+                    backgroundColor: '#ffffff'
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
                 }
+            }).from(element).save().then(() => {
+
+                // Kembalikan dark mode
+                if (htmlHadDark) htmlEl.classList.add('dark-mode');
+                if (bodyHadDark) bodyEl.classList.add('dark-mode');
+
+                element.removeAttribute("style");
             });
         }
     }
+    </script>
+    </script>
+    <script>
+    $(document).ready(function() {
+        function loadSiswa() {
+            var kelas = $("#kelas").val();
+            var rombel = $("#rombel").val();
+            if (kelas !== "" && rombel !== "") {
+                $.ajax({
+                    url: "get_siswa.php",
+                    type: "POST",
+                    data: {
+                        kelas: kelas,
+                        rombel: rombel
+                    },
+                    success: function(data) {
+                        $("#tidak_hadir").html(data);
+                    }
+                });
+            }
+        }
 
-    $("#kelas, #rombel").change(function(){
-        loadSiswa();
+        $("#kelas, #rombel").change(function() {
+            loadSiswa();
+        });
     });
-});
-</script>
+    </script>
 
 </body>
 

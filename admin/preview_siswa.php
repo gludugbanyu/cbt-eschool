@@ -237,6 +237,146 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
         list-style-type: none;
         padding-left: 0;
     }
+
+    /* Hindari soal terpotong */
+    .soal-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .card {
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: avoid;
+    }
+
+    img {
+        page-break-inside: avoid;
+        max-width: 100% !important;
+    }
+
+    /* ========================
+   COMPACT MODE UNTUK PDF
+======================== */
+    .pdf-mode {
+        font-size: 13px !important;
+    }
+
+    .pdf-mode .card-body {
+        padding: 12px !important;
+    }
+
+    .pdf-mode .mb-4 {
+        margin-bottom: 10px !important;
+    }
+
+    .pdf-mode h5 {
+        margin-bottom: 6px !important;
+    }
+
+    .pdf-mode p {
+        margin-bottom: 6px !important;
+    }
+
+    .pdf-mode ul {
+        margin-bottom: 6px !important;
+    }
+
+    .pdf-mode .pembahasan {
+        padding: 6px !important;
+        margin-top: 5px !important;
+    }
+
+    .pdf-mode .skor-soal {
+        padding: 5px !important;
+        margin-top: 5px !important;
+    }
+
+    .pdf-mode table td,
+    .pdf-mode table th {
+        padding: 4px !important;
+    }
+
+    .pdf-mode .row.mb-4 {
+        padding: 10px !important;
+    }
+
+    /* ==============================
+   MODE DOKUMEN RESMI SEKOLAH
+============================== */
+    .print-resmi {
+        font-family: "Times New Roman", serif !important;
+        font-size: 12pt !important;
+        line-height: 1.4 !important;
+        color: #000 !important;
+    }
+
+    .print-resmi .card,
+    .print-resmi .card-body,
+    .print-resmi .row,
+    .print-resmi .col-md-9,
+    .print-resmi .col-md-3 {
+        background: #fff !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .print-resmi .pembahasan {
+        background: none !important;
+        border: 1px solid #000 !important;
+        padding: 6px !important;
+        font-style: normal !important;
+    }
+
+    .print-resmi .skor-soal {
+        background: none !important;
+        border: 1px solid #000 !important;
+        padding: 4px !important;
+    }
+
+    .print-resmi h5 {
+        margin-bottom: 6px !important;
+        font-weight: bold !important;
+    }
+
+    .print-resmi p {
+        margin-bottom: 6px !important;
+    }
+
+    .print-resmi ul {
+        margin-bottom: 6px !important;
+    }
+
+    .print-resmi table {
+        border-collapse: collapse !important;
+        width: 100%;
+    }
+
+    .print-resmi table th,
+    .print-resmi table td {
+        border: 1px solid #000 !important;
+        padding: 4px !important;
+    }
+
+    .print-resmi .row.mb-4 {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+
+    .print-resmi>h1 {
+        display: none;
+    }
+    .dark-mode .card-header {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .dark-mode .card-body {
+        background: transparent !important;
+    }
     </style>
 </head>
 
@@ -283,7 +423,7 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
                     $jawab = isset($jawaban_siswa[$no]) ? $jawaban_siswa[$no] : '';
                     $tipe = $soal['tipe_soal'];
                 ?>
-                            <div class="row">
+                            <div class="row soal-item">
                                 <div class="card mb-4">
                                     <div class="card-body">
                                         <h5>No. <?= $no ?> (<?= $tipe ?>)</h5>
@@ -409,24 +549,47 @@ $query_soal = mysqli_query($koneksi, "SELECT * FROM butir_soal WHERE kode_soal='
     <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
     <script>
     function exportPDF() {
-        var element = document.getElementById('canvas_div_pdf');
+
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+        const element = document.getElementById('canvas_div_pdf');
+
+        const hadDarkHtml = htmlEl.classList.contains('dark-mode');
+        const hadDarkBody = bodyEl.classList.contains('dark-mode');
+
+        htmlEl.classList.remove('dark-mode');
+        bodyEl.classList.remove('dark-mode');
+
+        // AKTIFKAN MODE RESMI
+        element.classList.add("print-resmi");
+
         html2pdf().set({
-            margin: 0.2,
-            filename: '<?php echo $kode_soal;?>_<?php echo $nama_siswa;?>.pdf',
+            margin: 0.5,
             image: {
                 type: 'jpeg',
                 quality: 1
             },
             html2canvas: {
                 scale: 2,
-                logging: true
+                backgroundColor: '#ffffff'
+            },
+            pagebreak: {
+                mode: ['css', 'legacy'],
+                avoid: '.soal-item'
             },
             jsPDF: {
                 unit: 'in',
                 format: 'a4',
                 orientation: 'portrait'
             }
-        }).from(element).save();
+        }).from(element).save().then(() => {
+
+            element.classList.remove("print-resmi");
+
+            if (hadDarkHtml) htmlEl.classList.add('dark-mode');
+            if (hadDarkBody) bodyEl.classList.add('dark-mode');
+
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function() {

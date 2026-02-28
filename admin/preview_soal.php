@@ -33,10 +33,11 @@ only_pemilik_soal_by_kode($kode_soal);
         max-height: 300px !important;
         display: block;
     }
+
     @media (max-width: 768px) {
-    .card img {
-        width: 100% !important;
-        
+        .card img {
+            width: 100% !important;
+
         }
     }
 
@@ -98,6 +99,66 @@ only_pemilik_soal_by_kode($kode_soal);
     input[type="checkbox"]:checked {
         background-color: green;
         border-color: green;
+    }
+
+    /* ==============================
+   PRINT MODE – FORCE LIGHT
+============================== */
+    @media print {
+
+        html,
+        body {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        body.dark-mode,
+        html.dark-mode {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        .card,
+        .card-utama,
+        .custom-card,
+        .bg-white {
+            background: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+        }
+
+        .text-dark {
+            color: #000000 !important;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        table td,
+        table th {
+            border: 1px solid #000 !important;
+            color: #000 !important;
+        }
+    }
+
+    @media print {
+
+        .oke {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        table {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        img {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
     }
     </style>
 </head>
@@ -294,7 +355,7 @@ echo "
                                         echo "</div>";
                                     }
                                     ?>
-                                     <p class="text-center" id="encr" style="font-size:11px;color:grey;"></p>
+                                    <p class="text-center" id="encr" style="font-size:11px;color:grey;"></p>
                                 </div>
 
                             </div>
@@ -308,9 +369,20 @@ echo "
     <script src="../assets/html2pdf.js/dist/html2pdf.bundle.min.js"></script>
     <script>
     function exportPDF() {
+
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+
+        const hadDarkHtml = htmlEl.classList.contains('dark-mode');
+        const hadDarkBody = bodyEl.classList.contains('dark-mode');
+
+        htmlEl.classList.remove('dark-mode');
+        bodyEl.classList.remove('dark-mode');
+
         var element = document.getElementById('canvas_div_pdf');
+
         html2pdf().set({
-            margin: 0.2,
+            margin: 0.4,
             filename: 'Soal_<?php echo $kode_soal;?>.pdf',
             image: {
                 type: 'jpeg',
@@ -318,14 +390,23 @@ echo "
             },
             html2canvas: {
                 scale: 2,
-                logging: true
+                backgroundColor: '#ffffff'
+            },
+            pagebreak: {
+                mode: ['css', 'legacy'],
+                avoid: '.oke' // INI PENTING
             },
             jsPDF: {
                 unit: 'in',
                 format: 'a4',
                 orientation: 'portrait'
             }
-        }).from(element).save();
+        }).from(element).save().then(() => {
+
+            if (hadDarkHtml) htmlEl.classList.add('dark-mode');
+            if (hadDarkBody) bodyEl.classList.add('dark-mode');
+
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -342,16 +423,24 @@ echo "
         const printWindow = window.open('', '', 'width=1000,height=700');
 
         printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Preview</title>
-                        <link rel="stylesheet" href="../inc/print-soal.css" type="text/css" />
-                    </head>
-                    <body onload="window.print(); window.close();">
-                        ${modalBody}
-                    </body>
-                </html>
-            `);
+        <html>
+            <head>
+                <title>Print Preview</title>
+                <link rel="stylesheet" href="../inc/print-soal.css">
+                <style>
+                    body {
+                        background:#fff;
+                        color:#000;
+                        padding:20px;
+                        font-family: Arial, sans-serif;
+                    }
+                </style>
+            </head>
+            <body onload="window.print(); window.close();">
+                ${modalBody}
+            </body>
+        </html>
+    `);
 
         printWindow.document.close();
     }
