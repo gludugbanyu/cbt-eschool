@@ -261,7 +261,9 @@ function sanitize_summernote($html) {
     libxml_use_internal_errors(true);
 
     $doc = new DOMDocument();
-    $doc->loadHTML('<?xml encoding="utf-8" ?>' . $html, 
+
+    $doc->loadHTML(
+        mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'),
         LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
     );
 
@@ -319,10 +321,15 @@ function sanitize_summernote($html) {
         }
     }
 
-    $clean = $doc->saveHTML();
+$clean = $doc->saveHTML();
 
-// buang xml header
-$clean = preg_replace('/<\?xml.*?\?>/i', '', $clean);
+/* hapus xml header yang sering muncul */
+$clean = str_replace([
+    '<?xml encoding="utf-8" ?>',
+    '<?xml encoding="utf-8"?>',
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<!--?xml encoding="utf-8" ?-->'
+], '', $clean);
 
 // buang <p><br></p> atau <p>&nbsp;</p>
 $clean = preg_replace('#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $clean);
