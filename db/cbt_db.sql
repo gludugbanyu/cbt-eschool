@@ -313,7 +313,7 @@ CREATE TABLE `soal` (
   `kode_soal` varchar(200) NOT NULL,
   `nama_soal` varchar(255) NOT NULL,
   `mapel` varchar(100) NOT NULL,
-  `kelas` varchar(50) NOT NULL,
+  `kelas`  text NOT NULL,
   `waktu_ujian` int(11) DEFAULT 60,
   `tanggal` date DEFAULT curdate(),
   `status` text NOT NULL DEFAULT 'Nonaktif',
