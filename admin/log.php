@@ -69,11 +69,11 @@ include '../inc/dataadmin.php';
                                                 while ($row = mysqli_fetch_assoc($query)) {
                                                     echo '<tr>';
                                                     echo '<td>' . $no++ . '</td>';
-                                                    echo '<td>' . htmlspecialchars($row['nama_siswa']) . '</td>';
-                                                    echo '<td>' . htmlspecialchars($row['kelas']).''. htmlspecialchars($row['rombel']) . '</td>';
-                                                    echo '<td>' . htmlspecialchars($row['last_activity']) . '</td>';
-                                                    echo '<td>' . htmlspecialchars($row['page_url']) . '</td>';
-                                                    echo '<td>' . htmlspecialchars($row['session_token']) . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['nama_siswa'] ?? '') . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['kelas'] ?? '') . ' ' . htmlspecialchars($row['rombel'] ?? '') . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['last_activity'] ?? '') . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['page_url'] ?? '') . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['session_token'] ?? '') . '</td>';
                                                     echo '</tr>';
                                                 }
                                                 ?>
