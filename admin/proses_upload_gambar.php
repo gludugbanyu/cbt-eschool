@@ -1,10 +1,26 @@
 <?php
 session_start();
-include '../koneksi/koneksi.php';
 include '../inc/functions.php';
-check_login('admin');
-include '../inc/dataadmin.php';
 
+// 🔐 WAJIB LOGIN
+check_login_api('admin');
+ // ❌ kalau akses langsung via URL (GET)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+    // kalau bukan AJAX → redirect
+    if (!is_ajax_request()) {
+        header("Location: ../admin/dashboard.php?notallowed=1");
+        exit;
+    }
+
+    // kalau AJAX → tetap JSON
+    http_response_code(405);
+    echo json_encode([
+        'status' => false,
+        'message' => 'Method not allowed'
+    ]);
+    exit;
+}
 $targetDir = "../gambar/";
 $allowedExt  = ['jpg','jpeg','png','gif','webp'];
 $allowedMime = ['image/jpeg','image/png','image/gif','image/webp'];
@@ -14,7 +30,7 @@ $responses = [];
 
 // Pastikan folder ada
 if (!is_dir($targetDir)) {
-    mkdir($targetDir, 0755, true);
+    mkdir($targetDir, 0755, true); 
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gambar'])) {
