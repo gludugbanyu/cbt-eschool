@@ -1,74 +1,116 @@
 <?php
 session_start();
+include '../koneksi/koneksi.php';
+include '../inc/functions.php';
+check_login('admin');
+include '../inc/dataadmin.php';
 
 $targetDir = "../gambar/";
-$allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+$allowedExt  = ['jpg','jpeg','png','gif','webp'];
+$allowedMime = ['image/jpeg','image/png','image/gif','image/webp'];
 $maxSize = 2 * 1024 * 1024; // 2MB
+
 $responses = [];
 
+// Pastikan folder ada
+if (!is_dir($targetDir)) {
+    mkdir($targetDir, 0755, true);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['gambar'])) {
+
     $files = $_FILES['gambar'];
 
     for ($i = 0; $i < count($files['name']); $i++) {
-        $filename = basename($files['name'][$i]);
-        $targetFile = $targetDir . $filename;
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-        // Validasi jika file sudah ada
-        if (file_exists($targetFile)) {
+        $originalName = $files['name'][$i];
+        $tmpFile      = $files['tmp_name'][$i];
+        $fileSize     = $files['size'][$i];
+        $error        = $files['error'][$i];
+
+        // Skip kalau error upload
+        if ($error !== UPLOAD_ERR_OK) {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
                 'status' => 'error',
-                'message' => 'Nama file sudah ada'
+                'message' => 'Error saat upload'
             ];
             continue;
         }
 
-        // Validasi ekstensi
-        if (!in_array($imageFileType, $allowedTypes)) {
+        // Ambil extension
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+        // VALIDASI EXTENSION
+        if (!in_array($ext, $allowedExt)) {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
                 'status' => 'error',
                 'message' => 'Format tidak didukung'
             ];
             continue;
         }
 
-        // Validasi ukuran
-        if ($files['size'][$i] > $maxSize) {
+        // VALIDASI SIZE
+        if ($fileSize > $maxSize) {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
                 'status' => 'error',
                 'message' => 'Ukuran terlalu besar (maks 2MB)'
             ];
             continue;
         }
 
-        // Validasi isi gambar
-        if (!getimagesize($files["tmp_name"][$i])) {
+        // VALIDASI MIME TYPE (REAL FILE)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $tmpFile);
+        finfo_close($finfo);
+
+        if (!in_array($mime, $allowedMime)) {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
                 'status' => 'error',
-                'message' => 'Bukan file gambar valid'
+                'message' => 'Mime type tidak valid'
             ];
             continue;
         }
 
-        // Upload
-        if (move_uploaded_file($files["tmp_name"][$i], $targetFile)) {
+        // VALIDASI BENAR-BENAR GAMBAR
+        if (!getimagesize($tmpFile)) {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
+                'status' => 'error',
+                'message' => 'File bukan gambar valid'
+            ];
+            continue;
+        }
+
+        // RENAME FILE (WAJIB - hindari konflik & exploit)
+        $newName = uniqid('img_', true) . '.' . $ext;
+        $targetFile = $targetDir . $newName;
+
+        // UPLOAD FILE
+        if (move_uploaded_file($tmpFile, $targetFile)) {
+
+            // Set permission aman
+            chmod($targetFile, 0644);
+
+            $responses[] = [
+                'file' => $newName,
                 'status' => 'success',
                 'message' => 'Berhasil diupload'
             ];
+
         } else {
             $responses[] = [
-                'file' => $filename,
+                'file' => $originalName,
                 'status' => 'error',
-                'message' => 'Gagal upload'
+                'message' => 'Gagal upload ke server'
             ];
         }
     }
 
+    header('Content-Type: application/json');
     echo json_encode($responses);
+    exit;
 }
