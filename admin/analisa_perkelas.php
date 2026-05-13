@@ -280,11 +280,13 @@ include '../inc/dataadmin.php';
         if (!kode || !rombel) return;
 
         $.post('ajax_statistik_kelas.php', {
-            kode: kode,
-            rombel: rombel
-        }, function(res) {
+    kode: kode,
+    rombel: rombel
+}, function(res) {
 
-            let d = JSON.parse(res);
+    console.log(res);
+
+    let d = JSON.parse(res);
 
             $('#infoPeserta').html(d.info);
 

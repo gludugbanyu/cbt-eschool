@@ -88,11 +88,21 @@ $data=[];
 
 foreach($kunci as $no=>$v){
 
-$Pg=($global[$no]['n']>0)?
-$global[$no]['b']/$global[$no]['n']:0;
+$Pg = (
+    isset($global[$no]) &&
+    isset($global[$no]['n']) &&
+    $global[$no]['n'] > 0
+)
+? $global[$no]['b'] / $global[$no]['n']
+: 0;
 
-$Pk=($kelas[$no]['n']>0)?
-$kelas[$no]['b']/$kelas[$no]['n']:0;
+$Pk = (
+    isset($kelas[$no]) &&
+    isset($kelas[$no]['n']) &&
+    $kelas[$no]['n'] > 0
+)
+? $kelas[$no]['b'] / $kelas[$no]['n']
+: 0;
 
 $d=round($Pk-$Pg,2);
 
