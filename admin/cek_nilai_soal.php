@@ -17,3 +17,4 @@ $d = mysqli_fetch_assoc($q);
 echo json_encode([
     'jumlah' => (int)$d['jml']
 ]);
+ 
