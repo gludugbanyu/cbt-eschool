@@ -1,5 +1,8 @@
 <?php
+session_start();
 include '../koneksi/koneksi.php';
+include '../inc/functions.php';
+check_login('admin');
 
 $kode = $_GET['kode_soal'] ?? '';
 
