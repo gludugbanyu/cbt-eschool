@@ -11,7 +11,7 @@ $kode = $_GET['kode_soal'] ?? '';
 $stmt = mysqli_prepare(
     $koneksi,
     "SELECT COUNT(*) AS jml FROM nilai WHERE kode_soal = ?"
-);
+); 
 
 mysqli_stmt_bind_param($stmt, "s", $kode);
 mysqli_stmt_execute($stmt);
